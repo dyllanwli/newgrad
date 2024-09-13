@@ -1,5 +1,5 @@
 {
-  "name": "sugarmoon",
+  "name": "newgrad",
   "version": "1.0.0",
   "scripts": {
     "backend:dev": "export IS_PROD=0 && python -m uvicorn api.main:app --reload",

@@ -5,10 +5,10 @@ import { LogoTextHeader } from './LogoText';
 const Logo = () => {
     const [textIndex, setTextIndex] = useState(0);
     const texts = [
-        'SugarMoon',
-        'SugarMoon'
+        'NewGrad.works',
+        'NewGrad.works'
     ];
-    const displayTimes = [5000, 3000]; // 5 seconds for SugarMoon, 3 seconds for Elite Love
+    const displayTimes = [5000, 3000]; 
 
     useEffect(() => {
         const cycleText = () => {
@@ -31,7 +31,7 @@ const Logo = () => {
                     exit={{ opacity: 0, y: 20 }}
                     transition={{ duration: 0.5 }}
                 >
-                    {texts[textIndex] === 'SugarMoon.com' ? (
+                    {texts[textIndex] === 'NewGrad.works' ? (
                         <LogoTextHeader />
                     ) : (
                         texts[textIndex]

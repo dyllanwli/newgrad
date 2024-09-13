@@ -5,7 +5,7 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile
-    container_name: sugarmoon
+    container_name: newgrad
     volumes:
       - ./api:/backend/api
     ports:
