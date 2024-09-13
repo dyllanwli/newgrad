@@ -1,29 +1,43 @@
 import os
 import sys
-import logging
+import dotenv
+import logging.config
 
 
-def setup_sqlite3():
-    try:
-        import pysqlite3
+def setup_logging():
+    """Setup logging configuration"""
+    LOGGING_CONFIG = {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "formatters": {
+            "standard": {"format": "%(asctime)s [%(levelname)s] %(name)s: %(message)s"}
+        },
+        "handlers": {
+            "file": {
+                "class": "logging.handlers.TimedRotatingFileHandler",
+                "level": "INFO",
+                "formatter": "standard",
+                "filename": "app.log",
+                "when": "midnight",
+                "backupCount": 7,
+                "encoding": "utf-8",
+            }
+        },
+        "root": {"handlers": ["file"], "level": "INFO"},
+    }
 
-        sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
-    except ImportError:
-        pass
+    logging.config.dictConfig(LOGGING_CONFIG)
 
 
-def setup_logger():
-    logger = logging.getLogger("app")
-    handler = logging.StreamHandler(sys.stdout)
-    handler.setFormatter(
-        logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-    )
-    logger.handlers = [handler]
-    logger.setLevel(logging.INFO)
-    return logger
+def load_dotenv():
+    dotenv.load_dotenv()
 
 
-logger = setup_logger()
+setup_logging()
+load_dotenv()
+
+# Use logging in your application
+logger = logging.getLogger(__name__)
 
 IS_PROD = os.getenv("IS_PROD", "0") == "1"
 

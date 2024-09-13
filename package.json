@@ -2,8 +2,8 @@
   "name": "sugarmoon",
   "version": "1.0.0",
   "scripts": {
-    "backend:dev": "export IS_PROD=false && python -m uvicorn api.main:app --reload",
-    "backend:prod": "export IS_PROD=true && python -m uvicorn api.main:app",
+    "backend:dev": "export IS_PROD=0 && python -m uvicorn api.main:app --reload",
+    "backend:prod": "export IS_PROD=1 && python -m uvicorn api.main:app",
     "deploy": "cd frontend && yarn deploy"
   }
 }
