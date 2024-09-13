@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Root styles */
+:root {
+  color: rgba(0, 0, 0, 0.87);
+  font-family: 'Nunito', sans-serif;
+
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-nunito {
+  font-family: 'Nunito', sans-serif;
+}
+
+/* Slide menu styles */
+.slide-menu {
+  transition: transform 0.3s ease-in-out;
+}
+
+.slide-menu.open {
+  transform: translateX(0);
+}
+
+.slide-menu.closed {
+  transform: translateX(-100%);
+}

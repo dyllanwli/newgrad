@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: sugarmoon
+    volumes:
+      - ./api:/backend/api
+    ports:
+      - "8001:8000"
+    environment:
+      - IS_PROD=false
