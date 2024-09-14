@@ -72,7 +72,7 @@ export default function HomePage() {
             </motion.h1>
           </div>
           <motion.img
-            src="/assets/hero-section/rocket-hero.svg"
+            src="https://placehold.co/300x300"
             alt="rocket-hero"
             className="w-full max-w-[300px] h-auto rounded-lg mt-8 md:mt-0 md:ml-8"
             initial={{ opacity: 0, y: 20 }}
@@ -80,13 +80,11 @@ export default function HomePage() {
             transition={{ duration: 0.8, delay: 0.6 }}
           />
         </div>
-        <motion.button
-          className="px-8 py-3 bg-olive-green text-white rounded-full text-lg font-bold hover:bg-green-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 mt-8 max-w-xs w-full sm:w-auto"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+        <button
+          className="px-8 py-3 bg-blue-100 rounded-full text-lg font-bold hover:bg-purple-400 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 mt-8 max-w-xs w-full sm:w-auto"
         >
           Let's Talk
-        </motion.button>
+        </button>
       </div>
       <div className="bg-off-white py-16 px-4 sm:px-8">
         <div className="max-w-4xl mx-auto">
