@@ -28,12 +28,6 @@ const PlainFeatureItem: React.FC<PlainFeatureItemProps> = ({ imgSrc, imgAlt, tit
 
 export default function HomePage() {
   const { t } = useTranslation();
-
-
-//going to need to refactor this code and break them up into a few more files
-
-// we'll need to put the Let's Talk button in the same flexbox with the  left text and also make sure
-// the bottom of the hero section wraps a little tigther
   return (
     <div className="flex flex-col">
       <div className="relative h-[70vh] pt-32 pb-32 flex flex-col items-center justify-center bg-pale-blue p-4 sm:p-8 text-center overflow-hidden">

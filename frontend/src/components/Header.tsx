@@ -4,6 +4,7 @@ import { useUser } from '@clerk/clerk-react';
 import { Menu, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import Logo from './branding/Logo';
 
 const navItems = [
@@ -29,32 +30,30 @@ const Navigation: React.FC<NavigationProps> = ({ isOpen, navItems, toggleMenu })
   };
 
   return (
-    <nav
-      className={`md:flex md:items-center md:space-x-4 transition-all duration-300 ease-in-out 
-                  ${isOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 md:opacity-100'} 
-                  md:max-h-screen md:relative absolute top-full left-0 w-full md:w-auto 
-                  overflow-hidden z-50`}
+    <motion.nav
+      initial={false}
+      animate={isOpen ? 'open' : 'closed'}
+      variants={{
+        open: { height: 'auto', opacity: 1 },
+        closed: { height: 0, opacity: 0 },
+      }}
+      className="md:flex md:items-center md:space-x-4 overflow-hidden"
     >
-      <div className="md:bg-none bg-gradient-to-r from-[#000080] to-[#800080]">
-        <div className="flex flex-col md:flex-row items-start md:items-center py-2 px-4 md:p-0">
-          {navItems.map((item, index) => (
-            <a
-              key={index}
-              href={item.href}
-              onClick={handleNavigation(item.href)}
-              className="block py-1 px-2 text-white text-lg md:text-lg hover:bg-white hover:bg-opacity-20 rounded transition-all duration-300 ease-in-out"
-            >
-              {t(item.label)}
-            </a>
-          ))}
-          <div className="flex flex-col md:flex-row md:items-center mt-2 md:mt-0 space-y-2 md:space-y-0 md:space-x-2">
-            <ClerkButton />
-          </div>
-        </div>
+      <div className="flex flex-col md:flex-row items-start md:items-center py-1 md:py-0">
+        {navItems.map((item, index) => (
+          <a
+            key={index}
+            href={item.href}
+            onClick={handleNavigation(item.href)}
+            className="block py-1 px-2 text-black md:text-base hover:bg-gray-200 rounded transition"
+          >
+            {t(item.label)}
+          </a>
+        ))}
       </div>
-    </nav>
+    </motion.nav>
   );
-}
+};
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -67,42 +66,58 @@ const Header = () => {
   };
 
   return (
-    <header className="relative z-50 shadow-lg bg-gradient-to-r from-[#000080] to-[#800080] animate-slow-pulse">
-      <style>{`
-        @keyframes slowPulse {
-          50%, 100% {
-            opacity: 1;
-          }
-          50% {
-            opacity: 0.7;
-          }
-        }
-        .animate-slow-pulse {
-          animation: slowPulse 10s ease-in-out infinite;
-        }
-      `}</style>
-      <div className="container mx-auto flex flex-wrap items-center justify-between py-1.5 px-4 md:py-2.5 md:px-10 relative">
-        <div className="flex items-center justify-between w-full md:w-auto">
+    <header className="bg-pale-blue">
+      <div className="container mx-auto flex items-center justify-between py-1 px-4 md:px-8">
+        {/* Logo */}
+        <div className="flex items-center">
           <div onClick={handleLogoClick} className="cursor-pointer">
             <Logo />
           </div>
-          <div className="md:hidden flex items-center space-x-2">
+        </div>
+
+        {/* Search Bar (Desktop Only) */}
+        <div className="hidden md:flex md:flex-1 md:justify-center">
+          <input
+            type="text"
+            placeholder="Search..."
+            className="w-full max-w-md px-4 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        {/* Navigation and Menu */}
+        <div className="flex items-center space-x-4">
+          {/* Navigation Links (Desktop Only) */}
+          <div className="hidden md:flex">
+            <Navigation isOpen={true} navItems={navItems} toggleMenu={() => {}} />
+          </div>
+
+          {/* User Button */}
+          <ClerkButton />
+
+          {/* Hamburger Menu (Mobile Only) */}
+          <div className="md:hidden">
             <button
               onClick={toggleMenu}
-              className="focus:outline-none p-1.5 rounded-full transition-all duration-300 bg-white bg-opacity-20 hover:bg-opacity-30"
+              className="focus:outline-none p-2 rounded-md hover:bg-gray-200"
             >
-              {isMenuOpen ? <X size={20} className="text-white" /> : <Menu size={20} className="text-white" />}
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
-        <Navigation isOpen={isMenuOpen} navItems={navItems} toggleMenu={toggleMenu} />
       </div>
+
+      {/* Mobile Navigation */}
       {isMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
-          style={{ top: 'var(--header-height, 48px)' }}
-          onClick={toggleMenu}
-        ></div>
+        <div className="md:hidden">
+          <Navigation isOpen={isMenuOpen} navItems={navItems} toggleMenu={toggleMenu} />
+          <div className="px-4 py-2">
+            <input
+              type="text"
+              placeholder="Search..."
+              className="w-full px-4 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+        </div>
       )}
     </header>
   );
