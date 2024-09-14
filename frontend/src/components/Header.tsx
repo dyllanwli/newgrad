@@ -47,7 +47,7 @@ const Navigation: React.FC<NavigationProps> = ({ isOpen, navItems, toggleMenu })
             key={index}
             href={item.href}
             onClick={handleNavigation(item.href)}
-            className="block py-1 px-4 text-black md:text-base font-bold transition duration-200 ease-in-out hover:text-blue-500"
+            className="block py-1 px-4 text-black md:text-base font-bold transition duration-200 ease-in-out hover:text-blue-500 whitespace-nowrap"
             variants={{
               open: { opacity: 1, y: 0 },
               closed: { opacity: 0, y: -20 },

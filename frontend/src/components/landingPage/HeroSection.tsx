@@ -7,7 +7,7 @@ const HeroSection = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="relative h-[70vh] pt-16 pb-16 flex flex-col items-center justify-center bg-pale-blue p-4 sm:p-8 text-center overflow-hidden">
+    <div className="relative h-[50vh] pt-16 pb-16 flex flex-col items-start justify-center bg-pale-blue p-4 sm:p-8 overflow-hidden">
       <motion.div
         className="absolute inset-0 w-full h-full"
         initial={{ y: 0 }}
@@ -15,10 +15,10 @@ const HeroSection = () => {
         transition={{ duration: 20, repeat: Infinity, repeatType: "reverse", ease: "linear" }}
       >
       </motion.div>
-      <div className="relative z-10 max-w-4xl mx-auto flex flex-col md:flex-row items-center">
-        <div className="flex flex-col items-center md:items-start">
+      <div className="relative z-10 mx-auto flex flex-col md:flex-row items-center w-full md:w-4/5">
+        <div className="flex flex-col items-start">
           <motion.h1
-            className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 text-gray-800 leading-tight"
+            className="text-xl sm:text-xl md:text-2xl font-bold mb-4 text-gray-800 leading-tight"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -26,20 +26,12 @@ const HeroSection = () => {
             {t('landingpage.section1.line1')}
           </motion.h1>
           <motion.h1
-            className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 text-gray-800 leading-tight"
+            className="text-xl sm:text-xl md:text-2xl font-bold mb-4 text-gray-800 leading-tight"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            {t('landingpage.section1.line2')}
-          </motion.h1>
-          <motion.h1
-            className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 text-gray-800 leading-tight"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            <LogoText />
+            {t('landingpage.section1.line2')} <LogoText />
           </motion.h1>
         </div>
         <motion.img

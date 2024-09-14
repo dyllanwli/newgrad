@@ -7,5 +7,7 @@
     "header.profile": "Profile",
     "errorPage.title": "Oops! Something went wrong.",
     "errorPage.description": "We couldn't find the page you're looking for. Please check the URL or return to the homepage.",
-    "errorPage.backButton": "Back to Home"
+    "errorPage.backButton": "Back to Home",
+    "landingpage.section1.line1": "Discover 1,000+ entry-level jobs on our job board. Find careers in companies with sponsorship.",
+    "landingpage.section1.line2": "Track your application status at"
 }
