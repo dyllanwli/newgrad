@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useUser } from "@clerk/clerk-react";
 import { useNavigate } from 'react-router-dom';
 import HeroSection from '../components/landingPage/HeroSection'
-import JobList from '../components/JobList';
+import JobList from '../components/jobs/JobList';
 
 export default function HomePage() {
   const { t } = useTranslation();
