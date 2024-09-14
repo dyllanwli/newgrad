@@ -2,28 +2,23 @@
 from pydantic import BaseModel, Field
 from typing import Optional
 from bson import ObjectId
+from api.models.base import PyObjectId
 
-class PyObjectId(ObjectId):
-    """Custom BSON ObjectId for Pydantic"""
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
-
-    @classmethod
-    def validate(cls, v):
-        if not ObjectId.is_valid(v):
-            raise ValueError("Invalid ObjectId")
-        return ObjectId(v)
 
 class JobBase(BaseModel):
     title: str
     description: str
     company: str
     location: str
-    salary: Optional[float] = None
+    upvote: int
+    downvote: int
+    min_salary: Optional[float]
+    max_salary: Optional[float]
+
 
 class JobCreate(JobBase):
     pass
+
 
 class Job(JobBase):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
@@ -37,6 +32,9 @@ class Job(JobBase):
                 "description": "Job description here...",
                 "company": "Tech Corp",
                 "location": "New York, NY",
-                "salary": 120000.00
+                "upvote": "100",
+                "downvote": "10",
+                "min_salary": 110000.00,
+                "max_salary": 120000.00,
             }
         }

@@ -8,6 +8,8 @@ interface Job {
     location: string;
     sponsor: boolean;
     views: number;
+    upvote: number;
+    downvote: number
 }
 
 interface JobListProps {
