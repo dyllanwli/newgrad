@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const ProfilePage = () => {
   const [selectedCard, setSelectedCard] = useState(null);
-  const cards = ['Personal Info', 'Interests', 'Photos', 'Preferences', "Settings"];
+  const cards = ['Personal Info', 'Interests', 'Preferences', "Settings"];
 
   const CardContent = ({ title }) => (
     <div className="p-4">

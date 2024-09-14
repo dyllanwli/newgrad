@@ -1,17 +1,16 @@
-// src/components/Header.tsx
 import React, { useState } from 'react';
 import { ClerkButton } from './ClerkButton';
 import { useUser } from '@clerk/clerk-react';
 import { Menu, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Logo from './branding/Logo';
-import SearchBar from './SearchBar'; // Import the new SearchBar component
+import SearchBar from './SearchBar';
 
 const navItems = [
-  { label: 'header.home', href: '/home' },
-  { label: 'header.find', href: '/find' },
+  { label: 'header.discuss', href: '/discuss' },
+  { label: 'header.posting', href: '/postjobs' },
   { label: 'header.profile', href: '/profile' },
 ];
 
@@ -39,18 +38,24 @@ const Navigation: React.FC<NavigationProps> = ({ isOpen, navItems, toggleMenu })
         open: { height: 'auto', opacity: 1 },
         closed: { height: 0, opacity: 0 },
       }}
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
       className="md:flex md:items-center md:space-x-4 overflow-hidden"
     >
       <div className="flex flex-col md:flex-row items-start md:items-center py-1 md:py-0">
         {navItems.map((item, index) => (
-          <a
+          <motion.a
             key={index}
             href={item.href}
             onClick={handleNavigation(item.href)}
-            className="block py-1 px-2 text-black md:text-base hover:bg-gray-200 rounded transition"
+            className="block py-1 px-4 text-black md:text-base font-bold transition duration-200 ease-in-out hover:text-blue-500"
+            variants={{
+              open: { opacity: 1, y: 0 },
+              closed: { opacity: 0, y: -20 },
+            }}
+            transition={{ duration: 0.2, delay: index * 0.1 }}
           >
             {t(item.label)}
-          </a>
+          </motion.a>
         ))}
       </div>
     </motion.nav>
@@ -64,55 +69,67 @@ const Header = () => {
   const { isSignedIn } = useUser();
 
   const handleLogoClick = () => {
-    navigate(isSignedIn ? '/home' : '/');
+    navigate('/');
   };
 
   return (
     <header className="bg-pale-blue">
       <div className="container mx-auto flex items-center justify-between py-2 px-4 md:px-8">
-        {/* Logo */}
         <div className="flex items-center">
           <div onClick={handleLogoClick} className="cursor-pointer">
             <Logo />
           </div>
         </div>
 
-        {/* Search Bar (Desktop Only) */}
         <div className="hidden md:flex md:flex-1 md:justify-center">
           <SearchBar />
         </div>
 
-        {/* Navigation and Menu */}
         <div className="flex items-center space-x-4">
-          {/* Navigation Links (Desktop Only) */}
           <div className="hidden md:flex">
             <Navigation isOpen={true} navItems={navItems} toggleMenu={() => {}} />
           </div>
 
-          {/* User Button */}
           <ClerkButton />
 
-          {/* Hamburger Menu (Mobile Only) */}
           <div className="md:hidden">
-            <button
+            <motion.button
               onClick={toggleMenu}
               className="focus:outline-none p-2 rounded-md hover:bg-gray-200"
+              whileTap={{ scale: 0.95 }}
             >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={isMenuOpen ? 'close' : 'open'}
+                  initial={{ opacity: 0, rotate: -180 }}
+                  animate={{ opacity: 1, rotate: 0 }}
+                  exit={{ opacity: 0, rotate: 180 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                </motion.div>
+              </AnimatePresence>
+            </motion.button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Navigation */}
-      {isMenuOpen && (
-        <div className="md:hidden bg-white">
-          <Navigation isOpen={isMenuOpen} navItems={navItems} toggleMenu={toggleMenu} />
-          <div className="px-4 py-2">
-            <SearchBar />
-          </div>
-        </div>
-      )}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="md:hidden bg-white"
+          >
+            <Navigation isOpen={isMenuOpen} navItems={navItems} toggleMenu={toggleMenu} />
+            <div className="px-4 py-2">
+              <SearchBar />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };

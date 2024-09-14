@@ -1,3 +1,10 @@
 {
-    
+    "app.signin": "Sign In",
+    "app.signout": "Sign Out",
+    "header.discuss": "Discuss",
+    "header.posting": "Post Jobs",
+    "header.profile": "Profile",
+    "errorPage.title": "Oops! Something went wrong.",
+    "errorPage.description": "We couldn't find the page you're looking for. Please check the URL or return to the homepage.",
+    "errorPage.backButton": "Back to Home"
 }

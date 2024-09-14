@@ -11,14 +11,14 @@ const ErrorPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-400 flex flex-col items-center justify-center text-center px-4">
-      <h1 className="text-4xl font-bold text-white mb-4">{t('errorPage.title')}</h1>
-      <p className="text-xl text-white mb-8">{t('errorPage.description')}</p>
+    <div className="min-h-screen flex flex-col items-center justify-center text-center p-4 bg-gray-100">
+      <h1 className="text-3xl font-semibold text-gray-800 mb-2">{t('errorPage.title')}</h1>
+      <p className="text-lg text-gray-600 mb-6">{t('errorPage.description')}</p>
       <button
         onClick={handleBackToHome}
-        className="bg-white text-pink-500 font-semibold py-2 px-6 rounded-full shadow-lg hover:bg-pink-100 transition duration-300 ease-in-out flex items-center"
+        className="bg-purple-500 text-white font-bold py-2 px-4 rounded-full hover:bg-purple-400 transition duration-200"
       >
-        <Home className="w-5 h-5 mr-2" />
+        <Home className="w-4 h-4 inline-block mr-1" />
         {t('errorPage.backButton')}
       </button>
     </div>
