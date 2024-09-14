@@ -5,7 +5,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import RootLayout from './layouts/root-layout'
 import './i18n';
 
-import LandingPage from './pages/LandingPage.tsx';
+import LandingPage from './pages/HomePage.tsx';
 import ErrorPage from './pages/commonPages/ErrorPage.tsx';
 import ProfilePage from './pages/ProfilePage.tsx';
 // import DiscussPage from './pages/DiscussPage.tsx'
