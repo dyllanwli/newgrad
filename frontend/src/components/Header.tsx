@@ -10,13 +10,19 @@ import SearchBar from './SearchBar';
 
 const navItems = [
   { label: 'header.discuss', href: '/discuss' },
-  { label: 'header.posting', href: '/postjobs' },
+  { label: 'header.sharejobs', href: '/sharejobs', color: 'purple' },
   { label: 'header.profile', href: '/profile' },
 ];
 
+interface NavigationItem {
+  label: string;
+  href: string;
+  color?: string;
+}
+
 interface NavigationProps {
   isOpen: boolean;
-  navItems: { label: string; href: string }[];
+  navItems: NavigationItem[];
   toggleMenu: () => void;
 }
 
@@ -43,11 +49,11 @@ const Navigation: React.FC<NavigationProps> = ({ isOpen, navItems, toggleMenu })
     >
       <div className="flex flex-col md:flex-row items-start md:items-center py-1 md:py-0">
         {navItems.map((item, index) => (
-          <motion.a
+          <motion.button
             key={index}
-            href={item.href}
             onClick={handleNavigation(item.href)}
-            className="block py-1 px-4 text-black md:text-base font-bold transition duration-200 ease-in-out hover:text-blue-500 whitespace-nowrap"
+            className={`block py-1 px-4 md:text-base font-bold transition duration-200 rounded-full ease-in-out whitespace-nowrap ${item.color ? 'text-white hover:text-yellow-100' : 'text-black hover:text-purple-600'} `}
+            style={{ backgroundColor: item.color || 'transparent' }}
             variants={{
               open: { opacity: 1, y: 0 },
               closed: { opacity: 0, y: -20 },
@@ -55,7 +61,7 @@ const Navigation: React.FC<NavigationProps> = ({ isOpen, navItems, toggleMenu })
             transition={{ duration: 0.2, delay: index * 0.1 }}
           >
             {t(item.label)}
-          </motion.a>
+          </motion.button>
         ))}
       </div>
     </motion.nav>
@@ -66,7 +72,6 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const navigate = useNavigate();
-  const { isSignedIn } = useUser();
 
   const handleLogoClick = () => {
     navigate('/');
