@@ -2,14 +2,18 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface Job {
-    id: number;
-    title: string;
-    type: string;
-    location: string;
-    sponsor: boolean;
+    id: string; 
+    position: string;
+    company: string; 
+    location: { state: string; city: string }; 
+    not_sponsor?: boolean;
+    us_citizen?: boolean;
     views: number;
-    upvote: number;
-    downvote: number
+    date_posted: string;
+    expired: boolean;
+    apply_link: string;
+    min_salary?: number;
+    max_salary?: number;
 }
 
 interface JobListProps {
@@ -32,16 +36,26 @@ const JobList: React.FC<JobListProps> = ({ jobs, currentPage, setCurrentPage, ma
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {jobs.map((job) => (
                     <div key={job.id} className="bg-white p-4 rounded-lg shadow">
-                        <h3 className="text-lg font-semibold">{job.title}</h3>
-                        <p>{job.type}</p> {/* Full-time or Internship */}
-                        <p>{job.location}</p>
-                        <p>{job.sponsor ? 'Sponsored' : 'Not Sponsored'}</p>
+                        <h3 className="text-lg font-semibold">{job.position}</h3>
+                        <p>{job.company}</p>
+                        <p>{job.location.city}, {job.location.state}</p>
+                        {job.not_sponsor && <p>Does NOT offer Sponsorship</p>}
+                        {job.us_citizen && <p>Requires U.S. Citizenship</p>}
                         <p>{job.views} views</p>
+                        <p>{job.min_salary && job.max_salary ? `Salary: $${job.min_salary} - $${job.max_salary}` : 'Salary not specified'}</p>
+                        <p>{job.date_posted}</p>
+                        <a 
+                            href={job.expired ? '#' : job.apply_link} 
+                            className={`mt-2 inline-block px-4 py-2 rounded ${job.expired ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:underline'}`} 
+                            onClick={job.expired ? (e) => e.preventDefault() : undefined}
+                        >
+                            {job.expired ? 'Application Closed' : 'Apply Now'}
+                        </a>
                         <button
                             onClick={() => navigateToJob(job.id)}
                             className="mt-2 text-blue-500 hover:underline"
                         >
-                            View Job
+                            View Job Discussion
                         </button>
                     </div>
                 ))}
@@ -60,8 +74,7 @@ const JobList: React.FC<JobListProps> = ({ jobs, currentPage, setCurrentPage, ma
                     <button
                         key={index + 1}
                         onClick={() => setCurrentPage(index + 1)}
-                        className={`px-4 py-2 ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'
-                            }`}
+                        className={`px-4 py-2 ${currentPage === index + 1 ? 'bg-purple-500 text-white' : 'bg-gray-200'}`}
                     >
                         {index + 1}
                     </button>

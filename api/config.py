@@ -1,11 +1,14 @@
 import os
-import sys
 import dotenv
 import logging.config
 
 
 def setup_logging():
     """Setup logging configuration"""
+    log_filename_path = "logs/api.log"
+    if not os.path.exists(os.path.dirname(log_filename_path)):
+        os.makedirs(os.path.dirname(log_filename_path))
+
     LOGGING_CONFIG = {
         "version": 1,
         "disable_existing_loggers": False,
@@ -17,7 +20,7 @@ def setup_logging():
                 "class": "logging.handlers.TimedRotatingFileHandler",
                 "level": "INFO",
                 "formatter": "standard",
-                "filename": "app.log",
+                "filename": log_filename_path,
                 "when": "midnight",
                 "backupCount": 7,
                 "encoding": "utf-8",

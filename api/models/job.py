@@ -1,17 +1,26 @@
 # app/models/job.py
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, Dict
 from bson import ObjectId
 from api.models.base import PyObjectId
 
 
+class Location(BaseModel):
+    state: str
+    city: str
+
+
 class JobBase(BaseModel):
-    title: str
-    description: str
+    position: str
     company: str
-    location: str
-    upvote: int
-    downvote: int
+    location: Location
+    not_sponsor: Optional[bool]
+    us_citizen: Optional[bool]
+    views: int
+    date_posted: str
+    description: str
+    expired: bool
+    apply_link: str
     min_salary: Optional[float]
     max_salary: Optional[float]
 
@@ -26,15 +35,3 @@ class Job(JobBase):
     class Config:
         populate_by_name = True
         json_encoders = {ObjectId: str}
-        json_schema_extra = {
-            "example": {
-                "title": "Software Engineer",
-                "description": "Job description here...",
-                "company": "Tech Corp",
-                "location": "New York, NY",
-                "upvote": "100",
-                "downvote": "10",
-                "min_salary": 110000.00,
-                "max_salary": 120000.00,
-            }
-        }

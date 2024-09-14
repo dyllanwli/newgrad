@@ -1,7 +1,7 @@
 # app/services/job_service.py
 from api.models.job import Job, JobCreate
 from api.dependencies import db
-from typing import List
+from bson import ObjectId
 from pymongo import ASCENDING
 
 async def create_job(job: JobCreate):

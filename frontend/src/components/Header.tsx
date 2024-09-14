@@ -49,19 +49,14 @@ const Navigation: React.FC<NavigationProps> = ({ isOpen, navItems, toggleMenu })
     >
       <div className="flex flex-col md:flex-row items-start md:items-center py-1 md:py-0">
         {navItems.map((item, index) => (
-          <motion.button
+          <button
             key={index}
             onClick={handleNavigation(item.href)}
-            className={`block py-1 px-4 md:text-base font-bold transition duration-200 rounded-full ease-in-out whitespace-nowrap ${item.color ? 'text-white hover:text-yellow-100' : 'text-black hover:text-purple-600'} `}
+            className={`block py-1 px-4 md:text-base font-bold transition duration-200 rounded-full ease-in-out whitespace-nowrap ${item.color ? 'text-white transform hover:scale-105' : 'text-black hover:text-purple-600'} `}
             style={{ backgroundColor: item.color || 'transparent' }}
-            variants={{
-              open: { opacity: 1, y: 0 },
-              closed: { opacity: 0, y: -20 },
-            }}
-            transition={{ duration: 0.2, delay: index * 0.1 }}
           >
             {t(item.label)}
-          </motion.button>
+          </button>
         ))}
       </div>
     </motion.nav>
@@ -92,7 +87,7 @@ const Header = () => {
 
         <div className="flex items-center space-x-4">
           <div className="hidden md:flex">
-            <Navigation isOpen={true} navItems={navItems} toggleMenu={() => {}} />
+            <Navigation isOpen={true} navItems={navItems} toggleMenu={() => { }} />
           </div>
 
           <ClerkButton />
