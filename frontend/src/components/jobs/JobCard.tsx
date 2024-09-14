@@ -64,7 +64,7 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
                         href={job.expired ? '#' : job.apply_link}
                         className={`w-full text-center py-2 rounded ${job.expired
                                 ? 'bg-gray-400 cursor-not-allowed text-white'
-                                : 'bg-purple-600 hover:bg-purple-700 text-white transition-colors duration-300'
+                                : 'bg-purple-600 font-bold hover:bg-purple-700 text-white transition-colors duration-300'
                             }`}
                         onClick={job.expired ? (e) => e.preventDefault() : undefined}
                     >

@@ -1,6 +1,5 @@
 import React from 'react';
 import { LogoText } from './branding/LogoText';
-import LanguageSwitcher from './LanguageSwitcher';
 
 // Define the navigation items
 const navigation = {
@@ -24,9 +23,6 @@ const Footer: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
                     <div className="mb-8 md:mb-0">
                         <LogoText />
-                    </div>
-                    <div>
-                        <LanguageSwitcher />
                     </div>
                 </div>
                 <div className="mt-8 pt-8 border-t border-gray-200 text-center">
