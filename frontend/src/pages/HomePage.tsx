@@ -9,14 +9,11 @@ import JobList from '../components/JobList';
 
 export default function HomePage() {
   const { t } = useTranslation();
-  const { isSignedIn } = useUser();
   const navigate = useNavigate();
 
   const [jobs, setJobs] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
-  const maxPages = isSignedIn ? totalPages : Math.min(totalPages, 10);
 
   useEffect(() => {
     console.log('HomePage component mounted or currentPage changed');
@@ -43,7 +40,7 @@ export default function HomePage() {
         jobs={jobs}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
-        maxPages={maxPages}
+        jobsPerPage={10}
       />
 
       <Footer />

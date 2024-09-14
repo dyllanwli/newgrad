@@ -1,6 +1,6 @@
 # app/models/job.py
 from pydantic import BaseModel, Field
-from typing import Optional, Dict
+from typing import Optional, List
 from bson import ObjectId
 from api.models.base import PyObjectId
 
@@ -13,7 +13,7 @@ class Location(BaseModel):
 class JobBase(BaseModel):
     position: str
     company: str
-    location: Location
+    locations: List[Location]
     not_sponsor: Optional[bool]
     us_citizen: Optional[bool]
     views: int

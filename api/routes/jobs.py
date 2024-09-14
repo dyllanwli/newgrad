@@ -21,6 +21,8 @@ async def read_jobs(
 ):
     skip = (page - 1) * limit
     jobs, total_jobs = await get_jobs(skip=skip, limit=limit)
+    print("Retrieved jobs:", len(jobs))
+    print("Job 0:", jobs[0])
     return {"jobs": jobs, "totalPages": (total_jobs + limit - 1) // limit}
 
 @router.post("/jobs", response_model=Job)
