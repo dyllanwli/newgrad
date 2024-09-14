@@ -24,6 +24,9 @@ const Footer: React.FC = () => {
                     <div className="mb-8 md:mb-0">
                         <LogoText />
                     </div>
+                    {/* <button className="mt-0 text-blue-500 hover:underline focus:outline-none">
+                        ☕️ <a href="https://www.buymeacoffee.com/lidiyaa03i" target="_blank" rel="noopener noreferrer">Support this site</a>
+                    </button> */}
                 </div>
                 <div className="mt-8 pt-8 border-t border-gray-200 text-center">
                     <p>&copy; {new Date().getFullYear()} NewGrad.works. All rights reserved.</p>
