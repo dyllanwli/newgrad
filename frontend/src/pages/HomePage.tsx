@@ -21,7 +21,7 @@ export default function HomePage() {
     const fetchJobs = async () => {
       try {
         console.log('Fetching jobs from backend');
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/jobs?page=${currentPage}&limit=10`);
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/jobs?page=${currentPage}&limit=8`);
         const data = await response.json();
         setJobs(data.jobs);
         setTotalPages(data.totalPages);
@@ -40,7 +40,7 @@ export default function HomePage() {
         jobs={jobs}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
-        jobsPerPage={10}
+        totalPages={totalPages}
       />
 
       <Footer />
