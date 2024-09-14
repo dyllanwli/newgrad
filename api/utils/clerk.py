@@ -1,5 +1,8 @@
+# app/utils/clerk.py
 import jwt
 import os
+from fastapi import HTTPException, status
+from api.config import IS_PROD
 
 CLERK_PEM_PUBLIC_KEY_PROD = ""
 
@@ -17,15 +20,15 @@ gQIDAQAB
 
 
 def verify_credentials(credentials):
-    is_prod = os.getenv("IS_PROD") == "true"
-    CLERK_PEM_PUBLIC_KEY = (
-        CLERK_PEM_PUBLIC_KEY_PROD if is_prod else CLERK_PEM_PUBLIC_KEY_DEV
-    )
-    if credentials.credentials == "ptSJuhCtJWIBWzl7ANjnTIqjcN" and not is_prod:
-        return {"user": {"id": "testuser"}}
-    session = jwt.decode(
-        credentials.credentials, key=CLERK_PEM_PUBLIC_KEY, algorithms=["RS256"]
-    )
-    if not session:
-        raise Exception("Invalid credentials")
-    return session
+    token = credentials.credentials
+    try:
+        session = jwt.decode(
+            token,
+            key=CLERK_PEM_PUBLIC_KEY_PROD if IS_PROD else CLERK_PEM_PUBLIC_KEY_PROD,
+            algorithms=["RS256"],
+            audience=os.getenv("CLERK_JWT_AUDIENCE"),
+            issuer=os.getenv("CLERK_JWT_ISSUER"),
+        )
+        return session
+    except jwt.PyJWTError as e:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))

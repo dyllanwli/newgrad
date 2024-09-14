@@ -1,12 +1,15 @@
+# app/main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from api.config import IS_PROD
+from api.routes import jobs
 
 app = FastAPI(
     title="API",
     openapi_url=None if IS_PROD else "/openapi.json",
-    docs=False if IS_PROD else True,
+    docs_url=None if IS_PROD else "/docs",
 )
+
 origins = [
     "http://localhost:5173",
 ]
@@ -19,7 +22,4 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
+app.include_router(jobs.router, prefix="/api")

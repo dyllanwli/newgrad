@@ -19,9 +19,12 @@ export default function HomePage() {
   const maxPages = isSignedIn ? totalPages : Math.min(totalPages, 10);
 
   useEffect(() => {
+    console.log('HomePage component mounted or currentPage changed');
+
     const fetchJobs = async () => {
       try {
-        const response = await fetch(`/api/jobs?page=${currentPage}&limit=10`);
+        console.log('Fetching jobs from backend');
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/jobs?page=${currentPage}&limit=10`);
         const data = await response.json();
         setJobs(data.jobs);
         setTotalPages(data.totalPages);

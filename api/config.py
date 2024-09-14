@@ -36,10 +36,10 @@ def load_dotenv():
 setup_logging()
 load_dotenv()
 
-# Use logging in your application
 logger = logging.getLogger(__name__)
 
 IS_PROD = os.getenv("IS_PROD", "0") == "1"
+MONGODB_URL = os.getenv("MONGODB_URL")
 
 if IS_PROD:
     logger.info("PRODUCTION MODE")

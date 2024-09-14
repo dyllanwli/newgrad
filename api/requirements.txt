@@ -13,3 +13,4 @@ stripe>=10.0.0
 chromadb==0.5.0
 uvicorn[standard]==0.23.2
 pyjwt[crypto]==2.8.0
+motor==3.5.1
