@@ -1,3 +1,4 @@
+// src/components/Header.tsx
 import React, { useState } from 'react';
 import { ClerkButton } from './ClerkButton';
 import { useUser } from '@clerk/clerk-react';
@@ -6,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Logo from './branding/Logo';
+import SearchBar from './SearchBar'; // Import the new SearchBar component
 
 const navItems = [
   { label: 'header.home', href: '/home' },
@@ -67,7 +69,7 @@ const Header = () => {
 
   return (
     <header className="bg-pale-blue">
-      <div className="container mx-auto flex items-center justify-between py-1 px-4 md:px-8">
+      <div className="container mx-auto flex items-center justify-between py-2 px-4 md:px-8">
         {/* Logo */}
         <div className="flex items-center">
           <div onClick={handleLogoClick} className="cursor-pointer">
@@ -77,11 +79,7 @@ const Header = () => {
 
         {/* Search Bar (Desktop Only) */}
         <div className="hidden md:flex md:flex-1 md:justify-center">
-          <input
-            type="text"
-            placeholder="Search..."
-            className="w-full max-w-md px-4 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <SearchBar />
         </div>
 
         {/* Navigation and Menu */}
@@ -108,14 +106,10 @@ const Header = () => {
 
       {/* Mobile Navigation */}
       {isMenuOpen && (
-        <div className="md:hidden">
+        <div className="md:hidden bg-white">
           <Navigation isOpen={isMenuOpen} navItems={navItems} toggleMenu={toggleMenu} />
           <div className="px-4 py-2">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="w-full px-4 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <SearchBar />
           </div>
         </div>
       )}
