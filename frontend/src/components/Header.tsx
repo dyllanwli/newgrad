@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import Logo from './branding/Logo';
-import SearchBar from './SearchBar';
 
 const navItems = [
   { label: 'header.discuss', href: '/discuss' },
@@ -81,9 +80,6 @@ const Header = () => {
           </div>
         </div>
 
-        <div className="hidden md:flex md:flex-1 md:justify-center">
-          <SearchBar />
-        </div>
 
         <div className="flex items-center space-x-4">
           <div className="hidden md:flex">
@@ -124,9 +120,6 @@ const Header = () => {
             className="md:hidden bg-white"
           >
             <Navigation isOpen={isMenuOpen} navItems={navItems} toggleMenu={toggleMenu} />
-            <div className="px-4 py-2">
-              <SearchBar />
-            </div>
           </motion.div>
         )}
       </AnimatePresence>

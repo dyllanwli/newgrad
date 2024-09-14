@@ -8,7 +8,7 @@ interface SearchBarProps {
   placeholder?: string;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Search..." }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Search for jobs..." }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [query, setQuery] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
@@ -42,7 +42,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Search..." }) => {
   return (
     <motion.div
       className="relative flex items-center"
-      animate={{ width: isExpanded ? 350 : 210 }} // Increased width for longer search bar
+      animate={{ width: isExpanded ? 450 : 300 }} // Increased width for longer search bar
       transition={{ duration: 0.3 }}
     >
       <input
