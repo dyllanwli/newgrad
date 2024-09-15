@@ -26,9 +26,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Search for jobs...
 
   const handleSearch = () => {
     if (query.trim()) {
-      // Implement your search logic here
-      // For example, navigate to a search results page
-      navigate(`/search?query=${encodeURIComponent(query.trim())}`);
+      navigate(`/search?search=${encodeURIComponent(query.trim())}`);
       setIsExpanded(false);
     }
   };

@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from api.config import IS_PROD
 from api.routes import jobs
+from api.dependencies import create_text_index
 
 app = FastAPI(
     title="API",
@@ -23,3 +24,8 @@ app.add_middleware(
 )
 
 app.include_router(jobs.router, prefix="/api")
+
+@app.on_event("startup")
+async def startup_event():
+    await create_text_index()
+

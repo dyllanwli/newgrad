@@ -15,13 +15,12 @@ const JobListPagination: React.FC<JobListPaginationProps> = ({ currentPage, setC
         if (totalPages <= maxVisiblePages) {
             for (let i = 1; i <= totalPages; i++) {
                 pageNumbers.push(
-                    <button
+                    <PageNumber
                         key={i}
+                        pageNumber={i}
+                        currentPage={currentPage}
                         onClick={() => setCurrentPage(i)}
-                        className={`px-4 py-2 ${currentPage === i ? 'bg-purple-500 text-white' : 'bg-gray-200'}`}
-                    >
-                        {i}
-                    </button>
+                    />
                 );
             }
         } else {
@@ -30,13 +29,12 @@ const JobListPagination: React.FC<JobListPaginationProps> = ({ currentPage, setC
 
             if (leftSide > 1) {
                 pageNumbers.push(
-                    <button
+                    <PageNumber
                         key={1}
+                        pageNumber={1}
+                        currentPage={currentPage}
                         onClick={() => setCurrentPage(1)}
-                        className="px-4 py-2 bg-gray-200"
-                    >
-                        1
-                    </button>
+                    />
                 );
                 if (leftSide > 2) {
                     pageNumbers.push(
@@ -53,13 +51,12 @@ const JobListPagination: React.FC<JobListPaginationProps> = ({ currentPage, setC
 
             for (let i = leftSide; i <= rightSide; i++) {
                 pageNumbers.push(
-                    <button
+                    <PageNumber
                         key={i}
+                        pageNumber={i}
+                        currentPage={currentPage}
                         onClick={() => setCurrentPage(i)}
-                        className={`px-4 py-2 ${currentPage === i ? 'bg-purple-500 text-white' : 'bg-gray-200'}`}
-                    >
-                        {i}
-                    </button>
+                    />
                 );
             }
 
