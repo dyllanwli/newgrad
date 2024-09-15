@@ -34,6 +34,7 @@ disable=
     W0719, # Exception to catch is the result of a binary expression
     W0702, # No exception type(s) specified
     C0413, # Import "from module import *" should not be used
+    C0304, # Final newline missing
 
 [REPORTS]
 # Set the output format. Available formats are text, parseable, colorized, json, json:pretty, json:extended, json:extended:pretty, msvs (visual studio) and html.

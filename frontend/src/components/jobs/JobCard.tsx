@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Job } from './types';
@@ -9,15 +8,12 @@ interface JobCardProps {
 }
 
 const JobCard: React.FC<JobCardProps> = ({ job }) => {
-    const navigate = useNavigate();
+
     const [expanded, setExpanded] = useState(false);
+
 
     const toggleLocations = () => {
         setExpanded(!expanded);
-    };
-
-    const navigateToJob = () => {
-        navigate(`/jobs/${job._id}`);
     };
 
     return (
@@ -63,19 +59,18 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
                     <a
                         href={job.expired ? '#' : job.apply_link}
                         className={`w-full text-center py-2 rounded ${job.expired
-                                ? 'bg-gray-400 cursor-not-allowed text-white'
-                                : 'bg-purple-600 font-bold hover:bg-purple-700 text-white transition-colors duration-300'
+                            ? 'bg-gray-400 cursor-not-allowed text-white'
+                            : 'bg-purple-600 font-bold hover:bg-purple-700 text-white transition-colors duration-300'
                             }`}
                         onClick={job.expired ? (e) => e.preventDefault() : undefined}
                     >
                         {job.expired ? 'Application Closed' : 'Apply Now'}
                     </a>
-                    <button
-                        onClick={navigateToJob}
-                        className="text-purple-600 hover:text-purple-800 transition-colors duration-300"
+                    <a
+                        className={`text-purple-600 text-center transition-colors duration-300`}
                     >
                         View Job Discussion
-                    </button>
+                    </a>
                 </div>
             </div>
         </motion.div>

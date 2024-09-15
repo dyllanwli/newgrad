@@ -51,7 +51,7 @@ async def init_db():
             not_sponsor=None,
             us_citizen=None,
             views=0,
-            date_posted=job["date_posted"],
+            date_posted=job["date_posted"] + "2024",
             description="",
             expired=False,
             apply_link=job["apply_url"],

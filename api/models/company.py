@@ -1,6 +1,6 @@
 # app/models/company.py
 from pydantic import BaseModel, Field
-from typing import Optional
+# from typing import Optional
 from bson import ObjectId
 from api.models.base import PyObjectId
 
