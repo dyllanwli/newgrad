@@ -3,6 +3,7 @@ from pydantic import BaseModel, Field
 from typing import Optional, List
 from bson import ObjectId
 from api.models.base import PyObjectId
+from api.models.company import Company 
 
 
 class Location(BaseModel):
@@ -13,7 +14,7 @@ class Location(BaseModel):
 class JobBase(BaseModel):
     _id: str
     position: str
-    company: str
+    company: Company
     locations: List[Location]
     not_sponsor: Optional[bool]
     us_citizen: Optional[bool]

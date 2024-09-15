@@ -34,7 +34,7 @@ const JobSearchPage: React.FC = () => {
 
     return (
         <div className="flex flex-col">
-            <div className="flex justify-center">
+            <div className="flex justify-center py-4">
                 <SearchBar />
             </div>
             <JobList
