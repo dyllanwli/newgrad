@@ -36,13 +36,17 @@ async def init_db():
     for job in tqdm(jobs):
         locations = [loc.strip() for loc in job["locations"].split(";")]
         locations_list = []
+
         for loc in locations:
             state = loc.split(",")[-1].strip()
             city = loc.split(",")[0].strip()
             locations_list.append({"state": state, "city": city})
+
+        company_instance = await db.companies.find_one({"name": job["company"]})
+
         job_create = JobCreate(
             position=job["role"],
-            company=Company(**companies[job["company"]].dict()), #link to company collection
+            company=company_instance,
             locations=locations_list,
             not_sponsor=None,
             us_citizen=None,

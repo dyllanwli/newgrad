@@ -31,7 +31,7 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
                 <div className="flex-grow">
                     <h3 className="text-lg font-bold mb-1">{job.position}</h3>
                     <div className="flex items-center mb-1">
-                        <p className="font-bold text-gray-600 mr-4">{job.company}</p>
+                        <p className="font-bold text-gray-600 mr-4">{job.company.name}</p>
                         <p className="text-gray-700">{job.locations[0].city}, {job.locations[0].state}</p>
                         {job.locations.length > 1 && (
                             <button onClick={toggleLocations} className="ml-2 text-gray-500 hover:text-gray-700">

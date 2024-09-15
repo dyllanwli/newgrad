@@ -1,8 +1,12 @@
+export interface Company {
+    _id: string;
+    name: string;
+}
+
 export interface Job {
     _id: string;
     position: string;
-    company: string;
-    company_id: string;
+    company: Company;
     locations: { state: string; city: string }[];
     not_sponsor?: boolean;
     us_citizen?: boolean;
