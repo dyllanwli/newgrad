@@ -9,6 +9,7 @@ import LandingPage from './pages/HomePage.tsx';
 import ErrorPage from './pages/commonPages/ErrorPage.tsx';
 import ProfilePage from './pages/ProfilePage.tsx';
 import SearchPage from './pages/SearchPage.tsx';
+import JobDiscussionPage from './pages/JobDiscussionPage';
 // import DiscussPage from './pages/DiscussPage.tsx'
 // import PostJobsPage from './pages/PostJobsPage.tsx'
 
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
       { path: "/", element: <LandingPage /> },
       { path: "/profile", element: <ProfilePage /> },
       { path: "/search", element: <SearchPage /> },
+      { path: "/jobs/:company_id", element: <JobDiscussionPage /> },
       // { path: "/discuss", element: <DiscussPage /> },
       // { path: "/postjobs", element: <PostJobsPage /> },
 

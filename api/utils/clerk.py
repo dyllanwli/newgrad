@@ -24,10 +24,8 @@ def verify_credentials(credentials):
     try:
         session = jwt.decode(
             token,
-            key=CLERK_PEM_PUBLIC_KEY_PROD if IS_PROD else CLERK_PEM_PUBLIC_KEY_PROD,
+            key=CLERK_PEM_PUBLIC_KEY_PROD if IS_PROD else CLERK_PEM_PUBLIC_KEY_DEV,
             algorithms=["RS256"],
-            audience=os.getenv("CLERK_JWT_AUDIENCE"),
-            issuer=os.getenv("CLERK_JWT_ISSUER"),
         )
         return session
     except jwt.PyJWTError as e:

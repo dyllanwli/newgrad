@@ -18,7 +18,7 @@ async def get_jobs(skip: int = 0, limit: int = 10, search: Optional[str] = None)
         pipeline.append(
             {
                 "$search": {
-                    "index": "default",  # Replace with your index name if different
+                    "index": "default",
                     "text": {
                         "query": search,
                         "path": ["position", "company"],
@@ -58,3 +58,19 @@ async def get_job(job_id: str):
     if job:
         return Job(**job)
     return None
+
+
+async def get_jobs_by_company_service(company_id: str):
+    pipeline = [
+        {"$match": {"company.id": ObjectId(company_id)}},
+        {
+            "$addFields": {
+                "_id": {"$toString": "$_id"},
+                "company.id": {"$toString": "$company.id"},
+            }
+        },
+    ]
+    jobs_cursor = db.jobs.aggregate(pipeline)
+    jobs = await jobs_cursor.to_list(length=None)
+    company_name = jobs[0]["company"]["name"] if jobs else ""
+    return jobs, company_name
