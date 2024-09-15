@@ -11,6 +11,7 @@ class Location(BaseModel):
 
 
 class JobBase(BaseModel):
+    _id: str
     position: str
     company: str
     locations: List[Location]
