@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import JobCard from '../components/jobs/JobCard'
-import DiscussionComponent from '../components/DiscussionComponent';
+import DiscussionComponent from '../components/comments/DiscussionComponent';
 import { Job } from '../components/jobs/types';
 
 const JobDiscussionPage: React.FC = () => {

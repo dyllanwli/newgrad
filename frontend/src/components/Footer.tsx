@@ -1,20 +1,20 @@
 import React from 'react';
 import { LogoText } from './branding/LogoText';
 
-// Define the navigation items
-const navigation = {
-    resources: [
-        { name: 'Blog', href: '/blog' },
-    ],
-    company: [
-        { name: 'About Us', href: '/about-us' },
-    ],
-    legal: [
-        { name: 'Privacy Policy', href: '/privacy-policy' },
-        { name: 'Terms of Service', href: '/terms-of-service' },
-        { name: 'Cookie Policy', href: '/cookie-policy' },
-    ],
-};
+// // Define the navigation items
+// const navigation = {
+//     resources: [
+//         { name: 'Blog', href: '/blog' },
+//     ],
+//     company: [
+//         { name: 'About Us', href: '/about-us' },
+//     ],
+//     legal: [
+//         { name: 'Privacy Policy', href: '/privacy-policy' },
+//         { name: 'Terms of Service', href: '/terms-of-service' },
+//         { name: 'Cookie Policy', href: '/cookie-policy' },
+//     ],
+// };
 
 const Footer: React.FC = () => {
     return (
