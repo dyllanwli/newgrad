@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field
 from typing import Optional, List
 from bson import ObjectId
 from api.models.base import PyObjectId
-from api.models.company import Company 
+from api.models.company import Company
 
 
 class Location(BaseModel):
