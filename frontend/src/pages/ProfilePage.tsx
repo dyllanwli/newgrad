@@ -17,7 +17,6 @@ const ProfilePage = () => {
     <div className="w-full min-h-screen bg-gray-100">
       {/* Mobile View */}
       <div className="md:hidden">
-        <h1 className="text-2xl font-bold p-4">Your Profile</h1>
         <div className="space-y-4 p-4">
           {cards.map((card) => (
             <motion.div
@@ -48,7 +47,6 @@ const ProfilePage = () => {
       <div className="hidden md:flex justify-center">
         <div className="w-4/5 flex">
           <div className="w-1/4 bg-white h-screen p-4 border-r">
-            <h1 className="text-2xl font-bold mb-4">Your Profile</h1>
             <nav>
               {cards.map((card) => (
                 <motion.div

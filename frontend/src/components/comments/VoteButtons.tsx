@@ -1,6 +1,8 @@
 // src/components/comments/VoteButtons.tsx
 
 import React from 'react';
+import { motion } from 'framer-motion';
+import { ChevronUp, ChevronDown } from 'lucide-react';
 
 interface VoteButtonProps {
   commentId: string;
@@ -17,20 +19,61 @@ const VoteButton: React.FC<VoteButtonProps> = ({
   downvoteCount,
   onVote,
 }) => {
+  const buttonVariants = {
+    hover: { scale: 1.1 },
+    tap: { scale: 0.95 },
+  };
+
+  const countVariants = {
+    voted: { scale: [1, 1.2, 1], transition: { duration: 0.3 } },
+  };
+
+  const handleVote = (voteType: number) => {
+    onVote(commentId, voteType);
+  };
+
   return (
-    <div className="flex items-center space-x-2">
-      <button
-        onClick={() => onVote(commentId, 1)}
-        className={`px-2 py-1 rounded ${currentUserVote === 1 ? 'bg-green-500 text-white' : 'bg-gray-200'}`}
+    <div className="flex items-center space-x-1">
+      <motion.div
+        className="flex flex-col items-center cursor-pointer"
+        onClick={() => handleVote(1)}
+        variants={buttonVariants}
+        whileHover="hover"
+        whileTap="tap"
       >
-        Upvote ({upvoteCount})
-      </button>
-      <button
-        onClick={() => onVote(commentId, -1)}
-        className={`px-2 py-1 rounded ${currentUserVote === -1 ? 'bg-red-500 text-white' : 'bg-gray-200'}`}
+        <ChevronUp
+          size={20}
+          className={currentUserVote === 1 ? 'text-green-500' : 'text-gray-500'}
+        />
+        <motion.span
+          className={`text-xs font-bold ${currentUserVote === 1 ? 'text-green-500' : 'text-gray-700'
+            }`}
+          variants={countVariants}
+          animate={currentUserVote === 1 ? 'voted' : ''}
+        >
+          {upvoteCount}
+        </motion.span>
+      </motion.div>
+      <motion.div
+        className="flex flex-col items-center cursor-pointer"
+        onClick={() => handleVote(-1)}
+        variants={buttonVariants}
+        whileHover="hover"
+        whileTap="tap"
       >
-        Downvote ({downvoteCount})
-      </button>
+        <ChevronDown
+          size={20}
+          className={currentUserVote === -1 ? 'text-red-500' : 'text-gray-500'}
+        />
+        <motion.span
+          className={`text-xs font-bold ${currentUserVote === -1 ? 'text-red-500' : 'text-gray-700'
+            }`}
+          variants={countVariants}
+          animate={currentUserVote === -1 ? 'voted' : ''}
+        >
+          {downvoteCount}
+        </motion.span>
+      </motion.div>
     </div>
   );
 };
