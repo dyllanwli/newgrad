@@ -1,6 +1,6 @@
 // src/components/SearchBar.tsx
 import React, { useState, useRef } from 'react';
-import { Search } from 'lucide-react';
+import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
@@ -54,9 +54,10 @@ const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Search for jobs...
         placeholder={placeholder}
         className="w-full h-9 px-4 py-1 pl-10 bg-white border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300" // Decreased height
       />
-      <Search
+      <MagnifyingGlassIcon
         className="absolute left-3 text-gray-500 cursor-pointer"
-        size={20}
+        width={20}
+        height={20}
         onClick={handleSearch}
       />
     </motion.div>

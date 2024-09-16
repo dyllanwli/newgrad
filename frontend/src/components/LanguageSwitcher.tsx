@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Globe } from 'lucide-react';
+import { GlobeIcon } from '@radix-ui/react-icons';
 import SelectPopUp from './SelectPopUp';
 
 const LanguageSwitcher = () => {
@@ -23,7 +23,7 @@ const LanguageSwitcher = () => {
                 className="flex items-center space-x-1 text-black hover:text-gray-800"
                 onClick={() => setIsOpen(true)}
             >
-                <Globe/> 
+                <GlobeIcon/> 
                 <span>中文/English</span>
             </button>
 

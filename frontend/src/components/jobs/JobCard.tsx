@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
+import { ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons';
 import { motion } from 'framer-motion';
 import { Job } from './types';
 
@@ -31,7 +31,7 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
                         <p className="text-gray-700">{job.locations[0].city}, {job.locations[0].state}</p>
                         {job.locations.length > 1 && (
                             <button onClick={toggleLocations} className="ml-2 text-gray-500 hover:text-gray-700">
-                                {expanded ? <ChevronUpIcon size={20} /> : <ChevronDownIcon size={20} />}
+                                {expanded ? <ChevronUpIcon width={20} height={20} /> : <ChevronDownIcon width={20} height={20} />}
                             </button>
                         )}
                     </div>

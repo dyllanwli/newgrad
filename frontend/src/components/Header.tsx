@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { ClerkButton } from './ClerkButton';
-import { useUser } from '@clerk/clerk-react';
-import { Menu, X } from 'lucide-react';
+import { HamburgerMenuIcon, Cross1Icon } from '@radix-ui/react-icons';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -102,7 +101,7 @@ const Header = () => {
                   exit={{ opacity: 0, rotate: 180 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                  {isMenuOpen ? <Cross1Icon width={24} height={24} /> : <HamburgerMenuIcon width={24} height={24} />}
                 </motion.div>
               </AnimatePresence>
             </motion.button>

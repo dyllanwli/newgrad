@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Home } from 'lucide-react';
+import { HomeIcon } from '@radix-ui/react-icons';
 import { useTranslation } from 'react-i18next';
 
 const ErrorPage = () => {
@@ -18,7 +18,7 @@ const ErrorPage = () => {
         onClick={handleBackToHome}
         className="bg-purple-500 text-white font-bold py-2 px-4 rounded-full hover:bg-purple-400 transition duration-200"
       >
-        <Home className="w-4 h-4 inline-block mr-1" />
+        <HomeIcon className="w-4 h-4 inline-block mr-1" />
         {t('errorPage.backButton')}
       </button>
     </div>

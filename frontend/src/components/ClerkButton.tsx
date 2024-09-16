@@ -1,7 +1,7 @@
 'use client'
 import React from 'react';
 import { SignedIn, SignedOut, SignInButton, useAuth } from '@clerk/clerk-react';
-import { LogIn, User } from 'lucide-react';
+import { PersonIcon } from '@radix-ui/react-icons';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,7 +16,7 @@ export const ClerkButton = () => {
       <SignedOut>
         <SignInButton mode="modal">
           <button className="flex items-center justify-center gap-2 bg-white hover:bg-gray-100 text-black font-semibold py-2 px-4 rounded-lg shadow-md transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 whitespace-nowrap">
-            <LogIn size={20} />
+            <PersonIcon width={20} height={20} />
             <span className="sm:inline">{t('app.signin')}</span>
           </button>
         </SignInButton>

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ChevronUp, ChevronDown } from 'lucide-react';
+import { ChevronUpIcon, ChevronDownIcon } from '@radix-ui/react-icons';
 
 interface VoteButtonProps {
   commentId: string;
@@ -41,8 +41,9 @@ const VoteButton: React.FC<VoteButtonProps> = ({
         whileHover="hover"
         whileTap="tap"
       >
-        <ChevronUp
-          size={20}
+        <ChevronUpIcon
+          width={20}
+          height={20}
           className={currentUserVote === 1 ? 'text-green-500' : 'text-gray-500'}
         />
         <motion.span
@@ -61,8 +62,9 @@ const VoteButton: React.FC<VoteButtonProps> = ({
         whileHover="hover"
         whileTap="tap"
       >
-        <ChevronDown
-          size={20}
+        <ChevronDownIcon
+          width={20}
+          height={20}
           className={currentUserVote === -1 ? 'text-red-500' : 'text-gray-500'}
         />
         <motion.span
