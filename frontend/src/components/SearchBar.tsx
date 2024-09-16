@@ -52,7 +52,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Search for jobs...
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className="w-full h-9 px-4 py-1 pl-10 bg-white border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300" // Decreased height
+        className="w-full h-9 px-4 py-1 pl-10 bg-white border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300" // Decreased height
       />
       <Search
         className="absolute left-3 text-gray-500 cursor-pointer"

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { ClerkButton } from './ClerkButton';
-import { useUser } from '@clerk/clerk-react';
 import { Menu, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -51,7 +50,7 @@ const Navigation: React.FC<NavigationProps> = ({ isOpen, navItems, toggleMenu })
           <button
             key={index}
             onClick={handleNavigation(item.href)}
-            className={`block py-1 px-4 md:text-base font-bold transition duration-200 rounded-full ease-in-out whitespace-nowrap ${item.color ? 'text-white transform hover:scale-105' : 'text-black hover:text-purple-600'} `}
+            className={`block ml-1 py-1 px-4 md:text-base font-bold rounded-full ease-in-out whitespace-nowrap ${item.color ? 'text-white transform hover:scale-105 transition-transform duration-400' : 'hover:bg-opacity-80 hover:text-gray-500'} `}
             style={{ backgroundColor: item.color || 'transparent' }}
           >
             {t(item.label)}
