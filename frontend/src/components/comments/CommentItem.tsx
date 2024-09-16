@@ -9,18 +9,23 @@ interface CommentWithReplies extends Comment {
   replies: CommentWithReplies[];
 }
 
+
 interface CommentItemProps {
   comment: CommentWithReplies;
   level?: number;
+  maxDepth: number; // Add maxDepth prop
   onReply: (comment: Comment) => void;
   onEdit: (comment: Comment) => void;
   onVote: (commentId: string, voteType: number) => void;
   isSignedIn: boolean | undefined;
   getToken: () => Promise<string | null>;
 }
+
+
 const CommentItem: React.FC<CommentItemProps> = ({
   comment,
   level = 0,
+  maxDepth, // Destructure maxDepth
   onReply,
   onEdit,
   onVote,
@@ -40,12 +45,12 @@ const CommentItem: React.FC<CommentItemProps> = ({
   };
 
   return (
-    <div style={{ marginLeft: level * 20, borderLeft: '1px solid #ccc', paddingLeft: 10, marginTop: 10 }}>
+    <div style={{ marginLeft: level * 10, borderLeft: '1px solid #ccc', paddingLeft: 5, marginTop: 5 }}>
       <div>
         <strong>{comment.username}</strong>: {comment.content}
       </div>
       <small>{new Date(comment.datePosted).toLocaleString()}</small>
-      <div className="flex items-center space-x-2 mt-2">
+      <div className="flex items-center space-x-1 mt-1">
         <VoteButton
           commentId={comment._id}
           currentUserVote={comment.userVote || 0}
@@ -55,11 +60,16 @@ const CommentItem: React.FC<CommentItemProps> = ({
         />
         {isSignedIn && (
           <>
-            <button onClick={() => onReply(comment)} className="text-blue-500 hover:underline">
-              Reply
-            </button>
-            {comment.userId === user?.id && ( // Use user from useUser hook
-              <button onClick={() => setIsEditing(true)} className="text-green-500 hover:underline">
+            {level < maxDepth && (
+              <button
+                onClick={() => onReply(comment)}
+                className="text-blue-500 hover:underline text-sm"
+              >
+                Reply
+              </button>
+            )}
+            {comment.userId === user?.id && (
+              <button onClick={() => setIsEditing(true)} className="text-green-500 hover:underline text-sm">
                 Edit
               </button>
             )}
@@ -67,21 +77,21 @@ const CommentItem: React.FC<CommentItemProps> = ({
         )}
       </div>
       {isEditing && (
-        <form onSubmit={handleUpdate} className="mt-2">
+        <form onSubmit={handleUpdate} className="mt-1">
           <textarea
             value={editContent}
             onChange={(e) => setEditContent(e.target.value)}
             required
-            className="w-full p-2 border rounded mb-2"
+            className="w-full p-1 border rounded mb-1"
           />
-          <div className="flex space-x-2">
-            <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">
-              Update Comment
+          <div className="flex space-x-1">
+            <button type="submit" className="px-2 py-1 bg-blue-500 text-white rounded text-sm">
+              Update
             </button>
             <button
               type="button"
               onClick={() => setIsEditing(false)}
-              className="px-4 py-2 bg-gray-300 text-black rounded"
+              className="px-2 py-1 bg-gray-300 text-black rounded text-sm"
             >
               Cancel
             </button>
@@ -89,12 +99,13 @@ const CommentItem: React.FC<CommentItemProps> = ({
         </form>
       )}
       {comment.replies.length > 0 && (
-        <div className="mt-4">
+        <div className="mt-2">
           {comment.replies.map((reply) => (
             <CommentItem
               key={reply._id}
               comment={reply}
               level={level + 1}
+              maxDepth={maxDepth}
               onReply={onReply}
               onEdit={onEdit}
               onVote={onVote}

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth, useUser } from '@clerk/clerk-react';
 import CommentItem from './CommentItem';
 import { Comment } from './types'
+import { MAX_DEPTH } from './constants';
 
 interface DiscussionComponentProps {
   companyId: string;
@@ -19,6 +20,7 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ companyId }) 
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState<string>('');
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
+  const maxDepth = MAX_DEPTH;
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -173,6 +175,8 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ companyId }) 
           <CommentItem
             key={comment._id}
             comment={comment}
+            level={0}
+            maxDepth={maxDepth}
             onReply={handleReply}
             onEdit={handleEdit}
             onVote={handleVote}
