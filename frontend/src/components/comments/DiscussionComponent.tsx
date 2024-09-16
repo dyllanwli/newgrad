@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth, useUser } from '@clerk/clerk-react';
+import CommentItem from './CommentItem';
 
 interface DiscussionComponentProps {
   companyId: string;
@@ -25,14 +26,10 @@ interface CommentWithReplies extends Comment {
 
 const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ companyId }) => {
   const { getToken, isSignedIn } = useAuth();
-  const { user } = useUser();
-  const currentUserId = user ? user.id : null;
 
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState<string>('');
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
-  const [editCommentId, setEditCommentId] = useState<string | null>(null);
-  const [editContent, setEditContent] = useState<string>('');
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -46,7 +43,7 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ companyId }) 
         });
     };
     fetchComments();
-  }, [companyId, isSignedIn]);
+  }, [companyId, isSignedIn, getToken]);
 
   // Build the comment tree
   const buildCommentTree = (comments: Comment[]): CommentWithReplies[] => {
@@ -142,38 +139,25 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ companyId }) 
       });
   };
 
-  const handleEdit = (comment: Comment) => {
-    setEditCommentId(comment._id);
-    setEditContent(comment.content);
-  };
-
-  const handleUpdate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!isSignedIn || !editCommentId) {
+  const handleEdit = async (updatedComment: Comment) => {
+    if (!isSignedIn || !updatedComment._id) {
       return;
     }
     const token = await getToken();
-    fetch(`/api/comments/${editCommentId}`, {
+    fetch(`/api/comments/${updatedComment._id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ content: editContent }),
+      body: JSON.stringify({ content: updatedComment.content }),
     })
       .then((response) => response.json())
-      .then((updatedComment) => {
+      .then((updated) => {
         setComments((prevComments) =>
-          prevComments.map((comment) => (comment._id === editCommentId ? updatedComment : comment))
+          prevComments.map((comment) => (comment._id === updated._id ? updated : comment))
         );
-        setEditCommentId(null);
-        setEditContent('');
       });
-  };
-
-  const handleCancelEdit = () => {
-    setEditCommentId(null);
-    setEditContent('');
   };
 
   const handleReply = (comment: Comment) => {
@@ -184,68 +168,32 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ companyId }) 
     setReplyTo(null);
   };
 
-  const renderComments = (comments: CommentWithReplies[], level = 0) => {
-    return comments.map((comment) => (
-      <div key={comment._id} style={{ marginLeft: level * 20 }}>
-        <p>
-          <strong>{comment.username}</strong>: {comment.content}
-        </p>
-        <small>{new Date(comment.datePosted).toLocaleString()}</small>
-        <div>
-          <button
-            onClick={() => handleVote(comment._id, 1)}
-            style={{ color: comment.userVote === 1 ? 'blue' : 'black' }}
-          >
-            Upvote
-          </button>
-          <span>{comment.upvote_count}</span>
-          <button
-            onClick={() => handleVote(comment._id, -1)}
-            style={{ color: comment.userVote === -1 ? 'blue' : 'black' }}
-          >
-            Downvote
-          </button>
-          <span>{comment.downvote_count}</span>
-          {comment.userId === currentUserId && (
-            <>
-              <button onClick={() => handleEdit(comment)}>Edit</button>
-            </>
-          )}
-          <button onClick={() => handleReply(comment)}>Reply</button>
-        </div>
-        {editCommentId === comment._id && (
-          <form onSubmit={handleUpdate}>
-            <textarea
-              value={editContent}
-              onChange={(e) => setEditContent(e.target.value)}
-              required
-              className="w-full p-2 border rounded mb-2"
-            />
-            <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">
-              Update Comment
-            </button>
-            <button type="button" onClick={handleCancelEdit}>
-              Cancel
-            </button>
-          </form>
-        )}
-        {comment.replies.length > 0 && renderComments(comment.replies, level + 1)}
-      </div>
-    ));
-  };
-
   return (
     <div className="discussion-component">
       <h3 className="text-2xl font-bold mb-4">Discussion</h3>
       {replyTo && (
-        <div>
+        <div className="mb-4 p-2 bg-gray-100 rounded">
           Replying to <strong>{replyTo.username}</strong>
-          <button onClick={handleCancelReply}>Cancel Reply</button>
+          <button onClick={handleCancelReply} className="ml-4 text-red-500 hover:underline">
+            Cancel Reply
+          </button>
         </div>
       )}
-      {renderComments(commentTree)}
+      <div>
+        {commentTree.map((comment) => (
+          <CommentItem
+            key={comment._id}
+            comment={comment}
+            onReply={handleReply}
+            onEdit={handleEdit}
+            onVote={handleVote}
+            isSignedIn={isSignedIn}
+            getToken={getToken}
+          />
+        ))}
+      </div>
       {isSignedIn ? (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="mt-6">
           <textarea
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
