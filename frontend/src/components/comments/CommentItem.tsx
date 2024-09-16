@@ -19,27 +19,29 @@ interface CommentItemProps {
   onVote: (commentId: string, voteType: number) => void;
   isSignedIn: boolean | undefined;
   getToken: () => Promise<string | null>;
+  replyTo?: Comment | null;
+  setReplyTo: (comment: Comment | null) => void;
 }
-
 
 const CommentItem: React.FC<CommentItemProps> = ({
   comment,
   level = 0,
-  maxDepth, // Destructure maxDepth
+  maxDepth,
   onReply,
   onEdit,
   onVote,
   isSignedIn,
   getToken,
+  replyTo,
+  setReplyTo,
 }) => {
   const [editContent, setEditContent] = useState<string>('');
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const { user } = useUser(); // Move useUser hook to the top level
+  const { user } = useUser();
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isSignedIn) return;
-    // Assuming onEdit handles the update logic in the parent component
     onEdit({ ...comment, content: editContent });
     setIsEditing(false);
   };
@@ -62,7 +64,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
           <>
             {level < maxDepth && (
               <button
-                onClick={() => onReply(comment)}
+                onClick={() => setReplyTo(comment)}
                 className="text-blue-500 hover:underline text-sm"
               >
                 Reply
@@ -98,6 +100,28 @@ const CommentItem: React.FC<CommentItemProps> = ({
           </div>
         </form>
       )}
+      {replyTo?._id === comment._id && (
+        <form onSubmit={handleUpdate} className="mt-1">
+          <textarea
+            value={editContent}
+            onChange={(e) => setEditContent(e.target.value)}
+            required
+            className="w-full p-1 border rounded mb-1"
+          />
+          <div className="flex space-x-1">
+            <button type="submit" className="px-2 py-1 bg-blue-500 text-white rounded text-sm">
+              Post Reply
+            </button>
+            <button
+              type="button"
+              onClick={() => setReplyTo(null)}
+              className="px-2 py-1 bg-gray-300 text-black rounded text-sm"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      )}
       {comment.replies.length > 0 && (
         <div className="mt-2">
           {comment.replies.map((reply) => (
@@ -111,6 +135,8 @@ const CommentItem: React.FC<CommentItemProps> = ({
               onVote={onVote}
               isSignedIn={isSignedIn}
               getToken={getToken}
+              replyTo={replyTo} // Pass replyTo prop
+              setReplyTo={setReplyTo} // Pass setReplyTo prop
             />
           ))}
         </div>

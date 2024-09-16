@@ -165,7 +165,7 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ companyId }) 
       {replyTo && (
         <div className="mb-4 p-2 bg-gray-100 rounded">
           Replying to <strong>{replyTo.username}</strong>
-          <button onClick={handleCancelReply} className="ml-4 text-red-500 hover:underline">
+          <button onClick={() => setReplyTo(null)} className="ml-4 text-red-500 hover:underline">
             Cancel Reply
           </button>
         </div>
@@ -182,6 +182,8 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ companyId }) 
             onVote={handleVote}
             isSignedIn={isSignedIn}
             getToken={getToken}
+            replyTo={replyTo} // Pass replyTo prop
+            setReplyTo={setReplyTo} // Pass setReplyTo prop
           />
         ))}
       </div>
