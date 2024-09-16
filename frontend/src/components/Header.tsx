@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { ClerkButton } from './ClerkButton';
-import { HamburgerMenuIcon, Cross1Icon } from '@radix-ui/react-icons';
+import { Button, IconButton } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -47,14 +49,16 @@ const Navigation: React.FC<NavigationProps> = ({ isOpen, navItems, toggleMenu })
     >
       <div className="flex flex-col md:flex-row items-start md:items-center py-1 md:py-0">
         {navItems.map((item, index) => (
-          <button
+          <Button
             key={index}
             onClick={handleNavigation(item.href)}
-            className={`block py-1 px-4 md:text-base font-bold transition duration-200 rounded-full ease-in-out whitespace-nowrap ${item.color ? 'text-white transform hover:scale-105' : 'text-black hover:text-purple-600'} `}
-            style={{ backgroundColor: item.color || 'transparent' }}
+            variant="contained"
+            color={item.color ? 'primary' : 'inherit'}
+            style={{ backgroundColor: item.color || 'transparent', boxShadow: 'none' }} // Removed shadow
+            className={`block ml-1 py-1 px-4 font-bold rounded-full ease-in-out whitespace-nowrap ${item.color ? 'transform hover:scale-105 transition-transform duration-500' : 'hover:bg-opacity-80 hover:text-gray-500'} `}
           >
             {t(item.label)}
-          </button>
+          </Button>
         ))}
       </div>
     </motion.nav>
@@ -79,7 +83,6 @@ const Header = () => {
           </div>
         </div>
 
-
         <div className="flex items-center space-x-4">
           <div className="hidden md:flex">
             <Navigation isOpen={true} navItems={navItems} toggleMenu={() => { }} />
@@ -88,9 +91,9 @@ const Header = () => {
           <ClerkButton />
 
           <div className="md:hidden">
-            <motion.button
+            <motion.div
               onClick={toggleMenu}
-              className="focus:outline-none p-2 rounded-md hover:bg-gray-200"
+              className="focus:outline-none p-2 rounded-md"
               whileTap={{ scale: 0.95 }}
             >
               <AnimatePresence mode="wait" initial={false}>
@@ -101,10 +104,12 @@ const Header = () => {
                   exit={{ opacity: 0, rotate: 180 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {isMenuOpen ? <Cross1Icon width={24} height={24} /> : <HamburgerMenuIcon width={24} height={24} />}
+                  <IconButton>
+                    {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
+                  </IconButton>
                 </motion.div>
               </AnimatePresence>
-            </motion.button>
+            </motion.div>
           </div>
         </div>
       </div>

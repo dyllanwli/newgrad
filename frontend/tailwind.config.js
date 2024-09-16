@@ -6,11 +6,9 @@ export default {
   ],
   theme: {
     extend: {
-      colors: {
-        'navy-blue': '#5603fc', // You can adjust this hex code to your preferred shade of navy blue
-      },
     },
   },
+  important: '#root',
   plugins: [],
 }
 

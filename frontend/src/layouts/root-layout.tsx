@@ -1,12 +1,13 @@
-// /src/layouts/root-layout.tsx
-
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
-import { ClerkProvider } from '@clerk/clerk-react'
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
+import { ClerkProvider } from '@clerk/clerk-react';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import theme from './theme';
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
 if (!PUBLISHABLE_KEY) {
-    throw new Error("Missing Publishable Key")
+    throw new Error("Missing Publishable Key");
 }
 
 export default function RootLayout() {
@@ -18,10 +19,13 @@ export default function RootLayout() {
             routerReplace={(to) => navigate(to, { replace: true })}
             publishableKey={PUBLISHABLE_KEY}
         >
-            <Header />
-            <main>
-                <Outlet />
-            </main>
+            <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <Header />
+                <main>
+                    <Outlet />
+                </main>
+            </ThemeProvider>
         </ClerkProvider>
-    )
+    );
 }
