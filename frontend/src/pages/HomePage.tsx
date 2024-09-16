@@ -1,3 +1,5 @@
+// /src/pages/HomePage.tsx
+
 import Footer from "../components/Footer";
 // import { useTranslation } from 'react-i18next';
 import HeroSection from '../components/landingPage/HeroSection';

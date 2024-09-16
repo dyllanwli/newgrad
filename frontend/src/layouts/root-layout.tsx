@@ -1,3 +1,5 @@
+// /src/layouts/root-layout.tsx
+
 import { Outlet, useNavigate } from 'react-router-dom'
 import Header from '../components/Header';
 import { ClerkProvider } from '@clerk/clerk-react'
