@@ -3,18 +3,7 @@
 import React, { useState } from 'react';
 import { useAuth, useUser } from '@clerk/clerk-react';
 import VoteButton from './VoteButtons';
-
-interface Comment {
-  _id: string;
-  userId: string;
-  username: string;
-  content: string;
-  datePosted: string;
-  upvote_count: number;
-  downvote_count: number;
-  parent_id?: string;
-  userVote?: number; // 1 for upvote, -1 for downvote, 0 or undefined for no vote
-}
+import { Comment } from './types'
 
 interface CommentWithReplies extends Comment {
   replies: CommentWithReplies[];
