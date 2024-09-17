@@ -1,7 +1,9 @@
 // src/components/comments/CommentItem.tsx
 
 import React, { useState } from 'react';
-import { useAuth, useUser } from '@clerk/clerk-react';
+import { useUser } from '@clerk/clerk-react';
+import { formatDistanceToNow } from 'date-fns';
+import { fromZonedTime } from 'date-fns-tz'
 import VoteButton from './VoteButtons';
 import { Comment } from './types';
 
@@ -41,6 +43,9 @@ const CommentItem: React.FC<CommentItemProps> = ({
   const [replyContent, setReplyContent] = useState<string>('');
   const [currentMaxVisibleDepth, setCurrentMaxVisibleDepth] = useState<number>(maxVisibleDepth);
   const { user } = useUser();
+  const localDatePosted = fromZonedTime(comment.created_at, "UTC")
+  const distanceToNow = formatDistanceToNow(localDatePosted, { addSuffix: true, includeSeconds: true })
+
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,7 +78,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
       <div>
         <strong>{comment.username}</strong>: {comment.content}
       </div>
-      <small>{new Date(comment.datePosted).toLocaleString()}</small>
+      <small>Posted {distanceToNow}</small>
       <div className="flex items-center space-x-1 mt-1">
         <VoteButton
           commentId={comment._id}

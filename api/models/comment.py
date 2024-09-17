@@ -9,10 +9,13 @@ from typing import Optional
 
 class CommentBase(BaseModel):
     content: str
-    datePosted: datetime = Field(default_factory=datetime.utcnow)
     userId: Optional[str] = None
     username: Optional[str] = None
     parent_id: Optional[PyObjectId] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+
 
 class CommentCreate(CommentBase):
     pass
