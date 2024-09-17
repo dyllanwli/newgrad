@@ -26,7 +26,8 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ companyId }) 
   useEffect(() => {
     const fetchComments = async () => {
       const token = isSignedIn ? await getToken() : null;
-      fetch(`/api/companies/${companyId}/comments`, {
+      const discussId = companyId;
+      fetch(`/api/discuss/${discussId}/comments`, {
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       })
         .then((response) => response.json())
@@ -63,7 +64,8 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ companyId }) 
       return;
     }
     const token = await getToken();
-    fetch(`/api/companies/${companyId}/comments`, {
+    const discussId = companyId
+    fetch(`/api/discuss/${discussId}/comments`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -84,7 +86,8 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ companyId }) 
       return;
     }
     const token = await getToken();
-    fetch(`/api/companies/${companyId}/comments`, {
+    const discussId = companyId
+    fetch(`/api/discuss/${discussId}/comments`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

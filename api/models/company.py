@@ -4,10 +4,6 @@ from pydantic import BaseModel, Field
 from bson import ObjectId
 from api.models.base import PyObjectId
 
-class Location(BaseModel):
-    state: str
-    city: str
-
 class CompanyBase(BaseModel):
     _id: str
     name: str

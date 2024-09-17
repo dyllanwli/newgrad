@@ -5,7 +5,7 @@ from typing import List, Annotated
 from api.models.comment import Comment, CommentCreate
 from api.services.comment_service import (
     create_comment_service,
-    get_comments_by_company_service,
+    get_comments_by_discuss_service,
     vote_comment_service,
     update_comment_service,
 )
@@ -16,15 +16,15 @@ router = APIRouter()
 security = HTTPBearer()
 
 
-@router.get("/companies/{company_id}/comments", response_model=List[Comment])
-async def read_comments(company_id: str):
-    comments = await get_comments_by_company_service(company_id)
+@router.get("/discuss/{discuss_id}/comments", response_model=List[Comment])
+async def read_comments(discuss_id: str):
+    comments = await get_comments_by_discuss_service(discuss_id)
     return comments
 
 
-@router.post("/companies/{company_id}/comments", response_model=Comment)
+@router.post("/discuss/{discuss_id}/comments", response_model=Comment)
 async def post_comment(
-    company_id: str,
+    discuss_id: str,
     comment: CommentCreate,
     credentials: Annotated[HTTPAuthorizationCredentials, Depends(HTTPBearer())],
 ):
@@ -36,7 +36,7 @@ async def post_comment(
     user_id = user_session["id"]
     username = user_session["username"]
 
-    new_comment = await create_comment_service(company_id, comment, user_id, username)
+    new_comment = await create_comment_service(discuss_id, comment, user_id, username)
     return new_comment
 
 

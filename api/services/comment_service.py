@@ -8,18 +8,17 @@ from api.models.comment import Comment, CommentCreate
 from datetime import datetime
 from bson import ObjectId
 
-
-async def get_comments_by_company_service(company_id: str):
-    cursor = db.comments.find({"company_id": company_id}).sort("datePosted", 1)
+async def get_comments_by_discuss_service(discuss_id: str):
+    cursor = db.comments.find({"discuss_id": discuss_id}).sort("datePosted", 1)
     comments = await cursor.to_list(length=None)
     return [Comment(**comment) for comment in comments]
 
 
 async def create_comment_service(
-    company_id: str, comment: CommentCreate, user_id: str, username: str
+    discuss_id: str, comment: CommentCreate, user_id: str, username: str
 ):
     comment_dict = comment.dict()
-    comment_dict["company_id"] = company_id
+    comment_dict["discuss_id"] = discuss_id
     comment_dict["userId"] = user_id
     comment_dict["username"] = username
     result = await db.comments.insert_one(comment_dict)

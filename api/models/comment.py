@@ -11,16 +11,17 @@ class CommentBase(BaseModel):
     content: str
     datePosted: datetime = Field(default_factory=datetime.utcnow)
     userId: Optional[str] = None
-    username: Optional[str] = None  # Add this line
-    parent_id: Optional[PyObjectId] = None  # For replies
+    username: Optional[str] = None
+    parent_id: Optional[PyObjectId] = None
 
 class CommentCreate(CommentBase):
     pass
 
 class Comment(CommentBase):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-    upvote_count: int = 0  # For upvotes
-    downvote_count: int = 0  # For downvotes
+    upvote_count: int = 0
+    downvote_count: int = 0
+    discuss_id: str
 
     class Config:
         populate_by_name = True
