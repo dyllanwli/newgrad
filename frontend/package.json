@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.2.10",
+    "@headlessui/react": "^2.1.8",
     "@radix-ui/react-toast": "^1.2.1",
     "@types/node": "^22.0.0",
     "axios": "^1.7.7",

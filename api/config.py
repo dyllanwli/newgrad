@@ -35,16 +35,14 @@ def setup_logging():
 def load_dotenv():
     dotenv.load_dotenv()
 
+def check_status():
 
-setup_logging()
-load_dotenv()
+    logger = logging.getLogger(__name__)
 
-logger = logging.getLogger(__name__)
-
+    if IS_PROD:
+        logger.info("PRODUCTION MODE")
+    else:
+        logger.info("DEVELOPMENT MODE")
+        
 IS_PROD = os.getenv("IS_PROD", "0") == "1"
 MONGODB_URL = os.getenv("MONGODB_URL")
-
-if IS_PROD:
-    logger.info("PRODUCTION MODE")
-else:
-    logger.info("DEVELOPMENT MODE")
