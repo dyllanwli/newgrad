@@ -67,7 +67,7 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
                         {job.expired ? 'Application Closed' : 'Apply Now'}
                     </a>
                     <a
-                        className={`text-purple-600 text-center transition-colors duration-300`}
+                        className={`text-purple-600 text-center transition-colors duration-30 whitespace-nowrap`}
                     >
                         View Job Discussion
                     </a>
