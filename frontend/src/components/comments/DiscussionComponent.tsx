@@ -1,10 +1,10 @@
 // src/components/comments/DiscussionComponent.tsx
 
 import React, { useState, useEffect } from 'react';
-import { useAuth, useUser } from '@clerk/clerk-react';
+import { useAuth } from '@clerk/clerk-react';
 import CommentItem from './CommentItem';
-import { Comment } from './types'
-import { MAX_DEPTH } from './constants';
+import { Comment } from './types';
+import { MAX_DEPTH, MAX_VISIBLE_DEPTH } from './constants';
 
 interface DiscussionComponentProps {
   companyId: string;
@@ -21,6 +21,7 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ companyId }) 
   const [newComment, setNewComment] = useState<string>('');
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
   const maxDepth = MAX_DEPTH;
+  let maxVisibleDepth = MAX_VISIBLE_DEPTH;
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -36,7 +37,6 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ companyId }) 
     fetchComments();
   }, [companyId, isSignedIn, getToken]);
 
-  // Build the comment tree
   const buildCommentTree = (comments: Comment[]): CommentWithReplies[] => {
     const commentMap: { [key: string]: CommentWithReplies } = {};
     comments.forEach((comment) => {
@@ -69,13 +69,32 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ companyId }) 
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ content: newComment, parent_id: replyTo?._id }),
+      body: JSON.stringify({ content: newComment }),
     })
       .then((response) => response.json())
       .then((comment) => {
         setComments([...comments, comment]);
         setNewComment('');
         setReplyTo(null);
+      });
+  };
+
+  const handleAddReply = async (parentComment: Comment, replyContent: string) => {
+    if (!isSignedIn) {
+      return;
+    }
+    const token = await getToken();
+    fetch(`/api/companies/${companyId}/comments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ content: replyContent, parent_id: parentComment._id }),
+    })
+      .then((response) => response.json())
+      .then((comment) => {
+        setComments([...comments, comment]);
       });
   };
 
@@ -150,26 +169,9 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ companyId }) 
         );
       });
   };
-
-  const handleReply = (comment: Comment) => {
-    setReplyTo(comment);
-  };
-
-  const handleCancelReply = () => {
-    setReplyTo(null);
-  };
-
   return (
     <div className="discussion-component">
       <h3 className="text-2xl font-bold mb-4">Discussion</h3>
-      {replyTo && (
-        <div className="mb-4 p-2 bg-gray-100 rounded">
-          Replying to <strong>{replyTo.username}</strong>
-          <button onClick={() => setReplyTo(null)} className="ml-4 text-red-500 hover:underline">
-            Cancel Reply
-          </button>
-        </div>
-      )}
       <div>
         {commentTree.map((comment) => (
           <CommentItem
@@ -177,32 +179,32 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ companyId }) 
             comment={comment}
             level={0}
             maxDepth={maxDepth}
-            onReply={handleReply}
+            maxVisibleDepth={maxVisibleDepth} // Pass the default visible depth
+            onAddReply={handleAddReply}
             onEdit={handleEdit}
             onVote={handleVote}
             isSignedIn={isSignedIn}
             getToken={getToken}
-            replyTo={replyTo} // Pass replyTo prop
-            setReplyTo={setReplyTo} // Pass setReplyTo prop
+            replyTo={replyTo}
+            setReplyTo={setReplyTo}
           />
         ))}
       </div>
-      {isSignedIn ? (
+      {isSignedIn && !replyTo ? (
         <form onSubmit={handleSubmit} className="mt-6">
           <textarea
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             required
             className="w-full p-2 border rounded mb-2"
-            placeholder={replyTo ? `Replying to ${replyTo.username}` : 'Add a comment'}
+            placeholder="Add a comment"
           />
           <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">
-            {replyTo ? 'Post Reply' : 'Post Comment'}
+            Post Comment
           </button>
         </form>
-      ) : (
-        <p>You must be logged in to post a comment.</p>
-      )}
+      ) : null}
+      {!isSignedIn && <p>You must be logged in to post a comment.</p>}
     </div>
   );
 };

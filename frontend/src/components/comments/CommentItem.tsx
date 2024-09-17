@@ -3,18 +3,18 @@
 import React, { useState } from 'react';
 import { useAuth, useUser } from '@clerk/clerk-react';
 import VoteButton from './VoteButtons';
-import { Comment } from './types'
+import { Comment } from './types';
 
 interface CommentWithReplies extends Comment {
   replies: CommentWithReplies[];
 }
 
-
 interface CommentItemProps {
   comment: CommentWithReplies;
   level?: number;
-  maxDepth: number; // Add maxDepth prop
-  onReply: (comment: Comment) => void;
+  maxDepth: number;
+  maxVisibleDepth: number;
+  onAddReply: (parentComment: Comment, replyContent: string) => void;
   onEdit: (comment: Comment) => void;
   onVote: (commentId: string, voteType: number) => void;
   isSignedIn: boolean | undefined;
@@ -27,7 +27,8 @@ const CommentItem: React.FC<CommentItemProps> = ({
   comment,
   level = 0,
   maxDepth,
-  onReply,
+  maxVisibleDepth,
+  onAddReply,
   onEdit,
   onVote,
   isSignedIn,
@@ -35,8 +36,10 @@ const CommentItem: React.FC<CommentItemProps> = ({
   replyTo,
   setReplyTo,
 }) => {
-  const [editContent, setEditContent] = useState<string>('');
+  const [editContent, setEditContent] = useState<string>(comment.content);
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [replyContent, setReplyContent] = useState<string>('');
+  const [currentMaxVisibleDepth, setCurrentMaxVisibleDepth] = useState<number>(maxVisibleDepth);
   const { user } = useUser();
 
   const handleUpdate = async (e: React.FormEvent) => {
@@ -46,8 +49,27 @@ const CommentItem: React.FC<CommentItemProps> = ({
     setIsEditing(false);
   };
 
+  const handleReplySubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isSignedIn) return;
+    await onAddReply(comment, replyContent);
+    setReplyContent('');
+    setReplyTo(null);
+  };
+
+  const handleViewMore = () => {
+    setCurrentMaxVisibleDepth(maxDepth);
+  };
+
   return (
-    <div style={{ marginLeft: level * 10, borderLeft: '1px solid #ccc', paddingLeft: 5, marginTop: 5 }}>
+    <div
+      style={{
+        marginLeft: level * 10,
+        borderLeft: '1px solid #ccc',
+        paddingLeft: 5,
+        marginTop: 5,
+      }}
+    >
       <div>
         <strong>{comment.username}</strong>: {comment.content}
       </div>
@@ -71,7 +93,10 @@ const CommentItem: React.FC<CommentItemProps> = ({
               </button>
             )}
             {comment.userId === user?.id && (
-              <button onClick={() => setIsEditing(true)} className="text-green-500 hover:underline text-sm">
+              <button
+                onClick={() => setIsEditing(true)}
+                className="text-green-500 hover:underline text-sm"
+              >
                 Edit
               </button>
             )}
@@ -87,7 +112,10 @@ const CommentItem: React.FC<CommentItemProps> = ({
             className="w-full p-1 border rounded mb-1"
           />
           <div className="flex space-x-1">
-            <button type="submit" className="px-2 py-1 bg-blue-500 text-white rounded text-sm">
+            <button
+              type="submit"
+              className="px-2 py-1 bg-blue-500 text-white rounded text-sm"
+            >
               Update
             </button>
             <button
@@ -101,15 +129,18 @@ const CommentItem: React.FC<CommentItemProps> = ({
         </form>
       )}
       {replyTo?._id === comment._id && (
-        <form onSubmit={handleUpdate} className="mt-1">
+        <form onSubmit={handleReplySubmit} className="mt-1">
           <textarea
-            value={editContent}
-            onChange={(e) => setEditContent(e.target.value)}
+            value={replyContent}
+            onChange={(e) => setReplyContent(e.target.value)}
             required
             className="w-full p-1 border rounded mb-1"
           />
           <div className="flex space-x-1">
-            <button type="submit" className="px-2 py-1 bg-blue-500 text-white rounded text-sm">
+            <button
+              type="submit"
+              className="px-2 py-1 bg-blue-500 text-white rounded text-sm"
+            >
               Post Reply
             </button>
             <button
@@ -124,21 +155,31 @@ const CommentItem: React.FC<CommentItemProps> = ({
       )}
       {comment.replies.length > 0 && (
         <div className="mt-2">
-          {comment.replies.map((reply) => (
-            <CommentItem
-              key={reply._id}
-              comment={reply}
-              level={level + 1}
-              maxDepth={maxDepth}
-              onReply={onReply}
-              onEdit={onEdit}
-              onVote={onVote}
-              isSignedIn={isSignedIn}
-              getToken={getToken}
-              replyTo={replyTo} // Pass replyTo prop
-              setReplyTo={setReplyTo} // Pass setReplyTo prop
-            />
-          ))}
+          {level + 1 >= currentMaxVisibleDepth && currentMaxVisibleDepth < maxDepth ? (
+            <button
+              onClick={handleViewMore}
+              className="text-blue-500 hover:underline text-sm"
+            >
+              View more comments
+            </button>
+          ) : (
+            comment.replies.map((reply) => (
+              <CommentItem
+                key={reply._id}
+                comment={reply}
+                level={level + 1}
+                maxDepth={maxDepth}
+                maxVisibleDepth={currentMaxVisibleDepth}
+                onAddReply={onAddReply}
+                onEdit={onEdit}
+                onVote={onVote}
+                isSignedIn={isSignedIn}
+                getToken={getToken}
+                replyTo={replyTo}
+                setReplyTo={setReplyTo}
+              />
+            ))
+          )}
         </div>
       )}
     </div>
