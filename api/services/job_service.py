@@ -6,7 +6,7 @@ from api.dependencies import newgrad_db as db
 
 
 async def create_job(job: JobCreate):
-    job_dict = job.dict()
+    job_dict = job.model_dump()
     result = await db.jobs.insert_one(job_dict)
     job_dict["_id"] = result.inserted_id
     return Job(**job_dict)

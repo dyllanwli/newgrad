@@ -1,6 +1,7 @@
 # app/main.py
 import os
 from contextlib import asynccontextmanager
+import logging
 
 import uvicorn
 from fastapi import FastAPI
@@ -10,15 +11,20 @@ from api.config import IS_PROD, setup_logging, load_dotenv, check_status
 from api.dependencies import create_text_index
 from api.routes import jobs, comments
 
+logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    setup_logging()
+    setup_logging()  
+    logger.info("Running startup function...")
+
     load_dotenv()
     check_status()
     await create_text_index()
+    
     yield
-
+    
+    logger.info("Running shutdown function...")
 
 app = FastAPI(
     title="API",
