@@ -1,8 +1,8 @@
 fastapi
 pydantic
-tiktoken==0.7.0
 stripe>=10.0.0
-'uvicorn[standard]'
-'pyjwt[crypto]'
+uvicorn[standard]
+pyjwt[crypto]
 motor
 tqdm
+python-dotenv
