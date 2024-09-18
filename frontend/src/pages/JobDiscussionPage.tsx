@@ -30,7 +30,7 @@ const JobDiscussionPage: React.FC = () => {
         ))}
       </div>
       <div className="mt-8">
-        <DiscussionComponent companyId={company_id || ''} />
+        <DiscussionComponent discussId={company_id || ''} />
       </div>
     </div>
   );

@@ -1,8 +1,8 @@
 // src/pages/JobSearchPage.tsx
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import JobList from '../components/jobs/JobList';
-import SearchBar from '../components/SearchBar';
+import JobList from './jobs/JobList';
+import SearchBar from './SearchBar';
 import axios from 'axios';
 
 const JobSearchPage: React.FC = () => {

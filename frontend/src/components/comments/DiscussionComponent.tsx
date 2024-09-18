@@ -5,16 +5,18 @@ import { useAuth } from '@clerk/clerk-react';
 import CommentItem from './CommentItem';
 import { Comment } from './types';
 import { MAX_DEPTH, MAX_VISIBLE_DEPTH } from './constants';
+import { Button, Textarea } from '@headlessui/react'
+import clsx from 'clsx'
 
 interface DiscussionComponentProps {
-  companyId: string;
+  discussId: string;
 }
 
 interface CommentWithReplies extends Comment {
   replies: CommentWithReplies[];
 }
 
-const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ companyId }) => {
+const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ discussId }) => {
   const { getToken, isSignedIn } = useAuth();
 
   const [comments, setComments] = useState<Comment[]>([]);
@@ -26,7 +28,6 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ companyId }) 
   useEffect(() => {
     const fetchComments = async () => {
       const token = isSignedIn ? await getToken() : null;
-      const discussId = companyId;
       fetch(`/api/discuss/${discussId}/comments`, {
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       })
@@ -36,7 +37,7 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ companyId }) 
         });
     };
     fetchComments();
-  }, [companyId, isSignedIn, getToken]);
+  }, [discussId, isSignedIn, getToken]);
 
   const buildCommentTree = (comments: Comment[]): CommentWithReplies[] => {
     const commentMap: { [key: string]: CommentWithReplies } = {};
@@ -64,7 +65,6 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ companyId }) 
       return;
     }
     const token = await getToken();
-    const discussId = companyId
     fetch(`/api/discuss/${discussId}/comments`, {
       method: 'POST',
       headers: {
@@ -86,7 +86,6 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ companyId }) 
       return;
     }
     const token = await getToken();
-    const discussId = companyId
     fetch(`/api/discuss/${discussId}/comments`, {
       method: 'POST',
       headers: {
@@ -195,16 +194,17 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ companyId }) 
       </div>
       {isSignedIn && !replyTo ? (
         <form onSubmit={handleSubmit} className="mt-6">
-          <textarea
+          <Textarea
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             required
-            className="w-full p-2 border rounded mb-2"
+            className="w-full p-2 border rounded rounded-lg mb-2"
             placeholder="Add a comment"
+            maxLength={1000}
           />
-          <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">
+          <Button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">
             Post Comment
-          </button>
+          </Button>
         </form>
       ) : null}
       {!isSignedIn && <p>You must be logged in to post a comment.</p>}

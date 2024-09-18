@@ -1,7 +1,7 @@
 // import React from 'react';
 // import { useTranslation } from 'react-i18next';
 
-import SearchJobs from '../components/SearchJobs';
+import SearchJobs from '../components/JobSearchPage';
 import Footer from '../components/Footer';
 
 export default function SearchPage() {
