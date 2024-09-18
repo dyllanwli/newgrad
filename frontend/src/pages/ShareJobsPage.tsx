@@ -3,8 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { Description, Field, Fieldset, Input, Label, Legend, Select, Textarea, Button } from '@headlessui/react';
 import axios from 'axios';
 import Footer from '../components/Footer';
+import { useAuth } from '@clerk/clerk-react';
 
 const ShareJobsPage: React.FC = () => {
+    const { getToken, isSignedIn } = useAuth();
+
     const [formData, setFormData] = useState({
         position: '',
         company_name: '',
@@ -24,6 +27,15 @@ const ShareJobsPage: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!isSignedIn) {
+          return;
+        }
+        const token = await getToken();
+        // Validation check
+        if (!formData.position || !formData.company_name || !formData.location || !formData.description || !formData.apply_link) {
+            alert('Please fill in all required fields.');
+            return;
+        }
         try {
             await axios.post('/api/jobs', formData);
             navigate('/home');
@@ -42,6 +54,7 @@ const ShareJobsPage: React.FC = () => {
                             <Label htmlFor="position">Position</Label>
                             <Input
                                 type="text"
+                                name="position"
                                 value={formData.position}
                                 onChange={handleChange}
                                 required
@@ -52,6 +65,7 @@ const ShareJobsPage: React.FC = () => {
                             <Label htmlFor="company_name">Company Name</Label>
                             <Input
                                 type="text"
+                                name="company_name" 
                                 value={formData.company_name}
                                 onChange={handleChange}
                                 required
@@ -62,6 +76,7 @@ const ShareJobsPage: React.FC = () => {
                             <Label htmlFor="location">Location</Label>
                             <Input
                                 type="text"
+                                name="location" 
                                 value={formData.location}
                                 onChange={handleChange}
                                 required
@@ -72,6 +87,7 @@ const ShareJobsPage: React.FC = () => {
                             <Label htmlFor="min_salary">Minimum Salary</Label>
                             <Input
                                 type="number"
+                                name="min_salary" 
                                 value={formData.min_salary}
                                 onChange={handleChange}
                                 className="w-full px-4 py-2 border rounded"
@@ -81,17 +97,9 @@ const ShareJobsPage: React.FC = () => {
                             <Label htmlFor="max_salary">Maximum Salary</Label>
                             <Input
                                 type="number"
+                                name="max_salary" 
                                 value={formData.max_salary}
                                 onChange={handleChange}
-                                className="w-full px-4 py-2 border rounded"
-                            />
-                        </Field>
-                        <Field className="mb-4">
-                            <Label htmlFor="description">Job Description</Label>
-                            <Textarea
-                                value={formData.description}
-                                onChange={handleChange}
-                                required
                                 className="w-full px-4 py-2 border rounded"
                             />
                         </Field>
@@ -99,6 +107,7 @@ const ShareJobsPage: React.FC = () => {
                             <Label htmlFor="apply_link">Application Link</Label>
                             <Input
                                 type="url"
+                                name="apply_link" 
                                 value={formData.apply_link}
                                 onChange={handleChange}
                                 required

@@ -19,7 +19,7 @@ class JobBase(BaseModel):
     locations: List[Location]
     not_sponsor: Optional[bool]
     us_citizen: Optional[bool]
-    description: str
+    description: Optional[str]
     expired: bool
     apply_link: str
     min_salary: Optional[float]

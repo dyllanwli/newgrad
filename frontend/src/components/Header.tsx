@@ -1,3 +1,5 @@
+// /src/components/Header.tsx
+
 import React, { useState } from 'react';
 import { ClerkButton } from './ClerkButton';
 import { Menu, X } from 'lucide-react';
@@ -5,32 +7,41 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import Logo from './branding/Logo';
+import { useAuth } from '@clerk/clerk-react';
+import FullScreenDialog from "./FullScreenDialog";
 
 const navItems = [
   { label: 'header.discuss', href: '/discuss' },
-  { label: 'header.sharejobs', href: '/sharejobs', color: 'purple' },
-  { label: 'header.profile', href: '/profile' },
+  { label: 'header.sharejobs', href: '/sharejobs', color: 'purple', requiresAuth: true },
+  { label: 'header.profile', href: '/profile', requiresAuth: true },
 ];
 
 interface NavigationItem {
   label: string;
   href: string;
   color?: string;
+  requiresAuth?: boolean;
 }
 
 interface NavigationProps {
   isOpen: boolean;
   navItems: NavigationItem[];
   toggleMenu: () => void;
+  toggleSignIn: () => void;
 }
 
-const Navigation: React.FC<NavigationProps> = ({ isOpen, navItems, toggleMenu }) => {
+const Navigation: React.FC<NavigationProps> = ({ isOpen, navItems, toggleMenu, toggleSignIn }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { isSignedIn } = useAuth(); // Use the useAuth hook
 
-  const handleNavigation = (href: string) => (event: React.MouseEvent) => {
+  const handleNavigation = (item: NavigationItem) => (event: React.MouseEvent) => {
     event.preventDefault();
-    navigate(href);
+    if (item.requiresAuth && !isSignedIn) {
+      toggleSignIn();
+    } else {
+      navigate(item.href);
+    }
     toggleMenu();
   };
 
@@ -49,7 +60,7 @@ const Navigation: React.FC<NavigationProps> = ({ isOpen, navItems, toggleMenu })
         {navItems.map((item, index) => (
           <button
             key={index}
-            onClick={handleNavigation(item.href)}
+            onClick={handleNavigation(item)}
             className={`block ml-1 py-1 px-4 md:text-base font-bold rounded-full ease-in-out whitespace-nowrap ${item.color ? 'text-white transform hover:scale-105 transition-transform duration-400' : 'hover:bg-opacity-80 hover:text-gray-500'} `}
             style={{ backgroundColor: item.color || 'transparent' }}
           >
@@ -63,11 +74,16 @@ const Navigation: React.FC<NavigationProps> = ({ isOpen, navItems, toggleMenu })
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showSignInPrompt, setShowSignInPrompt] = useState(false);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const navigate = useNavigate();
 
   const handleLogoClick = () => {
     navigate('/');
+  };
+
+  const toggleSignIn = () => {
+    setShowSignInPrompt(!showSignInPrompt);
   };
 
   return (
@@ -79,10 +95,9 @@ const Header = () => {
           </div>
         </div>
 
-
         <div className="flex items-center space-x-4">
           <div className="hidden md:flex">
-            <Navigation isOpen={true} navItems={navItems} toggleMenu={() => { }} />
+            <Navigation isOpen={true} navItems={navItems} toggleMenu={() => { }} toggleSignIn={toggleSignIn} />
           </div>
 
           <ClerkButton />
@@ -118,10 +133,17 @@ const Header = () => {
             transition={{ duration: 0.3 }}
             className="md:hidden bg-white"
           >
-            <Navigation isOpen={isMenuOpen} navItems={navItems} toggleMenu={toggleMenu} />
+            <Navigation isOpen={isMenuOpen} navItems={navItems} toggleMenu={toggleMenu} toggleSignIn={toggleSignIn} />
           </motion.div>
         )}
       </AnimatePresence>
+
+      <FullScreenDialog
+        isOpen={showSignInPrompt}
+        onClose={toggleSignIn}
+        title="Sign In Required"
+        description="Please sign in to access. Don't miss out on the fun! 🎉"
+      />
     </header>
   );
 };
