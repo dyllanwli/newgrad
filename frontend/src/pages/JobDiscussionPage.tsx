@@ -2,10 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import JobCard from '../components/jobs/JobCard'
 import DiscussionComponent from '../components/comments/DiscussionComponent';
 import { Job } from '../components/jobs/types';
 import JobList from '../components/jobs/JobList';
+import axios from 'axios';
 
 const JobDiscussionPage: React.FC = () => {
   const { company_id } = useParams<{ company_id: string }>();
@@ -14,13 +14,16 @@ const JobDiscussionPage: React.FC = () => {
   const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    // Fetch all jobs for the company
-    fetch(`/api/companies/${company_id}/jobs`)
-      .then((response) => response.json())
-      .then((data) => {
-        setJobs(data.jobs);
-        setTotalPages(data.totalPages);
-      });
+    const fetchJobs = async () => {
+      try {
+        const response = await axios.get(`/api/companies/${company_id}/jobs`);
+        setJobs(response.data.jobs);
+        setTotalPages(response.data.totalPages);
+      } catch (error) {
+        console.error('Error fetching jobs:', error);
+      }
+    };
+    fetchJobs();
   }, [company_id]);
 
   return (

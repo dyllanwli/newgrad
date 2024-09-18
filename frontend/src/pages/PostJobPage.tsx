@@ -32,7 +32,7 @@ const PostJobPage: React.FC = () => {
         }
         const token = await getToken();
         // Validation check
-        if (!formData.position || !formData.company_name || !formData.location || !formData.description || !formData.apply_link) {
+        if (!formData.position || !formData.company_name || !formData.location || !formData.apply_link) {
             alert('Please fill in all required fields.');
             return;
         }
