@@ -6,5 +6,5 @@ client = AsyncIOMotorClient(MONGODB_URL)
 newgrad_db = client["newgrad"]
 
 
-async def create_text_index():
+async def create_index():
     pass

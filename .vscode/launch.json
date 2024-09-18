@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: FastAPI",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/api/main.py",
+            "args": [
+                "-m",
+                "uvicorn",
+                "api.main:app",
+                "--reload",
+                "--port",
+                "8000",
+                "--host",
+                "0.0.0.0"
+            ],
+            "env": {
+                "IS_PROD": "0",
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "jinja": true,
+            "justMyCode": false
+        }
+    ]
+}
