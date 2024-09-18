@@ -1,4 +1,5 @@
 // src/pages/JobSearchPage.tsx
+
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import JobList from './jobs/JobList';

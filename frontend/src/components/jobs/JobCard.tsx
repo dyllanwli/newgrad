@@ -3,7 +3,8 @@ import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Job } from './types';
 import { formatDistanceToNow } from 'date-fns';
-import { fromZonedTime } from 'date-fns-tz'
+import { fromZonedTime } from 'date-fns-tz';
+import { Button } from '@headlessui/react'
 
 interface JobCardProps {
     job: Job;
@@ -32,9 +33,9 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
                         <p className="font-bold text-gray-600 mr-4">{job.company_name}</p>
                         <p className="text-gray-700">{job.locations[0].city}, {job.locations[0].state}</p>
                         {job.locations.length > 1 && (
-                            <button onClick={toggleLocations} className="ml-2 text-gray-500 hover:text-gray-700">
+                            <Button onClick={toggleLocations} className="ml-2 text-gray-500 hover:text-gray-700">
                                 {expanded ? <ChevronUpIcon size={20} /> : <ChevronDownIcon size={20} />}
-                            </button>
+                            </Button>
                         )}
                     </div>
                     <motion.div
@@ -54,7 +55,7 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
                         <p className="font-semibold mr-2">
                             {job.min_salary && job.max_salary ? `$${job.min_salary} - $${job.max_salary}` : 'Salary not specified'}
                         </p>
-                        <p>Posted {formatDistanceToNow(fromZonedTime(job.created_at, "UTC"), { addSuffix: true})}</p>
+                        <p>Posted {formatDistanceToNow(fromZonedTime(job.created_at, "UTC"), { addSuffix: true })}</p>
                     </div>
                 </div>
                 <div className="mt-4 md:mt-0 md:ml-4 flex flex-col space-y-2 md:w-48">
@@ -71,7 +72,7 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
                     <a
                         className={`text-purple-600 text-center transition-colors duration-30 whitespace-nowrap`}
                     >
-                        View Job Discussion
+                        View Discussion
                     </a>
                 </div>
             </div>

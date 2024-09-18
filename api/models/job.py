@@ -27,6 +27,7 @@ class JobBase(BaseModel):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
     company: Optional[Company]
+    tags: Optional[List[str]] = None
 
 
 class JobCreate(JobBase):
