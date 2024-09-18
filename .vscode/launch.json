@@ -20,7 +20,6 @@
                 "IS_PROD": "0",
                 "PYTHONPATH": "${workspaceFolder}"
             },
-            "jinja": true,
             "justMyCode": false
         }
     ]

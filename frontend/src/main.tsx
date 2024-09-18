@@ -9,8 +9,8 @@ import ErrorPage from './pages/commonPages/ErrorPage.tsx';
 import ProfilePage from './pages/ProfilePage.tsx';
 import SearchPage from './pages/SearchPage.tsx';
 import JobDiscussionPage from './pages/JobDiscussionPage';
+import ShareJobsPage from './pages/ShareJobsPage';
 // import DiscussPage from './pages/DiscussPage.tsx'
-// import PostJobsPage from './pages/PostJobsPage.tsx'
 
 const router = createBrowserRouter([
   {
@@ -21,6 +21,7 @@ const router = createBrowserRouter([
       { path: "/profile", element: <ProfilePage /> },
       { path: "/search", element: <SearchPage /> },
       { path: "/jobs/:company_id", element: <JobDiscussionPage /> },
+      { path: "/sharejobs", element: <ShareJobsPage /> }
       // { path: "/discuss", element: <DiscussPage /> },
       // { path: "/postjobs", element: <PostJobsPage /> },
 

@@ -13,10 +13,10 @@ from api.routes import jobs, comments
 logger = logging.getLogger(__name__)
 
 
-async def on_start():
+def on_start():
     load_dotenv()
     check_status()
-    await create_index()
+    create_index()
 
 
 on_start()
