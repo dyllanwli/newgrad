@@ -1,4 +1,5 @@
 # app/services/job_service.py
+
 from typing import Optional
 from bson import ObjectId
 from api.models.job import Job, JobCreate
@@ -21,7 +22,7 @@ async def get_jobs(skip: int = 0, limit: int = 10, search: Optional[str] = None)
                     "index": "default",
                     "text": {
                         "query": search,
-                        "path": ["position", "company"],
+                        "path": ["position", "company_name"],
                         "fuzzy": {
                             "maxEdits": 2,
                             "prefixLength": 1,
@@ -33,6 +34,21 @@ async def get_jobs(skip: int = 0, limit: int = 10, search: Optional[str] = None)
         )
     pipeline.extend(
         [
+            {
+                "$lookup": {
+                    "from": "companies",
+                    "localField": "company_id",
+                    "foreignField": "_id",
+                    "as": "company",
+                }
+            },
+            {"$unwind": "$company"},
+            {
+                "$addFields": {
+                    "_id": {"$toString": "$_id"},
+                    "company_id": {"$toString": "$company_id"},
+                }
+            },
             {"$sort": {"_id": 1}},
             {"$skip": skip},
             {"$limit": limit},
@@ -60,17 +76,36 @@ async def get_job(job_id: str):
     return None
 
 
-async def get_jobs_by_company_service(company_id: str):
+async def get_jobs_by_company_service(company_id: str, skip: int = 0, limit: int = 10):
     pipeline = [
-        {"$match": {"company.id": ObjectId(company_id)}},
+        {"$match": {"company_id": ObjectId(company_id)}},
+        {
+            "$lookup": {
+                "from": "companies",
+                "localField": "company_id",
+                "foreignField": "_id",
+                "as": "company",
+            }
+        },
         {
             "$addFields": {
                 "_id": {"$toString": "$_id"},
-                "company.id": {"$toString": "$company.id"},
+                "company_id": {"$toString": "$company_id"},
             }
         },
+        {"$unwind": "$company"},
+        {"$sort": {"_id": 1}},
+        {"$skip": skip},
+        {"$limit": limit},
     ]
     jobs_cursor = db.jobs.aggregate(pipeline)
     jobs = await jobs_cursor.to_list(length=None)
-    company_name = jobs[0]["company"]["name"] if jobs else ""
-    return jobs, company_name
+    total_jobs = await db.jobs.count_documents({})
+    return jobs, total_jobs
+
+
+async def increment_company_views(company_id: str):
+    result = await db.companies.update_one(
+        {"_id": ObjectId(company_id)}, {"$inc": {"views": 1}}
+    )
+    return result.modified_count > 0

@@ -17,7 +17,7 @@ const JobDiscussionPage: React.FC = () => {
       .then((response) => response.json())
       .then((data) => {
         setJobs(data.jobs);
-        setCompanyName(data.companyName);
+        setCompanyName(data.jobs.company_name);
       });
   }, [company_id]);
 

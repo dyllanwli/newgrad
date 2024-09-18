@@ -7,6 +7,7 @@ from api.models.base import PyObjectId
 class CompanyBase(BaseModel):
     _id: str
     name: str
+    views: int
 
 class CompanyCreate(CompanyBase):
     pass

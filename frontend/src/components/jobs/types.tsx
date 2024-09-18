@@ -1,17 +1,19 @@
 export interface Company {
     _id: string;
     name: string;
+    views: number;
 }
 
 export interface Job {
     _id: string;
     position: string;
     company: Company;
+    company_id: string;
+    company_name: string;
     locations: { state: string; city: string }[];
     not_sponsor?: boolean;
     us_citizen?: boolean;
-    views: number;
-    date_posted: string;
+    created_at: string;
     expired: boolean;
     apply_link: string;
     min_salary?: number;

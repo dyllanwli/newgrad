@@ -4,7 +4,7 @@ from typing import Optional, List
 from bson import ObjectId
 from api.models.base import PyObjectId
 from api.models.company import Company
-
+from datetime import datetime
 
 class Location(BaseModel):
     state: str
@@ -14,17 +14,19 @@ class Location(BaseModel):
 class JobBase(BaseModel):
     _id: str
     position: str
-    company: Company
+    company_id: str
+    company_name: str
     locations: List[Location]
     not_sponsor: Optional[bool]
     us_citizen: Optional[bool]
-    views: int
-    date_posted: str
     description: str
     expired: bool
     apply_link: str
     min_salary: Optional[float]
     max_salary: Optional[float]
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    company: Optional[Company]
 
 
 class JobCreate(JobBase):

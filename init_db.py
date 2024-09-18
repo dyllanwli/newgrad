@@ -2,9 +2,10 @@ import pandas as pd
 from motor.motor_asyncio import AsyncIOMotorClient
 import asyncio
 from api.models.job import JobCreate
-from api.models.company import CompanyCreate, Company
+from api.models.company import CompanyCreate
 from api.config import MONGODB_URL
 from tqdm import tqdm
+from datetime import datetime
 
 
 async def init_db():
@@ -26,7 +27,7 @@ async def init_db():
     for job in jobs:
         company_name = job["company"]
         if company_name not in companies:
-            companies[company_name] = CompanyCreate(name=company_name)
+            companies[company_name] = CompanyCreate(name=company_name, views=0)
             try:
                 await db.companies.insert_one(companies[company_name].dict())
             except Exception as e:
@@ -43,20 +44,21 @@ async def init_db():
             locations_list.append({"state": state, "city": city})
 
         company_instance = await db.companies.find_one({"name": job["company"]})
-
+        date_posted_dt = datetime.strptime(job["date_posted"] + " 2024", "%b %d %Y")
+        timestamp = date_posted_dt.timestamp()
         job_create = JobCreate(
             position=job["role"],
-            company=company_instance,
+            company_id= str(company_instance["_id"]),
+            company_name = str(company_instance["name"]),
             locations=locations_list,
             not_sponsor=None,
             us_citizen=None,
-            views=0,
-            date_posted=job["date_posted"] + "2024",
             description="",
             expired=False,
             apply_link=job["apply_url"],
             min_salary=None,
             max_salary=None,
+            created_at=timestamp,
         )
         await db.jobs.insert_one(job_create.dict())
 

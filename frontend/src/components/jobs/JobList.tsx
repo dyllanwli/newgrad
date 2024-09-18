@@ -23,7 +23,7 @@ const JobList: React.FC<JobListProps> = ({ jobs, currentPage, setCurrentPage, to
             <h2 className="text-3xl font-bold mb-6 text-gray-800">Available Jobs</h2>
             <div className="space-y-4">
                 {jobs.map((job) => (
-                    <div key={job._id} onClick={() => handleJobClick(job.company._id)} className="cursor-pointer">
+                    <div key={job._id} onClick={() => handleJobClick(job.company_id)} className="cursor-pointer">
                         <JobCard job={job} />
                     </div>
                 ))}
