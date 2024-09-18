@@ -5,7 +5,7 @@ import axios from 'axios';
 import Footer from '../components/Footer';
 import { useAuth } from '@clerk/clerk-react';
 
-const ShareJobsPage: React.FC = () => {
+const PostJobPage: React.FC = () => {
     const { getToken, isSignedIn } = useAuth();
 
     const [formData, setFormData] = useState({
@@ -49,7 +49,7 @@ const ShareJobsPage: React.FC = () => {
             <div className="flex justify-center py-8">
                 <form onSubmit={handleSubmit} className="w-full max-w-lg bg-white p-8 rounded-lg shadow-md">
                     <Fieldset>
-                        <Legend className="text-2xl font-bold mb-4">Share a Job</Legend>
+                        <Legend className="text-2xl font-bold mb-4">Post a Job</Legend>
                         <Field className="mb-4">
                             <Label htmlFor="position">Position</Label>
                             <Input
@@ -128,4 +128,4 @@ const ShareJobsPage: React.FC = () => {
     );
 };
 
-export default ShareJobsPage;
+export default PostJobPage;

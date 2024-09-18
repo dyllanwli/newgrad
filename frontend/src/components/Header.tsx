@@ -12,7 +12,7 @@ import FullScreenDialog from "./FullScreenDialog";
 
 const navItems = [
   { label: 'header.discuss', href: '/discuss' },
-  { label: 'header.sharejobs', href: '/sharejobs', color: 'purple', requiresAuth: true },
+  { label: 'header.postjob', href: '/postjob', color: 'purple', requiresAuth: true },
   { label: 'header.profile', href: '/profile', requiresAuth: true },
 ];
 
