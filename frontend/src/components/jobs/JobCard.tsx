@@ -1,3 +1,5 @@
+// /src/components/jobs/JobCard.tsx
+
 import React, { useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -11,9 +13,7 @@ interface JobCardProps {
 }
 
 const JobCard: React.FC<JobCardProps> = ({ job }) => {
-
     const [expanded, setExpanded] = useState(false);
-
 
     const toggleLocations = () => {
         setExpanded(!expanded);
@@ -26,7 +26,7 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
         >
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div className="flex flex-col md:flex-row md:items-start md:justify-between">
                 <div className="flex-grow">
                     <h3 className="text-lg font-bold mb-1">{job.position}</h3>
                     <div className="flex items-center mb-1">
@@ -58,19 +58,19 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
                         <p>Posted {formatDistanceToNow(fromZonedTime(job.created_at, "UTC"), { addSuffix: true })}</p>
                     </div>
                 </div>
-                <div className="mt-4 md:mt-0 md:ml-4 flex flex-col space-y-2 md:w-48">
+                <div className="mt-4 md:mt-0 md:ml-4 flex flex-col space-y-2 md:w-auto">
                     <a
                         href={job.expired ? '#' : job.apply_link}
-                        className={`w-full text-center py-2 rounded ${job.expired
-                            ? 'bg-gray-400 cursor-not-allowed text-white'
-                            : 'bg-purple-600 font-bold hover:bg-purple-700 text-white transition-colors duration-300'
+                        className={`w-full sm:w-auto text-center py-2 px-4 rounded whitespace-nowrap ${job.expired
+                                ? 'bg-gray-400 cursor-not-allowed text-white'
+                                : 'bg-purple-600 font-bold hover:bg-purple-700 text-white transition-colors duration-300'
                             }`}
                         onClick={job.expired ? (e) => e.preventDefault() : undefined}
                     >
                         {job.expired ? 'Application Closed' : 'Apply Now'}
                     </a>
                     <a
-                        className={`text-purple-600 text-center transition-colors duration-30 whitespace-nowrap`}
+                        className="text-purple-600 text-center transition-colors duration-300 whitespace-nowrap"
                     >
                         View Discussion
                     </a>
