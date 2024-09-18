@@ -100,7 +100,7 @@ async def get_jobs_by_company_service(company_id: str, skip: int = 0, limit: int
     ]
     jobs_cursor = db.jobs.aggregate(pipeline)
     jobs = await jobs_cursor.to_list(length=None)
-    total_jobs = await db.jobs.count_documents({})
+    total_jobs = await db.jobs.count_documents({"company_id": ObjectId(company_id)})
     return jobs, total_jobs
 
 
