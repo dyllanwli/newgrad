@@ -7,7 +7,7 @@ const HeroSection = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="relative h-[50vh] pt-24 pb-16 flex flex-col items-start justify-center bg-pale-blue p-4 sm:p-8 overflow-hidden">
+    <div className="relative scale-75 flex flex-col items-start justify-center bg-pale-blue overflow-hidden">
       <div className="relative z-10 mx-auto flex flex-col md:flex-row items-center w-full md:w-4/5">
         <div className="flex flex-col items-start">
           <motion.h1

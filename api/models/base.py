@@ -1,5 +1,4 @@
 from bson import ObjectId
-import pydantic
 
 
 class PyObjectId(ObjectId):
@@ -10,8 +9,8 @@ class PyObjectId(ObjectId):
     @classmethod
     def validate(cls, v, validation_info=None):
         if not ObjectId.is_valid(v):
-            raise pydantic.ValidationError("Invalid objectid")
-        return v
+            raise ValueError("Invalid objectid")
+        return ObjectId(v)
 
     @classmethod
     def __get_pydantic_json_schema__(cls, core_schema, handler):

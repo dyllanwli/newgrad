@@ -17,16 +17,16 @@ class JobBase(BaseModel):
     company_id: str
     company_name: str
     locations: List[Location]
-    not_sponsor: Optional[bool]
-    us_citizen: Optional[bool]
-    description: Optional[str]
+    not_sponsor: Optional[bool] = None
+    us_citizen: Optional[bool] = None
+    description: Optional[str] = None
     expired: bool
     apply_link: str
-    min_salary: Optional[float]
-    max_salary: Optional[float]
+    min_salary: Optional[float] = None
+    max_salary: Optional[float] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
-    company: Optional[Company]
+    company: Optional[Company] = None
     tags: Optional[List[str]] = None
 
 

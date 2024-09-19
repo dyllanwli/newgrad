@@ -1,6 +1,6 @@
 # api/routers/jobs.py
 from fastapi import APIRouter, Depends, HTTPException, status, Query
-from typing import List, Optional, Dict
+from typing import List, Optional
 from pydantic import BaseModel
 from api.models.job import Job, JobCreate
 from api.services.job_service import (
