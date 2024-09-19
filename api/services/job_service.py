@@ -76,7 +76,9 @@ async def get_job(job_id: str):
     return None
 
 
-async def get_jobs_by_company_service(company_id: str, skip: int = 0, limit: int = 10):
+async def get_jobs_by_company_service(
+    company_id: str, skip: int = 0, limit: int = 10, sort_by_created_at: bool = True
+):
     pipeline = [
         {"$match": {"company_id": ObjectId(company_id)}},
         {
@@ -94,7 +96,7 @@ async def get_jobs_by_company_service(company_id: str, skip: int = 0, limit: int
             }
         },
         {"$unwind": "$company"},
-        {"$sort": {"_id": 1}},
+        {"$sort": {"created_at": -1}} if sort_by_created_at else {"$sort": {"_id": 1}},
         {"$skip": skip},
         {"$limit": limit},
     ]

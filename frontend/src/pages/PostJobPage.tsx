@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Footer from '../components/Footer';
 import { useAuth } from '@clerk/clerk-react';
-import PostJobFieldset from '../components/PostJobFieldset';
+import JobFieldset from '../components/JobFieldset';
 
 const PostJobPage: React.FC = () => {
     const { getToken, isSignedIn } = useAuth();
@@ -13,16 +13,20 @@ const PostJobPage: React.FC = () => {
         company_id: '',
         company_name: '',
         locations: [],
+        not_sponsor: false,
+        us_citizen: false,
+        internship: false,
+        remote: false,
         expired: false,
-        min_salary: 0,
-        max_salary: 0,
-        description: '',
         apply_link: '',
+        min_salary: 70000,
+        max_salary: 90000,
+        tabs: [],
     });
 
     const navigate = useNavigate();
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const handleChange = (e: any) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
@@ -45,7 +49,7 @@ const PostJobPage: React.FC = () => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            navigate('/home');
+            window.location.reload();
         } catch (error) {
             console.error('Error creating job post:', error);
         }
@@ -54,8 +58,10 @@ const PostJobPage: React.FC = () => {
     return (
         <div className="flex flex-col min-h-screen">
             <div className="flex justify-center py-8">
-                <PostJobFieldset
+                <JobFieldset
                     Job={formData}
+                    title={"Post a Job"}
+                    buttonTitle={"Post Job"}
                     handleChange={handleChange}
                     handleSubmit={handleSubmit}
                 />

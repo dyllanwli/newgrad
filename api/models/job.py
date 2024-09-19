@@ -9,6 +9,7 @@ from datetime import datetime
 class Location(BaseModel):
     state: str
     city: str
+    country: Optional[str] = None
 
 
 class JobBase(BaseModel):
@@ -20,6 +21,8 @@ class JobBase(BaseModel):
     not_sponsor: Optional[bool] = None
     us_citizen: Optional[bool] = None
     description: Optional[str] = None
+    internship: Optional[bool] = None
+    remote: Optional[bool] = None
     expired: bool
     apply_link: str
     min_salary: Optional[float] = None

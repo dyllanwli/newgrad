@@ -49,21 +49,23 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
                         ))}
                     </motion.div>
                     <div className="flex flex-wrap items-center text-sm text-gray-600">
+                        <p className="mr-2">{job.company?.views || 0} views</p>
                         {job.not_sponsor && <p className="text-red-500 mr-2">Does NOT offer Sponsorship</p>}
                         {job.us_citizen && <p className="text-blue-500 mr-2">Requires U.S. Citizenship</p>}
-                        <p className="mr-2">{job.company.views} views</p>
-                        <p className="font-semibold mr-2">
-                            {job.min_salary && job.max_salary ? `$${job.min_salary} - $${job.max_salary}` : 'Salary not specified'}
-                        </p>
-                        <p>Posted {formatDistanceToNow(fromZonedTime(job.created_at, "UTC"), { addSuffix: true })}</p>
+                        {job.min_salary && job.max_salary && (
+                            <p className="font-semibold mr-2">
+                                `$${job.min_salary} - $${job.max_salary}`
+                            </p>
+                        )}
+                        {job.created_at && <p>Posted {formatDistanceToNow(fromZonedTime(job.created_at, "UTC"), { addSuffix: true })}</p>}
                     </div>
                 </div>
                 <div className="mt-4 md:mt-0 md:ml-4 flex flex-col space-y-2 md:w-auto">
                     <a
                         href={job.expired ? '#' : job.apply_link}
                         className={`w-full sm:w-auto text-center py-2 px-4 rounded whitespace-nowrap ${job.expired
-                                ? 'bg-gray-400 cursor-not-allowed text-white'
-                                : 'bg-purple-600 font-bold hover:bg-purple-700 text-white transition-colors duration-300'
+                            ? 'bg-gray-400 cursor-not-allowed text-white'
+                            : 'bg-purple-600 font-bold hover:bg-purple-700 text-white transition-colors duration-300'
                             }`}
                         onClick={job.expired ? (e) => e.preventDefault() : undefined}
                     >
