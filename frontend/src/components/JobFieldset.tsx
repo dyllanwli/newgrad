@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Input, Fieldset, Field, Label, Legend, Button, Switch, Combobox, ComboboxOption, ComboboxOptions, ComboboxInput } from '@headlessui/react';
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react';
+import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
 import { Job, Company } from "./jobs/types";
 import { NumericFormat } from 'react-number-format';
@@ -27,6 +28,11 @@ const JobFieldset: React.FC<JobFieldsetProps> = ({ Job, title, buttonTitle, hand
     const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
     const [createNewCompany, setCreateNewCompany] = useState(false);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
+
+    const fieldVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0 }
+    };
 
     useEffect(() => {
         if (query.length > 1) {
@@ -90,8 +96,13 @@ const JobFieldset: React.FC<JobFieldsetProps> = ({ Job, title, buttonTitle, hand
     };
 
     return (
-        <form onSubmit={handleSubmit} className="w-full max-w-lg bg-white p-8 rounded-lg shadow-md">
-            <Fieldset>
+        <motion.form
+            onSubmit={handleSubmit}
+            className="w-full max-w-lg bg-white p-8 rounded-lg shadow-md"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+        >            <Fieldset>
                 <Legend className="text-2xl font-bold mb-4">{title}</Legend>
                 <Field className="mb-4">
                     <Label htmlFor="apply_link">Application Link</Label>
@@ -355,7 +366,7 @@ const JobFieldset: React.FC<JobFieldsetProps> = ({ Job, title, buttonTitle, hand
                     {buttonTitle}
                 </Button>
             </Fieldset>
-        </form>
+        </motion.form>
     );
 };
 
