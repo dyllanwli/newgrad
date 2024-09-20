@@ -1,7 +1,7 @@
 # api/routers/comments.py
 
-from fastapi import APIRouter, Depends, HTTPException, status
-from typing import List, Annotated
+from fastapi import APIRouter, HTTPException, status
+from typing import List
 from api.models.comment import Comment, CommentCreate
 from api.services.comment_service import (
     create_comment_service,
@@ -9,11 +9,9 @@ from api.services.comment_service import (
     vote_comment_service,
     update_comment_service,
 )
-from api.utils.clerk import verify_credentials
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from api.utils.auth import verify_credentials, HTTPCredentials
 
 router = APIRouter()
-security = HTTPBearer()
 
 
 @router.get("/discuss/{discuss_id}/comments", response_model=List[Comment])
@@ -26,13 +24,10 @@ async def read_comments(discuss_id: str):
 async def post_comment(
     discuss_id: str,
     comment: CommentCreate,
-    credentials: Annotated[HTTPAuthorizationCredentials, Depends(HTTPBearer())],
+    credentials: HTTPCredentials,
 ):
     user_session = verify_credentials(credentials)
-    if not user_session:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
-        )
+
     user_id = user_session["id"]
     username = user_session["username"]
 
@@ -44,13 +39,9 @@ async def post_comment(
 async def vote_comment(
     comment_id: str,
     vote_type: int,
-    credentials: Annotated[HTTPAuthorizationCredentials, Depends(HTTPBearer())],
+    credentials: HTTPCredentials,
 ):
     user_session = verify_credentials(credentials)
-    if not user_session:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
-        )
     user_id = user_session["id"]
     await vote_comment_service(comment_id, user_id, vote_type)
     return {"message": "Vote registered"}
@@ -60,13 +51,9 @@ async def vote_comment(
 async def update_comment(
     comment_id: str,
     comment_update: CommentCreate,
-    credentials: Annotated[HTTPAuthorizationCredentials, Depends(HTTPBearer())],
+    credentials: HTTPCredentials,
 ):
     user_session = verify_credentials(credentials)
-    if not user_session:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
-        )
     user_id = user_session["id"]
     updated_comment = await update_comment_service(comment_id, comment_update, user_id)
     return updated_comment

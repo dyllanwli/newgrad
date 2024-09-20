@@ -1,7 +1,7 @@
 # app/models/company.py
 from pydantic import BaseModel, Field
 
-# from typing import Optional
+from typing import Optional
 from bson import ObjectId
 from api.models.base import PyObjectId
 
@@ -10,6 +10,8 @@ class CompanyBase(BaseModel):
     _id: str
     name: str
     views: int
+    description: Optional[str] = None
+    employees: Optional[int] = None
 
 
 class CompanyCreate(CompanyBase):

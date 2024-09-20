@@ -1,4 +1,4 @@
-# app/services/job_service.py
+# api/services/job_service.py
 
 from typing import Optional
 from bson import ObjectId
@@ -6,14 +6,69 @@ from api.models.job import Job, JobCreate
 from api.dependencies import newgrad_db as db
 
 
-async def create_job(job: JobCreate):
+async def delete_job(job_id: str, where: str):
+    if where == "queue":
+        result = await db.jobs_queue.delete_one({"_id": ObjectId(job_id)})
+        if result.deleted_count == 1:
+            return {"detail": "Job queue deleted successfully"}
+    elif where == "jobs":
+        result = await db.jobs_queue.delete_one({"_id": ObjectId(job_id)})
+        if result.deleted_count == 1:
+            return {"detail": "Job deleted successfully"}
+
+
+async def create_job_queue(job: JobCreate):
     job_dict = job.model_dump()
-    result = await db.jobs.insert_one(job_dict)
+    company_id = job_dict.get("company_id")
+    if not company_id:
+        job_dict["company_id"] = ObjectId()
+    else:
+        job_dict["company_id"] = ObjectId(job_dict["company_id"])
+    result = await db.jobs_queue.insert_one(job_dict)
+    job_dict["company_id"] = str(job_dict["company_id"])
     job_dict["_id"] = result.inserted_id
     return Job(**job_dict)
 
 
-async def get_jobs(skip: int = 0, limit: int = 10, search: Optional[str] = None):
+async def update_job(job: JobCreate):
+    job_dict = job.model_dump()
+    company_id = job_dict.get("company_id")
+    if not company_id:
+        company_name = job_dict.get("company_name")
+        existing_company = await db.companies.find_one({"name": company_name})
+
+        if existing_company:
+            company_id = existing_company["_id"]
+        else:
+            result = await db.companies.insert_one({"name": company_name})
+            company_id = result.inserted_id
+
+        job_dict["company_id"] = company_id
+    else:
+        job_dict["company_id"] = ObjectId(job_dict["company_id"])
+
+    # Check if the job already exists
+    existing_job = await db.jobs.find_one({"_id": job_dict["_id"]})
+    if existing_job:
+        # Update the existing job
+        await db.jobs.update_one({"_id": job_dict["_id"]}, {"$set": job_dict})
+        job_dict["company_id"] = str(job_dict["company_id"])
+        return Job(**job_dict)
+    else:
+        # If the job does not exist, insert it as a new job
+        result = await db.jobs.insert_one(job_dict)
+        job_dict["company_id"] = str(job_dict["company_id"])
+        job_dict["_id"] = result.inserted_id
+        return Job(**job_dict)
+
+async def get_jobs(skip: int = 0, limit: int = 10, search: Optional[str] = None, where: str = None):
+    collection = None
+    if where == "queue":
+        collection = db.jobs_queue
+    elif where == "jobs":
+        collection = db.jobs
+    else:
+        return None, None
     pipeline = []
     if search:
         pipeline.append(
@@ -55,16 +110,16 @@ async def get_jobs(skip: int = 0, limit: int = 10, search: Optional[str] = None)
         ]
     )
 
-    cursor = db.jobs.aggregate(pipeline)
+    cursor = collection.aggregate(pipeline)
     jobs = await cursor.to_list(length=limit)
     # Get total count of documents matching the search
     if search:
         count_pipeline = pipeline[:-3] + [{"$count": "total"}]
-        count_cursor = db.jobs.aggregate(count_pipeline)
+        count_cursor = collection.aggregate(count_pipeline)
         count_result = await count_cursor.to_list(length=1)
         total_jobs = count_result[0]["total"] if count_result else 0
     else:
-        total_jobs = await db.jobs.count_documents({})
+        total_jobs = await collection.count_documents({})
 
     return jobs, total_jobs
 
@@ -76,9 +131,7 @@ async def get_job(job_id: str):
     return None
 
 
-async def get_jobs_by_company_service(
-    company_id: str, skip: int = 0, limit: int = 10, sort_by_created_at: bool = True
-):
+async def get_jobs_by_company_service(company_id: str, skip: int = 0, limit: int = 10):
     pipeline = [
         {"$match": {"company_id": ObjectId(company_id)}},
         {
@@ -96,7 +149,6 @@ async def get_jobs_by_company_service(
             }
         },
         {"$unwind": "$company"},
-        {"$sort": {"created_at": -1}} if sort_by_created_at else {"$sort": {"_id": 1}},
         {"$skip": skip},
         {"$limit": limit},
     ]

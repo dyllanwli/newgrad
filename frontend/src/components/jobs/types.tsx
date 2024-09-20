@@ -1,8 +1,11 @@
 // src/components/jobs/types.tsx
+
 export interface Company {
     _id: string;
     name: string;
     views: number;
+    description?: string;
+    employees?: number;
 }
 
 export interface Job {
@@ -21,5 +24,6 @@ export interface Job {
     apply_link: string;
     min_salary?: number;
     max_salary?: number;
-    tabs?: string[]
+    tags?: string[]
+    description?: string;
 }

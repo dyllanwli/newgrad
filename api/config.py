@@ -53,3 +53,10 @@ def check_status():
            
 IS_PROD = os.getenv("IS_PROD", "0") == "1"
 MONGODB_URL = os.getenv("MONGODB_URL")
+CLERK_PEM_PUBLIC_KEY = None
+if IS_PROD:
+    with open("clerk.prod.pem", "rb") as pem_file:
+        CLERK_PEM_PUBLIC_KEY = pem_file.read()
+else:
+    with open("clerk.dev.pem", "rb") as pem_file:
+        CLERK_PEM_PUBLIC_KEY = pem_file.read()

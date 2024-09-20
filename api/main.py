@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from api.config import load_dotenv, check_status
 from api.dependencies import create_index
-from api.routes import jobs, comments
+from api.routes import jobs, comments, companies
 
 logger = logging.getLogger(__name__)
 
@@ -36,6 +36,7 @@ app.add_middleware(
 
 app.include_router(jobs.router, prefix="/api")
 app.include_router(comments.router, prefix="/api")
+app.include_router(companies.router, prefix="/api")
 
 
 if __name__ == "__main__":

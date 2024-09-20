@@ -1,5 +1,6 @@
+// frontend/src/pages/PostJobPage.tsx
+
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Footer from '../components/Footer';
 import { useAuth } from '@clerk/clerk-react';
@@ -12,7 +13,11 @@ const PostJobPage: React.FC = () => {
         position: '',
         company_id: '',
         company_name: '',
-        locations: [],
+        locations: [{
+            city: "",
+            state: "",
+            country: "",
+        }],
         not_sponsor: false,
         us_citizen: false,
         internship: false,
@@ -21,10 +26,8 @@ const PostJobPage: React.FC = () => {
         apply_link: '',
         min_salary: 70000,
         max_salary: 90000,
-        tabs: [],
+        tags: [],
     });
-
-    const navigate = useNavigate();
 
     const handleChange = (e: any) => {
         const { name, value } = e.target;
@@ -39,11 +42,12 @@ const PostJobPage: React.FC = () => {
         const token = await getToken();
         // Validation check
         if (!formData.position || !formData.company_name || !formData.locations || !formData.apply_link) {
-            alert('Please fill in all required fields.');
+            console.log('Please fill in all required fields.');
             return;
         }
+        console.log(formData)
         try {
-            await axios.post('/api/jobs', formData, {
+            await axios.post('/api/post_job_request', formData, {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,

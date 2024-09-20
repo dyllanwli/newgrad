@@ -1,7 +1,11 @@
-import React from 'react';
-import { Fieldset, Field, Input, Label, Legend, Button, Switch } from '@headlessui/react';
-import { Job } from "./jobs/types";
+// frontend/src/components/JobFieldset.tsx
+
+import React, { useState, useEffect, useRef } from 'react';
+import { Input, Fieldset, Field, Label, Legend, Button, Switch, Combobox, ComboboxOption, ComboboxOptions, ComboboxInput } from '@headlessui/react';
+import { Job, Company } from "./jobs/types";
 import { NumericFormat } from 'react-number-format';
+import { useAuth } from '@clerk/clerk-react';
+import axios from 'axios';
 
 interface JobFieldsetProps {
     Job: Omit<Job, '_id'>; // Exclude _id from the Job interface
@@ -12,6 +16,67 @@ interface JobFieldsetProps {
 }
 
 const JobFieldset: React.FC<JobFieldsetProps> = ({ Job, title, buttonTitle, handleChange, handleSubmit }) => {
+    const { getToken } = useAuth()
+    const [companySuggestions, setCompanySuggestions] = useState<Company[]>([]);
+    const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+    const [query, setQuery] = useState(Job.company_name || '');
+    const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
+    const [createNewCompany, setCreateNewCompany] = useState(false);
+
+    useEffect(() => {
+        if (query.length > 1) {
+            // Debounce API call
+            if (debounceTimeout.current) {
+                clearTimeout(debounceTimeout.current);
+            }
+            debounceTimeout.current = setTimeout(async () => {
+                try {
+                    const token = await getToken();
+                    const response = await axios.get(
+                        `/api/companies/search?query=${encodeURIComponent(query)}`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        }
+                    );
+                    setCompanySuggestions(response.data);
+                } catch (error) {
+                    console.error('Error fetching company suggestions:', error);
+                }
+            }, 300);
+        } else {
+            setCompanySuggestions([]);
+        }
+
+        // Cleanup on unmount
+        return () => {
+            if (debounceTimeout.current) {
+                clearTimeout(debounceTimeout.current);
+            }
+        };
+    }, [query, getToken]);
+
+    const handleCompanySelect = (company: Company | null) => {
+        console.log("changing")
+        if (company) {
+            setSelectedCompany(company);
+            handleChange({
+                target: { name: 'company_id', value: company._id },
+            });
+            handleChange({
+                target: { name: "company_name", value: company.name }
+            });
+        } else if (createNewCompany) {
+            handleChange({
+                target: { name: 'company_id', value: '' },
+            });
+            handleChange({
+                target: { name: "company_name", value: query }
+            });
+        }
+    };
+
     return (
         <form onSubmit={handleSubmit} className="w-full max-w-lg bg-white p-8 rounded-lg shadow-md">
             <Fieldset>
@@ -38,16 +103,50 @@ const JobFieldset: React.FC<JobFieldsetProps> = ({ Job, title, buttonTitle, hand
                         className="w-full px-4 py-2 border rounded"
                     />
                 </Field>
-                <Field className="mb-4">
-                    <Label htmlFor="company_name">Company Name</Label>
-                    <Input
-                        type="text"
-                        name="company_name"
-                        value={Job.company_name}
-                        onChange={handleChange}
-                        required
-                        className="w-full px-4 py-2 border rounded"
-                    />
+                <Field className="mb-4 relative">
+                    <Combobox
+                        value={selectedCompany}
+                        onChange={handleCompanySelect}
+                    >
+                        <Label className="block text-sm font-medium text-gray-700">
+                            Company Name
+                        </Label>
+                        <div className="relative mt-1">
+                            <ComboboxInput
+                                className="w-full px-4 py-2 border rounded"
+                                onChange={(event) => {
+                                    setQuery(event.target.value);
+                                    setCreateNewCompany(false);
+                                }}
+                                displayValue={(company: Company) => (company ? company.name : '')}
+                                required
+                            />
+                            <ComboboxOptions
+                                className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                {query.length > 0 && (
+                                    <ComboboxOption
+                                        value={{ id: null, name: query }}
+                                        className={({ focus }) =>
+                                            `relative cursor-default select-none py-2 pl-3 pr-9 ${focus ? 'bg-purple-600 text-white' : 'text-gray-900'}`
+                                        }
+                                    >
+                                        Create new company "{query}"
+                                    </ComboboxOption>
+                                )}
+                                {companySuggestions.map((company) => (
+                                    <ComboboxOption
+                                        key={company._id}
+                                        value={company}
+                                        className={({ focus }) =>
+                                            `relative cursor-default select-none py-2 pl-3 pr-9 ${focus ? 'bg-purple-600 text-white' : 'text-gray-900'}`
+                                        }
+                                    >
+                                        {company.name}
+                                    </ComboboxOption>
+                                ))}
+                            </ComboboxOptions>
+                        </div>
+                    </Combobox>
                 </Field>
                 {Job.locations.map((loc, index) => (
                     <div key={index} className="flex mb-4">
@@ -122,7 +221,7 @@ const JobFieldset: React.FC<JobFieldsetProps> = ({ Job, title, buttonTitle, hand
                 </Field>
                 <Field className="mb-4">
                     <div className="flex items-center justify-between">
-                        <Label htmlFor="internship">Is Internship</Label>
+                        <Label htmlFor="internship">Internship</Label>
                         <Switch
                             name="internship"
                             checked={Job.internship}
