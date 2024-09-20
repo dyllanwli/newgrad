@@ -14,7 +14,7 @@ export interface Job {
     company?: Company;
     company_id: string;
     company_name: string;
-    locations: { state: string; city: string; country?: string }[];
+    locations: { state?: string; city?: string; country?: string }[];
     not_sponsor?: boolean;
     us_citizen?: boolean;
     created_at?: string;

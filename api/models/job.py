@@ -7,8 +7,8 @@ from api.models.company import Company
 from datetime import datetime
 
 class Location(BaseModel):
-    state: str
-    city: str
+    state: Optional[str] = None
+    city: Optional[str] = None
     country: Optional[str] = None
 
 

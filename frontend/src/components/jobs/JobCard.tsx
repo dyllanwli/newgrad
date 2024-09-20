@@ -31,7 +31,7 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
                     <h3 className="text-lg font-bold mb-1">{job.position}</h3>
                     <div className="flex items-center mb-1">
                         <p className="font-bold text-gray-600 mr-4">{job.company_name}</p>
-                        <p className="text-gray-700">{job.locations[0].city}, {job.locations[0].state}</p>
+                        {job.locations?.length > 0 && <p className="text-gray-700">{job.locations[0].city} {job.locations[0].state}</p>}
                         {job.locations.length > 1 && (
                             <Button onClick={toggleLocations} className="ml-2 text-gray-500 hover:text-gray-700">
                                 {expanded ? <ChevronUpIcon size={20} /> : <ChevronDownIcon size={20} />}
@@ -45,7 +45,7 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
                         className="overflow-hidden"
                     >
                         {job.locations.slice(1).map((loc, index) => (
-                            <p key={index} className="text-gray-600">{loc.city}, {loc.state}</p>
+                            <p key={index} className="text-gray-600">{loc.city} {loc.state}</p>
                         ))}
                     </motion.div>
                     <div className="flex flex-wrap items-center text-sm text-gray-600">

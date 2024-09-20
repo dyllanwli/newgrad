@@ -189,7 +189,6 @@ const JobFieldset: React.FC<JobFieldsetProps> = ({ Job, title, buttonTitle, hand
                                     onChange={(e) => handleChange({
                                         target: { name: 'locations', value: Job.locations.map((l, i) => i === index ? { ...l, city: e.target.value } : l) }
                                     })}
-                                    required
                                     className="w-full px-4 py-2 border rounded"
                                 />
                             </Field>
@@ -202,7 +201,6 @@ const JobFieldset: React.FC<JobFieldsetProps> = ({ Job, title, buttonTitle, hand
                                     onChange={(e) => handleChange({
                                         target: { name: 'locations', value: Job.locations.map((l, i) => i === index ? { ...l, state: e.target.value } : l) }
                                     })}
-                                    required
                                     className="w-full px-4 py-2 border rounded"
                                 />
                             </Field>
@@ -215,7 +213,6 @@ const JobFieldset: React.FC<JobFieldsetProps> = ({ Job, title, buttonTitle, hand
                                     onChange={(e) => handleChange({
                                         target: { name: 'locations', value: Job.locations.map((l, i) => i === index ? { ...l, country: e.target.value } : l) }
                                     })}
-                                    required
                                     className="w-full px-4 py-2 border rounded"
                                 />
                             </Field>
