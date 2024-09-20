@@ -2,10 +2,14 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Input, Fieldset, Field, Label, Legend, Button, Switch, Combobox, ComboboxOption, ComboboxOptions, ComboboxInput } from '@headlessui/react';
+import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react';
+import { Check } from 'lucide-react';
 import { Job, Company } from "./jobs/types";
 import { NumericFormat } from 'react-number-format';
 import { useAuth } from '@clerk/clerk-react';
+import { JOBTAGS } from './constants/Tags';
 import axios from 'axios';
+
 
 interface JobFieldsetProps {
     Job: Omit<Job, '_id'>; // Exclude _id from the Job interface
@@ -22,6 +26,7 @@ const JobFieldset: React.FC<JobFieldsetProps> = ({ Job, title, buttonTitle, hand
     const [query, setQuery] = useState(Job.company_name || '');
     const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
     const [createNewCompany, setCreateNewCompany] = useState(false);
+    const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
     useEffect(() => {
         if (query.length > 1) {
@@ -75,6 +80,13 @@ const JobFieldset: React.FC<JobFieldsetProps> = ({ Job, title, buttonTitle, hand
                 target: { name: "company_name", value: query }
             });
         }
+    };
+
+    const handleTagChange = (tags: string[]) => {
+        setSelectedTags(tags);
+        handleChange({
+            target: { name: 'tags', value: tags }
+        });
     };
 
     return (
@@ -301,6 +313,40 @@ const JobFieldset: React.FC<JobFieldsetProps> = ({ Job, title, buttonTitle, hand
                         })}
                         className="w-full px-4 py-2 border rounded"
                     />
+                </Field>
+                <Field className="mb-4">
+                    <Label htmlFor="tags">Tags</Label>
+                    <Listbox value={selectedTags} onChange={handleTagChange} multiple>
+                        <div className="relative">
+                            <ListboxButton className="w-full px-4 py-2 border rounded">
+                                {selectedTags.length > 0 ? selectedTags.join(', ') : 'Select tags'}
+                            </ListboxButton>
+                            <ListboxOptions className="absolute z-10 mt-1 w-full max-h-60 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                {JOBTAGS.map((tag) => (
+                                    <ListboxOption
+                                        key={tag}
+                                        value={tag}
+                                        className={({ focus, selected }) =>
+                                            `relative cursor-default select-none py-2 pl-3 pr-9 ${focus ? 'bg-purple-600 text-white' : 'text-gray-900'} ${selected ? 'font-semibold' : 'font-normal'}`
+                                        }
+                                    >
+                                        {({ selected }) => (
+                                            <>
+                                                <span className={`block truncate ${selected ? 'font-semibold' : 'font-normal'}`}>
+                                                    {tag}
+                                                </span>
+                                                {selected ? (
+                                                    <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-purple-600">
+                                                        <Check className="h-5 w-5" aria-hidden="true" />
+                                                    </span>
+                                                ) : null}
+                                            </>
+                                        )}
+                                    </ListboxOption>
+                                ))}
+                            </ListboxOptions>
+                        </div>
+                    </Listbox>
                 </Field>
                 <Button
                     type="submit"

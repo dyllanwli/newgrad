@@ -1,0 +1,1 @@
+export const JOBTAGS = ["tag1", "tag2"];
