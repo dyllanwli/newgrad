@@ -5,6 +5,7 @@ import axios from 'axios';
 import Footer from '../components/Footer';
 import { useAuth } from '@clerk/clerk-react';
 import JobFieldset from '../components/JobFieldset';
+import FullScreenDialog from "../components/FullScreenDialog"
 
 const PostJobPage: React.FC = () => {
     const { getToken, isSignedIn } = useAuth();
@@ -28,6 +29,8 @@ const PostJobPage: React.FC = () => {
         max_salary: 90000,
         tags: [],
     });
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
 
     const handleChange = (e: any) => {
         const { name, value } = e.target;
@@ -40,11 +43,6 @@ const PostJobPage: React.FC = () => {
             return;
         }
         const token = await getToken();
-        // Validation check
-        if (!formData.position || !formData.company_name || !formData.locations || !formData.apply_link) {
-            console.log('Please fill in all required fields.');
-            return;
-        }
         console.log(formData)
         try {
             await axios.post('/api/post_job_request', formData, {
@@ -53,7 +51,7 @@ const PostJobPage: React.FC = () => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            window.location.reload();
+            setIsDialogOpen(true);
         } catch (error) {
             console.error('Error creating job post:', error);
         }
@@ -71,6 +69,15 @@ const PostJobPage: React.FC = () => {
                 />
             </div>
             <Footer />
+            <FullScreenDialog
+                isOpen={isDialogOpen}
+                onClose={() => {
+                    setIsDialogOpen(false);
+                    window.location.reload();
+                }}
+                title="Job Posted Successfully"
+                description="Your job has been posted successfully."
+            />
         </div>
     );
 };
