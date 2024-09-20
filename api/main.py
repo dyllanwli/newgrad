@@ -1,26 +1,13 @@
 # app/main.py
-
-import logging
-
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.config import load_dotenv, check_status
-from api.dependencies import create_index
+from api.config import load_dotenv, lifespan
 from api.routes import jobs, comments, companies
 
-logger = logging.getLogger(__name__)
-
-
-def on_start():
-    load_dotenv()
-    check_status()
-    create_index()
-
-
-on_start()
-app = FastAPI()
+load_dotenv()
+app = FastAPI(lifespan=lifespan)
 
 origins = [
     "http://localhost:5173",

@@ -1,7 +1,8 @@
 import os
 import dotenv
 import logging.config
-from fastapi.openapi.utils import get_openapi
+from fastapi import FastAPI
+from contextlib import asynccontextmanager
 
 
 def setup_logging():
@@ -37,11 +38,6 @@ def load_dotenv():
     dotenv.load_dotenv()
 
 
-def custom_openapi(app):
-    openapi_schema = get_openapi(title="API", version="1.0", routes=app.routes)
-    app.openapi_schema = openapi_schema
-    return app.openapi_schema
-
 def check_status():
 
     logger = logging.getLogger(__name__)
@@ -50,7 +46,16 @@ def check_status():
         logger.info("PRODUCTION MODE")
     else:
         logger.info("DEVELOPMENT MODE")
-           
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    from api.dependencies import create_index
+    check_status()
+    await create_index()
+    yield
+
+
 IS_PROD = os.getenv("IS_PROD", "0") == "1"
 MONGODB_URL = os.getenv("MONGODB_URL")
 CLERK_PEM_PUBLIC_KEY = None
