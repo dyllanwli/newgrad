@@ -5,6 +5,7 @@ import { useUser } from '@clerk/clerk-react';
 import { formatDistanceToNow } from 'date-fns';
 import { fromZonedTime } from 'date-fns-tz'
 import VoteButton from './VoteButtons';
+import { Textarea } from '@headlessui/react';
 import { Comment } from './types';
 
 interface CommentWithReplies extends Comment {
@@ -110,7 +111,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
       </div>
       {isEditing && (
         <form onSubmit={handleUpdate} className="mt-1">
-          <textarea
+          <Textarea
             value={editContent}
             onChange={(e) => setEditContent(e.target.value)}
             required
@@ -135,7 +136,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
       )}
       {replyTo?._id === comment._id && (
         <form onSubmit={handleReplySubmit} className="mt-1">
-          <textarea
+          <Textarea
             value={replyContent}
             onChange={(e) => setReplyContent(e.target.value)}
             required

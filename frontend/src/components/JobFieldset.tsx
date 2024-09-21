@@ -29,6 +29,7 @@ const JobFieldset: React.FC<JobFieldsetProps> = ({ Job, title, buttonTitle, hand
     const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
     const [createNewCompany, setCreateNewCompany] = useState(false);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
+    const [showPreview, setShowPreview] = useState(false);
 
 
     const fieldVariants = {
@@ -393,9 +394,10 @@ const JobFieldset: React.FC<JobFieldsetProps> = ({ Job, title, buttonTitle, hand
                     <Field className="mb-4">
                         <Label htmlFor="description">Job Description</Label>
                         <MarkdownEditor
-                            content={Job.description || ''}
-                            editable={true}
-                            handleChange={handleChange}
+                            value={Job.description || ''}
+                            onChange={(value) => handleChange({
+                                target: { name: 'description', value: value }
+                            })}
                         />
                     </Field>
                     <Button

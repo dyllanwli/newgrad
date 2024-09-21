@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@headlessui/react';
-import MarkdownEditor from "../markdown/MarkdownEditor";
+import MarkdownViewer from "../markdown/MarkdownViewer";
 import { ChevronDownIcon } from "lucide-react";
 
 interface JobCardDescriptionProps {
@@ -43,9 +43,8 @@ const JobCardDescription: React.FC<JobCardDescriptionProps> = ({ description }) 
                         transition={{ duration: 0.3 }}
                         className="overflow-hidden mt-2 p-4 border border-gray-200 rounded-md"
                     >
-                        <MarkdownEditor
+                        <MarkdownViewer
                             content={description}
-                            editable={false}
                         />
                         <Button
                             onClick={hideDescription}
