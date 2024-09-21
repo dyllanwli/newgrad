@@ -23,6 +23,7 @@ class JobBase(BaseModel):
     description: Optional[str] = None
     internship: Optional[bool] = None
     remote: Optional[bool] = None
+    part_time: Optional[bool] = None
     expired: bool
     apply_link: str
     min_salary: Optional[float] = None
@@ -31,6 +32,7 @@ class JobBase(BaseModel):
     updated_at: datetime = Field(default_factory=datetime.utcnow)
     company: Optional[Company] = None
     tags: Optional[List[str]] = None
+    posted_by: Optional[str] = None # user_id
 
 
 class JobCreate(JobBase):

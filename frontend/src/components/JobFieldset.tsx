@@ -9,6 +9,7 @@ import { Job, Company } from "./jobs/types";
 import { NumericFormat } from 'react-number-format';
 import { useAuth } from '@clerk/clerk-react';
 import { JOBTAGS } from './constants/Tags';
+import MarkdownEditor from './markdown/MarkdownEditor';
 import axios from 'axios';
 
 
@@ -28,6 +29,7 @@ const JobFieldset: React.FC<JobFieldsetProps> = ({ Job, title, buttonTitle, hand
     const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
     const [createNewCompany, setCreateNewCompany] = useState(false);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
+
 
     const fieldVariants = {
         hidden: { opacity: 0, y: 20 },
@@ -69,7 +71,6 @@ const JobFieldset: React.FC<JobFieldsetProps> = ({ Job, title, buttonTitle, hand
     }, [query, getToken]);
 
     const handleCompanySelect = (company: Company | null) => {
-        console.log("changing")
         if (company) {
             setSelectedCompany(company);
             handleChange({
@@ -84,6 +85,13 @@ const JobFieldset: React.FC<JobFieldsetProps> = ({ Job, title, buttonTitle, hand
             });
             handleChange({
                 target: { name: "company_name", value: query }
+            });
+        } else {
+            handleChange({
+                target: { name: 'company_id', value: '' },
+            });
+            handleChange({
+                target: { name: "company_name", value: '' }
             });
         }
     };
@@ -229,7 +237,7 @@ const JobFieldset: React.FC<JobFieldsetProps> = ({ Job, title, buttonTitle, hand
                     </Button>
                     <Field className="mb-4">
                         <div className="flex items-center justify-between">
-                            <Label htmlFor="internship">Remote Work</Label>
+                            <Label htmlFor="remote">Remote</Label>
                             <Switch
                                 name="remote"
                                 checked={Job.remote}
@@ -241,6 +249,25 @@ const JobFieldset: React.FC<JobFieldsetProps> = ({ Job, title, buttonTitle, hand
                             >
                                 <span
                                     className={`${Job.remote ? 'translate-x-6' : 'translate-x-1'
+                                        } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+                                />
+                            </Switch>
+                        </div>
+                    </Field>
+                    <Field className="mb-4">
+                        <div className="flex items-center justify-between">
+                            <Label htmlFor="part_time">Part Time</Label>
+                            <Switch
+                                name="part_time"
+                                checked={Job.part_time}
+                                onChange={(checked) => handleChange({
+                                    target: { name: 'part_time', value: checked }
+                                })}
+                                className={`${Job.part_time ? 'bg-purple-600' : 'bg-gray-200'}
+                            ml-1 relative inline-flex h-6 w-11 items-center rounded-full`}
+                            >
+                                <span
+                                    className={`${Job.part_time ? 'translate-x-6' : 'translate-x-1'
                                         } inline-block h-4 w-4 transform rounded-full bg-white transition`}
                                 />
                             </Switch>
@@ -362,6 +389,14 @@ const JobFieldset: React.FC<JobFieldsetProps> = ({ Job, title, buttonTitle, hand
                                 </ListboxOptions>
                             </div>
                         </Listbox>
+                    </Field>
+                    <Field className="mb-4">
+                        <Label htmlFor="description">Job Description</Label>
+                        <MarkdownEditor
+                            content={Job.description || ''}
+                            editable={true}
+                            handleChange={handleChange}
+                        />
                     </Field>
                     <Button
                         type="submit"

@@ -3,12 +3,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Footer from '../components/Footer';
-import { useAuth } from '@clerk/clerk-react';
+import { useAuth, useUser } from '@clerk/clerk-react';
 import JobFieldset from '../components/JobFieldset';
 import FullScreenDialog from "../components/FullScreenDialog"
 
 const PostJobPage: React.FC = () => {
     const { getToken, isSignedIn } = useAuth();
+    const { user } = useUser()
 
     const [formData, setFormData] = useState({
         position: '',
@@ -28,7 +29,10 @@ const PostJobPage: React.FC = () => {
         min_salary: 70000,
         max_salary: 90000,
         tags: [],
+        posted_by: user?.id,
+        description: ""
     });
+
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
 
@@ -76,7 +80,7 @@ const PostJobPage: React.FC = () => {
                     window.location.reload();
                 }}
                 title="Job Posted Successfully"
-                description="Your job has been posted successfully."
+                description="Your job has been added and is awaiting review."
             />
         </div>
     );

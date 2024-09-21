@@ -6,7 +6,7 @@ import './i18n';
 
 import LandingPage from './pages/HomePage.tsx';
 import ErrorPage from './pages/commonPages/ErrorPage.tsx';
-import ProfilePage from './pages/ProfilePage.tsx';
+import MyApplyPage from './pages/MyApplyPage.tsx';
 import SearchPage from './pages/SearchPage.tsx';
 import JobDiscussionPage from './pages/JobDiscussionPage';
 import PostJobPage from './pages/PostJobPage';
@@ -18,7 +18,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />, // Add errorElement
     children: [
       { path: "/", element: <LandingPage /> },
-      { path: "/profile", element: <ProfilePage /> },
+      { path: "/myapply", element: <MyApplyPage /> },
       { path: "/search", element: <SearchPage /> },
       { path: "/jobs/:company_id", element: <JobDiscussionPage /> },
       { path: "/postjob", element: <PostJobPage /> }

@@ -9,9 +9,10 @@ interface JobListProps {
     currentPage: number;
     setCurrentPage: (page: number) => void;
     totalPages: number;
+    handleTagClick: (tag: string) => void;
 }
 
-const JobList: React.FC<JobListProps> = ({ jobs, currentPage, setCurrentPage, totalPages }) => {
+const JobList: React.FC<JobListProps> = ({ jobs, currentPage, setCurrentPage, totalPages, handleTagClick }) => {
     const navigate = useNavigate();
 
     const handleJobClick = (company_id: string) => {
@@ -23,9 +24,7 @@ const JobList: React.FC<JobListProps> = ({ jobs, currentPage, setCurrentPage, to
             <h2 className="text-3xl font-bold mb-6 text-gray-800">Available Jobs</h2>
             <div className="space-y-4">
                 {jobs.map((job) => (
-                    <div key={job._id} onClick={() => handleJobClick(job.company_id)} className="cursor-pointer">
-                        <JobCard job={job} />
-                    </div>
+                    <JobCard job={job} key={job._id} handleJobClick={handleJobClick} handleTagClick={handleTagClick} />
                 ))}
             </div>
             <div className="mt-8">

@@ -57,7 +57,7 @@ const FullScreenDialog: React.FC<FullScreenDialogProps> = ({ isOpen, onClose, ti
                                 <div className="mt-4 flex justify-end">
                                     <button
                                         onClick={onClose}
-                                        className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
+                                        className="px-4 py-2 bg-coral text-white rounded hover:bg-purple-600 transition-colors"
                                     >
                                         Close
                                     </button>

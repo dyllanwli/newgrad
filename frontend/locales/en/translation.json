@@ -4,7 +4,7 @@
     "app.signout": "Sign Out",
     "header.discuss": "Discuss",
     "header.postjob": "Post Job",
-    "header.profile": "Profile",
+    "header.myapply": "My Apply",
     "errorPage.title": "Oops! Something went wrong.",
     "errorPage.description": "We couldn't find the page you're looking for. Please check the URL or return to the homepage.",
     "errorPage.backButton": "Back to Home",

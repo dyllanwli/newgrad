@@ -19,6 +19,7 @@ export interface Job {
     us_citizen?: boolean;
     created_at?: string;
     internship?: boolean;
+    part_time?: boolean;
     remote?: boolean;
     expired: boolean;
     apply_link: string;

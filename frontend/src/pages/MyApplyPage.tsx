@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const ProfilePage = () => {
+const MyApplyPage = () => {
   const [selectedCard, setSelectedCard] = useState(null);
   const cards = ['Personal Info', 'Interests', 'Preferences', "Settings"];
 
@@ -82,4 +82,4 @@ const ProfilePage = () => {
     </div>
   );
 };
-export default ProfilePage;
+export default MyApplyPage;
