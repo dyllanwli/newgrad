@@ -13,6 +13,13 @@ origins = [
     "http://localhost:5173",
 ]
 
+@app.middleware("http")
+async def add_noindex_header(request, call_next):
+    response = await call_next(request)
+    response.headers['X-Robots-Tag'] = 'noindex, nofollow'
+    return response
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
