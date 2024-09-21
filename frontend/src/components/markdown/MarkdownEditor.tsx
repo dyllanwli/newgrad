@@ -27,7 +27,7 @@ const MarkdownEditor = ({ content, editable, handleChange }: MarkdownEditorProps
                     className="border p-2 w-full h-full bg-white text-black"
                 />
             ) : (
-                <ReactMarkdown>{value}</ReactMarkdown>
+                <ReactMarkdown className="prose">{value}</ReactMarkdown>
             )}
         </div>
     );

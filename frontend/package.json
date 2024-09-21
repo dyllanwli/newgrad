@@ -14,6 +14,7 @@
     "@clerk/clerk-react": "^5.2.10",
     "@headlessui/react": "^2.1.8",
     "@radix-ui/react-toast": "^1.2.1",
+    "@tailwindcss/typography": "^0.5.15",
     "@types/node": "^22.0.0",
     "@uiw/react-md-editor": "^4.0.4",
     "axios": "^1.7.7",

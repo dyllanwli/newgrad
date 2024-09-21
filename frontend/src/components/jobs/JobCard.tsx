@@ -2,13 +2,12 @@
 
 import React, { useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Job } from './types';
 import { formatDistanceToNow } from 'date-fns';
 import { fromZonedTime } from 'date-fns-tz';
-import { Button } from '@headlessui/react'
-import MarkdownEditor from "../markdown/MarkdownEditor"
-
+import { Button } from '@headlessui/react';
+import JobCardDescription from './JobCardDescription';
 interface JobCardProps {
     job: Job;
     handleJobClick: (company_id: string) => void;
@@ -17,14 +16,9 @@ interface JobCardProps {
 
 const JobCard: React.FC<JobCardProps> = ({ job, handleJobClick, handleTagClick }) => {
     const [expandedLocations, setExpandedLocations] = useState(false);
-    const [showDescription, setShowDescription] = useState(false);
 
     const toggleLocations = () => {
         setExpandedLocations(!expandedLocations);
-    };
-
-    const toggleDescription = () => {
-        setShowDescription(!showDescription);
     };
 
     return (
@@ -36,9 +30,9 @@ const JobCard: React.FC<JobCardProps> = ({ job, handleJobClick, handleTagClick }
         >
             <div className="flex flex-col md:flex-row md:items-start md:justify-between">
                 <div className="flex-grow">
-                    <h3 className="text-lg font-bold mb-1">{job.position}</h3>
+                    <h3 className="text-lg font-bold mb-1 cursor-pointer" onClick={() => handleJobClick(job.company_id)}>{job.position}</h3>
                     <div className="flex items-center mb-1">
-                        <p className="font-bold text-gray-600 mr-4">{job.company_name}</p>
+                        <p className="font-bold text-gray-600 mr-4 cursor-pointer" onClick={() => handleJobClick(job.company_id)}>{job.company_name}</p>
                         {job.locations?.length > 0 && <p className="text-gray-700">{job.locations[0].city} {job.locations[0].state}</p>}
                         {job.locations.length > 1 && (
                             <Button onClick={toggleLocations} className="ml-2 text-gray-500 hover:text-gray-700">
@@ -73,37 +67,7 @@ const JobCard: React.FC<JobCardProps> = ({ job, handleJobClick, handleTagClick }
                             <span key={index} className="bg-gray-200 font-semibold py-1 px-2 rounded mr-2" onClick={() => handleTagClick(tag)} >{tag}</span>
                         ))}
                         {job.description && (
-                            <div className="text-gray-500 hover:text-gray-800">
-                                <Button
-                                    onClick={toggleDescription}
-                                    className="w-full flex items-center justify-between px-4 py-2 text-left text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none"
-                                >
-                                    <span>View Job Description</span>
-                                    <motion.div
-                                        initial={false}
-                                        animate={{ rotate: showDescription ? 180 : 0 }}
-                                        transition={{ duration: 0.3 }}
-                                    >
-                                        <ChevronDownIcon size={20} className="ml-2 text-gray-500" />
-                                    </motion.div>
-                                </Button>
-                                <AnimatePresence>
-                                    {showDescription && (
-                                        <motion.div
-                                            initial={{ opacity: 0, height: 0 }}
-                                            animate={{ opacity: 1, height: 'auto' }}
-                                            exit={{ opacity: 0, height: 0 }}
-                                            transition={{ duration: 0.3 }}
-                                            className="overflow-hidden mt-2 p-4 bg-white border border-gray-200 rounded-md"
-                                        >
-                                            <MarkdownEditor
-                                                content={job.description}
-                                                editable={false}
-                                            />
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
-                            </div>
+                            <JobCardDescription description={job.description} />
                         )}
                     </div>
                 </div>
@@ -118,12 +82,12 @@ const JobCard: React.FC<JobCardProps> = ({ job, handleJobClick, handleTagClick }
                     >
                         {job.expired ? 'Application Closed' : 'Apply Now'}
                     </a>
-                    <Button
+                    <p
                         onClick={() => handleJobClick(job.company_id)}
                         className="text-purple-600 text-center transition-colors duration-300 whitespace-nowrap bg-transparent border-none cursor-pointer"
                     >
                         View Discussion
-                    </Button>
+                    </p>
                 </div>
             </div>
         </motion.div>

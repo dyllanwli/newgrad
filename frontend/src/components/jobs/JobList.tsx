@@ -9,7 +9,7 @@ interface JobListProps {
     currentPage: number;
     setCurrentPage: (page: number) => void;
     totalPages: number;
-    handleTagClick: (tag: string) => void;
+    handleTagClick?: (tag: string) => void;
 }
 
 const JobList: React.FC<JobListProps> = ({ jobs, currentPage, setCurrentPage, totalPages, handleTagClick }) => {
@@ -24,8 +24,12 @@ const JobList: React.FC<JobListProps> = ({ jobs, currentPage, setCurrentPage, to
             <h2 className="text-3xl font-bold mb-6 text-gray-800">Available Jobs</h2>
             <div className="space-y-4">
                 {jobs.map((job) => (
-                    <JobCard job={job} key={job._id} handleJobClick={handleJobClick} handleTagClick={handleTagClick} />
-                ))}
+                    <JobCard
+                        job={job}
+                        key={job._id}
+                        handleJobClick={handleJobClick}
+                        handleTagClick={handleTagClick || (() => { })} // Provide a default function
+                    />))}
             </div>
             <div className="mt-8">
                 <JobListPagination

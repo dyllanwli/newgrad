@@ -16,6 +16,7 @@ class ApplicationStatus(str, Enum):
 class UserJobApplication(BaseModel):
     job_id: str
     job: Optional[Job] = None
+    admin: Optional[str] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
     applied_at: datetime = Field(default_factory=datetime.utcnow)
