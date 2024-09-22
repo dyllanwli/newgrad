@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import RootLayout from './layouts/root-layout'
+import RootLayout from './root-layout.tsx'
 import './i18n';
 
 import LandingPage from './pages/HomePage.tsx';
