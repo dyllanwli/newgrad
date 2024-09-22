@@ -2,10 +2,10 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
-import Footer from '../components/Footer';
+import Footer from '@/components/Footer';
 import { useAuth, useUser } from '@clerk/clerk-react';
-import JobFieldset from '../components/JobFieldset';
-import FullScreenDialog from "../components/FullScreenDialog"
+import JobFieldset from '@/components/JobFieldset';
+import FullScreenDialog from "@/components/FullScreenDialog"
 
 const PostJobPage: React.FC = () => {
     const { getToken, isSignedIn } = useAuth();

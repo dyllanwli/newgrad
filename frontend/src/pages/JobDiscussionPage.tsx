@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import DiscussionComponent from '../components/comments/DiscussionComponent';
-import { Job } from '../components/jobs/types';
-import JobList from '../components/jobs/JobList';
+import DiscussionComponent from '@/components/comments/DiscussionComponent';
+import { Job } from '@/components/jobs/types';
+import JobList from '@/components/jobs/JobList';
 import axios from 'axios';
 
 const JobDiscussionPage: React.FC = () => {

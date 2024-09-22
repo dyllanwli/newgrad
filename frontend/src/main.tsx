@@ -10,7 +10,8 @@ import MyApplyPage from './pages/MyApplyPage.tsx';
 import SearchPage from './pages/SearchPage.tsx';
 import JobDiscussionPage from './pages/JobDiscussionPage';
 import PostJobPage from './pages/PostJobPage';
-import DiscussPage from './pages/DiscussPage.tsx'
+import CommunityPage from './pages/CommunityPage.tsx'
+import CommunityDiscussPage from './pages/CommunityDiscussPage.tsx'
 
 const router = createBrowserRouter([
   {
@@ -22,7 +23,8 @@ const router = createBrowserRouter([
       { path: "/search", element: <SearchPage /> },
       { path: "/jobs/:company_id", element: <JobDiscussionPage /> },
       { path: "/postjob", element: <PostJobPage /> },
-      { path: "/discuss", element: <DiscussPage /> },
+      { path: "/community", element: <CommunityPage /> },
+      { path: "/discuss/:discuss_id", element: <CommunityDiscussPage /> }
     ]
   }
 ])

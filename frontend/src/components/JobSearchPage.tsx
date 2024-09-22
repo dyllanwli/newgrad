@@ -5,17 +5,20 @@ import { useLocation } from 'react-router-dom';
 import JobList from './jobs/JobList';
 import SearchBar from './SearchBar';
 import axios from 'axios';
+import ProgressBar from './ui/ProgressBar'; 
 
 const JobSearchPage: React.FC = () => {
     const [jobs, setJobs] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [isLoading, setIsLoading] = useState(false); 
     const location = useLocation();
 
     const queryParams = new URLSearchParams(location.search);
     const search = queryParams.get('search');
     useEffect(() => {
         const fetchJobs = async () => {
+            setIsLoading(true); 
             try {
                 const response = await axios.get(`/api/jobs`, {
                     params: {
@@ -28,6 +31,8 @@ const JobSearchPage: React.FC = () => {
                 setTotalPages(response.data.totalPages);
             } catch (error) {
                 console.error('Error fetching jobs:', error);
+            } finally {
+                setIsLoading(false);
             }
         };
         fetchJobs();
@@ -35,6 +40,7 @@ const JobSearchPage: React.FC = () => {
 
     return (
         <div className="flex flex-col">
+            <ProgressBar isLoading={isLoading} /> 
             <div className="flex justify-center py-4">
                 <SearchBar />
             </div>

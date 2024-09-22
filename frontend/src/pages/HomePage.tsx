@@ -1,7 +1,7 @@
-import Footer from "../components/Footer";
+import Footer from "@/components/Footer";
 // import { useTranslation } from 'react-i18next';
-import HeroSection from '../components/landingPage/HeroSection';
-import JobSearchPage from '../components/JobSearchPage';
+import HeroSection from '@/components/landingPage/HeroSection';
+import JobSearchPage from '@/components/JobSearchPage';
 
 export default function HomePage() {
   // const { t } = useTranslation();
