@@ -5,11 +5,12 @@ import axios from 'axios';
 import Footer from '@/components/Footer';
 import { useAuth, useUser } from '@clerk/clerk-react';
 import JobFieldset from '@/components/JobFieldset';
-import FullScreenDialog from "@/components/FullScreenDialog"
+import FullScreenDialog from "@/components/FullScreenDialog";
+import ProgressBar from '@/components/ui/ProgressBar';
 
 const PostJobPage: React.FC = () => {
     const { getToken, isSignedIn } = useAuth();
-    const { user } = useUser()
+    const { user } = useUser();
 
     const [formData, setFormData] = useState({
         position: '',
@@ -34,7 +35,7 @@ const PostJobPage: React.FC = () => {
     });
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleChange = (e: any) => {
         const { name, value } = e.target;
@@ -47,7 +48,8 @@ const PostJobPage: React.FC = () => {
             return;
         }
         const token = await getToken();
-        console.log(formData)
+        console.log(formData);
+        setIsLoading(true);
         try {
             await axios.post('/api/post_job_request', formData, {
                 headers: {
@@ -58,11 +60,14 @@ const PostJobPage: React.FC = () => {
             setIsDialogOpen(true);
         } catch (error) {
             console.error('Error creating job post:', error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     return (
         <div className="flex flex-col min-h-screen">
+            <ProgressBar isLoading={isLoading} />
             <div className="flex justify-center py-8">
                 <JobFieldset
                     Job={formData}

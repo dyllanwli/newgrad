@@ -3,7 +3,7 @@ import WelcomeSection from '@/components/community/WelcomeSection';
 import Footer from '@/components/Footer';
 import DiscussionSection from '@/components/community/DiscussionSection';
 import { Discussion } from '@/components/community/types';
-import ProgressBar from '@/components/ui/ProgressBar'; // Import ProgressBar
+import ProgressBar from '@/components/ui/ProgressBar';
 
 const initialDiscussions: Discussion[] = [
   { id: 1, title: "Best practices for code reviews, tips and tricks, and more and more and more this a text to see how it looks like", posted_by: "user4", likes: 72, comments: 41, views: 350 },
@@ -18,7 +18,7 @@ const initialDiscussions: Discussion[] = [
 const CommunityPage: React.FC = () => {
   const [discussions, setDiscussions] = useState<Discussion[]>(initialDiscussions);
   const [page, setPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false); // Optional: To handle loading state
+  const [isLoading, setIsLoading] = useState(false);
 
   const loadMoreDiscussions = () => {
     if (isLoading) return;
@@ -79,14 +79,16 @@ const CommunityPage: React.FC = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [isLoading]); // Add isLoading to dependencies
-
+  }, [isLoading]); 
+  const handleCardClick = (discussion: Discussion) => {
+    console.log('Discussion clicked:', discussion);
+  };
   return (
     <div className="flex flex-col min-h-screen">
-      <ProgressBar isLoading={isLoading} /> {/* Add ProgressBar */}
+      <ProgressBar isLoading={isLoading} />
       <WelcomeSection />
       <div className="container mx-auto px-4 py-8">
-        <DiscussionSection discussions={discussions} />
+        <DiscussionSection discussions={discussions} onCardClick={handleCardClick} />
         {isLoading && <p className="text-center mt-4">Loading more discussions...</p>}
       </div>
       <Footer />

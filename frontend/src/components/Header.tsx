@@ -12,7 +12,7 @@ import FullScreenDialog from "./FullScreenDialog";
 
 const navItems = [
   { label: 'header.community', href: '/community' },
-  { label: 'header.postjob', href: '/postjob', color: 'purple', requiresAuth: true },
+  { label: 'header.postjob', href: '/postjob', requiresAuth: true },
   { label: 'header.myapply', href: '/myapply', requiresAuth: true },
 ];
 
@@ -28,9 +28,11 @@ interface NavigationProps {
   navItems: NavigationItem[];
   toggleMenu: () => void;
   toggleSignIn: () => void;
+  activeItem: string;
+  setActiveItem: (label: string) => void;
 }
 
-const Navigation: React.FC<NavigationProps> = ({ isOpen, navItems, toggleMenu, toggleSignIn }) => {
+const Navigation: React.FC<NavigationProps> = ({ isOpen, navItems, toggleMenu, toggleSignIn, activeItem, setActiveItem }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { isSignedIn } = useAuth(); // Use the useAuth hook
@@ -41,6 +43,7 @@ const Navigation: React.FC<NavigationProps> = ({ isOpen, navItems, toggleMenu, t
       toggleSignIn();
     } else {
       navigate(item.href);
+      setActiveItem(item.label);
     }
     toggleMenu();
   };
@@ -61,8 +64,7 @@ const Navigation: React.FC<NavigationProps> = ({ isOpen, navItems, toggleMenu, t
           <button
             key={index}
             onClick={handleNavigation(item)}
-            className={`block ml-1 py-1 px-4 md:text-base font-bold rounded-full ease-in-out whitespace-nowrap ${item.color ? 'text-white transform hover:scale-105 transition-transform duration-400' : 'hover:bg-opacity-80 hover:text-gray-500'} `}
-            style={{ backgroundColor: item.color || 'transparent' }}
+            className={`block ml-1 py-1 px-4 md:text-base font-bold rounded-full ease-in-out whitespace-nowrap ${activeItem === item.label ? 'text-white bg-purple-800' : 'hover:bg-opacity-80 hover:text-gray-500'} `}
           >
             {t(item.label)}
           </button>
@@ -75,11 +77,13 @@ const Navigation: React.FC<NavigationProps> = ({ isOpen, navItems, toggleMenu, t
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showSignInPrompt, setShowSignInPrompt] = useState(false);
+  const [activeItem, setActiveItem] = useState('');
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const navigate = useNavigate();
 
   const handleLogoClick = () => {
     navigate('/');
+    setActiveItem('');
   };
 
   const toggleSignIn = () => {
@@ -97,7 +101,7 @@ const Header = () => {
 
         <div className="flex items-center space-x-4">
           <div className="hidden md:flex">
-            <Navigation isOpen={true} navItems={navItems} toggleMenu={() => { }} toggleSignIn={toggleSignIn} />
+            <Navigation isOpen={true} navItems={navItems} toggleMenu={() => { }} toggleSignIn={toggleSignIn} activeItem={activeItem} setActiveItem={setActiveItem} />
           </div>
 
           <ClerkButton />
@@ -133,7 +137,7 @@ const Header = () => {
             transition={{ duration: 0.3 }}
             className="md:hidden bg-white"
           >
-            <Navigation isOpen={isMenuOpen} navItems={navItems} toggleMenu={toggleMenu} toggleSignIn={toggleSignIn} />
+            <Navigation isOpen={isMenuOpen} navItems={navItems} toggleMenu={toggleMenu} toggleSignIn={toggleSignIn} activeItem={activeItem} setActiveItem={setActiveItem} />
           </motion.div>
         )}
       </AnimatePresence>

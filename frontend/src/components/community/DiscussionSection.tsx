@@ -5,9 +5,10 @@ import { motion } from 'framer-motion';
 
 interface DiscussionSectionProps {
     discussions: Discussion[];
+    onCardClick: (discussion: Discussion) => void; 
 }
 
-const DiscussionSection: React.FC<DiscussionSectionProps> = ({ discussions }) => {
+const DiscussionSection: React.FC<DiscussionSectionProps> = ({ discussions, onCardClick }) => {
     return (
         <div className="columns-2 sm:columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
             {discussions.map(discussion => (
@@ -15,6 +16,7 @@ const DiscussionSection: React.FC<DiscussionSectionProps> = ({ discussions }) =>
                     key={discussion.id}
                     whileHover={{ scale: 1.05 }} 
                     whileTap={{ scale: 0.95 }} 
+                    onClick={() => onCardClick(discussion)} 
                 >
                     <DiscussionCard discussion={discussion} />
                 </motion.div>
