@@ -9,10 +9,9 @@ interface JobListProps {
     currentPage: number;
     setCurrentPage: (page: number) => void;
     totalPages: number;
-    handleTagClick?: (tag: string) => void;
 }
 
-const JobList: React.FC<JobListProps> = ({ jobs, currentPage, setCurrentPage, totalPages, handleTagClick }) => {
+const JobList: React.FC<JobListProps> = ({ jobs, currentPage, setCurrentPage, totalPages }) => {
     const navigate = useNavigate();
 
     const handleJobClick = (company_id: string) => {
@@ -28,7 +27,6 @@ const JobList: React.FC<JobListProps> = ({ jobs, currentPage, setCurrentPage, to
                         job={job}
                         key={job._id}
                         handleJobClick={handleJobClick}
-                        handleTagClick={handleTagClick || (() => { })} // Provide a default function
                     />))}
             </div>
             <div className="mt-8">

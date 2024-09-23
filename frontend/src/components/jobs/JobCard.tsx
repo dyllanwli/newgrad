@@ -11,10 +11,9 @@ import JobCardDescription from './JobCardDescription';
 interface JobCardProps {
     job: Job;
     handleJobClick: (company_id: string) => void;
-    handleTagClick: (tag: string) => void;
 }
 
-const JobCard: React.FC<JobCardProps> = ({ job, handleJobClick, handleTagClick }) => {
+const JobCard: React.FC<JobCardProps> = ({ job, handleJobClick }) => {
     const [expandedLocations, setExpandedLocations] = useState(false);
 
     const toggleLocations = () => {
@@ -64,7 +63,7 @@ const JobCard: React.FC<JobCardProps> = ({ job, handleJobClick, handleTagClick }
                         {job.remote && <span className="bg-blue-500 text-white py-1 px-2 rounded mr-2">Remote</span>}
                         {job.part_time && <span className="bg-yellow-500 text-white py-1 px-2 rounded mr-2">Part-Time</span>}
                         {job.tags && job.tags.map((tag, index) => (
-                            <span key={index} className="bg-gray-200 font-semibold py-1 px-2 rounded mr-2" onClick={() => handleTagClick(tag)} >{tag}</span>
+                            <span key={index} className="bg-gray-200 font-semibold py-1 px-2 rounded mr-2" >{tag}</span>
                         ))}
                         {job.description && (
                             <JobCardDescription description={job.description} />
