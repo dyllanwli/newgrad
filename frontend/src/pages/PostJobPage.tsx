@@ -5,7 +5,7 @@ import axios from 'axios';
 import Footer from '@/components/Footer';
 import { useAuth, useUser } from '@clerk/clerk-react';
 import JobFieldset from '@/components/JobFieldset';
-import FullScreenDialog from "@/components/FullScreenDialog";
+import FullScreenDialog from "@/components/ui/FullScreenDialog";
 import ProgressBar from '@/components/ui/ProgressBar';
 
 const PostJobPage: React.FC = () => {

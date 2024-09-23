@@ -65,6 +65,8 @@ const JobCard: React.FC<JobCardProps> = ({ job, handleJobClick }) => {
                         {job.tags && job.tags.map((tag, index) => (
                             <span key={index} className="bg-gray-200 font-semibold py-1 px-2 rounded mr-2" >{tag}</span>
                         ))}
+                    </div>
+                    <div className="flex flex-wrap items-center">
                         {job.description && (
                             <JobCardDescription description={job.description} />
                         )}

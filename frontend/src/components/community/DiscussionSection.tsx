@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import { Discussion } from './types';
 import DiscussionCard from './DiscussionCard';
 import { motion } from 'framer-motion';
 import { Plus } from 'lucide-react';
 import Dropdown from '@/components/ui/Dropdown';
+import FullScreenDialog from '../ui/FullScreenDialog';
+import { useAuth } from '@clerk/clerk-react';
 
 interface DiscussionSectionProps {
     discussions: Discussion[];
@@ -13,14 +15,24 @@ interface DiscussionSectionProps {
 
 const DiscussionSection: React.FC<DiscussionSectionProps> = ({ discussions, onCardClick }) => {
     const [filter, setFilter] = useState('all');
-    const navigate = useNavigate(); // Initialize useNavigate
+    const [showDialog, setShowDialog] = useState(false);
+    const navigate = useNavigate();
+    const { isSignedIn } = useAuth();
 
     const handleFilterChange = (value: string) => {
         setFilter(value);
     };
 
     const handlePostClick = () => {
-        navigate('/post-discussion'); // Navigate to PostDiscussion page
+        if (isSignedIn) {
+            navigate('/post-discussion');
+        } else {
+            setShowDialog(true);
+        }
+    };
+
+    const handleCloseDialog = () => {
+        setShowDialog(false);
     };
 
     return (
@@ -30,7 +42,8 @@ const DiscussionSection: React.FC<DiscussionSectionProps> = ({ discussions, onCa
                     options={[
                         { value: 'all', label: 'All Discussions' },
                         { value: 'popular', label: 'Popular' },
-                        { value: 'recent', label: 'Recent' }
+                        { value: 'recent', label: 'Recent' },
+                        { value: 'company', label: 'Company' }
                     ]}
                     onSelect={handleFilterChange}
                 />
@@ -39,7 +52,7 @@ const DiscussionSection: React.FC<DiscussionSectionProps> = ({ discussions, onCa
                     <motion.div
                         whileHover={{ rotate: 90 }}
                         className="p-2 text-purple-500 rounded w-10 h-10"
-                        onClick={handlePostClick} // Add onClick event
+                        onClick={handlePostClick}
                     >
                         <Plus />
                     </motion.div>
@@ -57,6 +70,14 @@ const DiscussionSection: React.FC<DiscussionSectionProps> = ({ discussions, onCa
                     </motion.div>
                 ))}
             </div>
+            {showDialog && (
+                <FullScreenDialog
+                    isOpen={showDialog}
+                    onClose={handleCloseDialog}
+                    title="Sign In Required"
+                    description="Please sign in to post a discussion."
+                />
+            )}
         </>
     );
 };

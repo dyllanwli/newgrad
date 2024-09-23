@@ -23,7 +23,7 @@ const JobCardDescription: React.FC<JobCardDescriptionProps> = ({ description }) 
         <div className="text-gray-500 hover:text-gray-800">
             <Button
                 onClick={toggleDescription}
-                className="w-full flex items-center justify-between px-4 py-2 text-left text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none"
+                className="w-full flex items-center justify-between text-left text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none"
             >
                 <span>View Job Description</span>
                 <motion.div

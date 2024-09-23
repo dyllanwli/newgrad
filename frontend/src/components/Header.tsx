@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import Logo from './branding/Logo';
 import { useAuth } from '@clerk/clerk-react';
-import FullScreenDialog from "./FullScreenDialog";
+import FullScreenDialog from "./ui/FullScreenDialog";
 
 const navItems = [
   { label: 'header.community', href: '/community' },

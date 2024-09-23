@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import MarkdownEditor from '@/components/ui/markdown/MarkdownEditor';
+import { useAuth, useUser } from '@clerk/clerk-react';
 import axios from 'axios';
 
 // Define the shape of a tag
@@ -12,6 +14,9 @@ interface Tag {
 const colors = ['#5f0f40', '#9a031e', '#fb8b24', '#e36414', '#0f4c5c'];
 
 const PostDiscussion: React.FC = () => {
+    const navigate = useNavigate();
+    const { getToken, isSignedIn } = useAuth();
+    const { user } = useUser();
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [tags, setTags] = useState<Tag[]>([]);
@@ -27,7 +32,7 @@ const PostDiscussion: React.FC = () => {
             if (newTagName && !tags.some(tag => tag.name.toLowerCase() === newTagName.toLowerCase())) {
                 const newTag: Tag = {
                     name: newTagName,
-                    color: colors[tags.length % colors.length], 
+                    color: colors[tags.length % colors.length],
                 };
                 setTags([...tags, newTag]);
             }
@@ -39,16 +44,33 @@ const PostDiscussion: React.FC = () => {
         setTags(tags.filter((_, i) => i !== index));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Handle the form submission logic here
-        console.log('Title:', title);
-        console.log('Content:', content);
-        console.log('Tags:', tags.map(tag => tag.name));
+        try {
+            if (!isSignedIn) {
+                throw new Error('User is not signed in');
+            }
+            const token = await getToken();
+            const response = await axios.post('/api/discussions', {
+                title,
+                content,
+                tags: tags.map(tag => tag.name),
+                posted_by: user?.id,
+                username: user?.username
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            console.log('Discussion created:', response.data);
+            navigate(`/discuss/${response.data._id}`);
+        } catch (error) {
+            console.error('Error creating discussion:', error);
+        }
     };
 
     return (
-        <motion.div 
+        <motion.div
             className="container mx-auto p-4 md:w-1/2"
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -109,14 +131,24 @@ const PostDiscussion: React.FC = () => {
                         ))}
                     </div>
                 </div>
-                <motion.button
-                    type="submit"
-                    className="py-2 px-4 rounded bg-purple-500 hover:bg-purple-600 text-white"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                >
-                    Post
-                </motion.button>
+                <div className="flex justify-between">
+                    <motion.button
+                        type="submit"
+                        className="py-2 px-4 rounded bg-purple-500 hover:bg-purple-600 text-white"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                    >
+                        Post
+                    </motion.button>
+                    <motion.button
+                        onClick={() => navigate(-1)}
+                        className="py-2 px-4 rounded bg-gray-500 hover:bg-gray-600 text-white"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                    >
+                        Back
+                    </motion.button>
+                </div>
             </form>
         </motion.div>
     );

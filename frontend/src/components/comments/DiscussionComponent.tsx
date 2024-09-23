@@ -6,6 +6,7 @@ import CommentItem from './CommentItem';
 import { Comment } from './types';
 import { MAX_DEPTH, MAX_VISIBLE_DEPTH } from './constants';
 import { Button, Textarea } from '@headlessui/react'
+import ProgressBar from '../ui/ProgressBar';
 import axios from 'axios';
 
 interface DiscussionComponentProps {
@@ -22,11 +23,13 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ discussId }) 
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState<string>('');
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const maxDepth = MAX_DEPTH;
   let maxVisibleDepth = MAX_VISIBLE_DEPTH;
 
   useEffect(() => {
     const fetchComments = async () => {
+      setIsLoading(true);
       const token = isSignedIn ? await getToken() : null;
       try {
         const response = await axios.get(`/api/discuss/${discussId}/comments`, {
@@ -35,6 +38,8 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ discussId }) 
         setComments(response.data);
       } catch (error) {
         console.error('Error fetching comments:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchComments();
@@ -181,6 +186,7 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ discussId }) 
   
   return (
     <div className="discussion-component">
+      <ProgressBar isLoading={isLoading} /> 
       <h3 className="text-2xl font-bold mb-4">Discussion</h3>
       <div>
         {commentTree.map((comment) => (
