@@ -15,7 +15,7 @@ const JobList: React.FC<JobListProps> = ({ jobs, currentPage, setCurrentPage, to
     const navigate = useNavigate();
 
     const handleJobClick = (company_id: string) => {
-        navigate(`/jobs/${company_id}`);
+        navigate(`/company/${company_id}`);
     };
 
     return (

@@ -28,10 +28,17 @@ const CommunityPage: React.FC = () => {
   const fetchDiscussions = async (search: string = '') => {
     setIsLoading(true);
     try {
-      const response = await axios.get('/api/discussions', {
-        params: { search }
-      });
-      setDiscussions(response.data);
+      if (filter === 'Company') {
+        const response = await axios.get('/api/discussions/company', {
+          params: { search }
+        });
+        setDiscussions(response.data);
+      } else {
+        const response = await axios.get('/api/companies/discussions', {
+          params: { search }
+        });
+        setDiscussions(response.data);
+      }
     } catch (error) {
       console.error('Error fetching discussions:', error);
     } finally {
@@ -41,14 +48,10 @@ const CommunityPage: React.FC = () => {
 
   useEffect(() => {
     fetchDiscussions(searchTerm);
-  }, [searchTerm]);
+  }, [searchTerm, filter]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-  };
-
-  const handleCardClick = (discussion: Discussion) => {
-    console.log('Discussion clicked:', discussion);
   };
 
   const handleFilterChange = (value: string) => {
@@ -70,7 +73,7 @@ const CommunityPage: React.FC = () => {
       <div className="container mx-auto px-4 py-8">
         <CommunitySearchBar searchTerm={searchTerm} onSearchChange={handleSearchChange} />
         <DiscussionOptions onFilterChange={handleFilterChange} onPostClick={handlePostClick} />
-        <DiscussionSection discussions={discussions} onCardClick={handleCardClick} />
+        <DiscussionSection discussions={discussions} />
         {isLoading && <p className="text-center mt-4">Loading more discussions...</p>}
       </div>
       <Footer />

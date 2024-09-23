@@ -29,7 +29,7 @@ const DiscussionCard: React.FC<DiscussionCardProps> = ({ discussion }) => {
         >
             <h2 className="text-xl font-semibold mb-2">{discussion.title}</h2>
             <div className="flex justify-between items-center text-gray-500">
-                <p className="text-gray-600">{discussion.username.length > 15 ? `${discussion.username.substring(0, 15)}...` : discussion.username}</p>
+                {discussion.username && discussion.username !== "company" && <p className="text-gray-600">{discussion.username.length > 15 ? `${discussion.username.substring(0, 15)}...` : discussion.username}</p>}
                 <span className="flex items-center">
                     <Heart className="mr-1 size-5" /> {discussion.likes}
                 </span>

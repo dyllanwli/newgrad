@@ -2,7 +2,7 @@
 
 export interface Company {
     _id: string;
-    name: string;
+    title: string;
     views: number;
     description?: string;
     employees?: number;

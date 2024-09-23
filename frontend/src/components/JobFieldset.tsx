@@ -78,7 +78,7 @@ const JobFieldset: React.FC<JobFieldsetProps> = ({ Job, title, buttonTitle, hand
                 target: { name: 'company_id', value: company._id },
             });
             handleChange({
-                target: { name: "company_name", value: company.name }
+                target: { name: "company_name", value: company.title }
             });
         } else if (createNewCompany) {
             handleChange({
@@ -157,7 +157,7 @@ const JobFieldset: React.FC<JobFieldsetProps> = ({ Job, title, buttonTitle, hand
                                         setQuery(event.target.value);
                                         setCreateNewCompany(false);
                                     }}
-                                    displayValue={(company: Company) => (company ? company.name : '')}
+                                    displayValue={(company: Company) => (company ? company.title : '')}
                                     required
                                 />
                                 <ComboboxOptions
@@ -180,7 +180,7 @@ const JobFieldset: React.FC<JobFieldsetProps> = ({ Job, title, buttonTitle, hand
                                                 `relative cursor-default select-none py-2 pl-3 pr-9 ${focus ? 'bg-purple-600 text-white' : 'text-gray-900'}`
                                             }
                                         >
-                                            {company.name}
+                                            {company.title}
                                         </ComboboxOption>
                                     ))}
                                 </ComboboxOptions>

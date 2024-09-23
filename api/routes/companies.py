@@ -3,6 +3,7 @@
 from fastapi import APIRouter, Query
 from typing import List, Optional
 from api.models.company import Company
+from api.models.discussion import Discussion
 from api.utils.auth import verify_credentials, HTTPCredentials
 from api.services.company_service import get_companies
 from api.services.discussion_service import get_all_company_discussions_service
@@ -19,7 +20,7 @@ async def search_companies(
     return companies
 
 
-@router.get("/companies/discussions", response_model=List[Company])
+@router.get("/companies/discussions", response_model=List[Discussion])
 async def get_company_discussions(search: Optional[str] = None):
     discussions = await get_all_company_discussions_service(search)
     return discussions

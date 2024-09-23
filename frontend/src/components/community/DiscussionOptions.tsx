@@ -13,12 +13,13 @@ const DiscussionOptions: React.FC<DiscussionOptionsProps> = ({ onFilterChange, o
         <div className="flex justify-between items-center mb-4">
             <Dropdown
                 options={[
-                    { value: 'all', label: 'All Discussions' },
+                    { value: 'all', label: 'All' },
                     { value: 'popular', label: 'Popular' },
-                    { value: 'recent', label: 'Recent' },
+                    { value: 'views', label: 'Views' },
                     { value: 'company', label: 'Company' }
                 ]}
                 onSelect={onFilterChange}
+                placeholder="All Discussions"
             />
             <div className="flex items-center">
                 <span className="text-gray-700">Post</span>

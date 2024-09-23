@@ -3,7 +3,7 @@ from api.models.discussion import Discussion, DiscussionCreate
 from fastapi import HTTPException
 from bson import ObjectId
 from typing import List, Optional
-from api.dependencies import newgrad_db as db
+from datetime import datetime, timedelta
 
 
 async def create_discussion_service(
@@ -22,7 +22,9 @@ async def get_discussion_service(discussion_id: str):
         raise HTTPException(status_code=404, detail="Discussion not found")
     return Discussion(**discussion)
 
-async def get_all_discussions_service(search: Optional[str] = None) -> List[Discussion]:
+async def get_all_discussions_service(
+    search: Optional[str] = None, filter_by: Optional[str] = None
+) -> List[Discussion]:
     query = {}
     if search:
         query = {
@@ -31,7 +33,22 @@ async def get_all_discussions_service(search: Optional[str] = None) -> List[Disc
                 {"content": {"$regex": search, "$options": "i"}}
             ]
         }
-    discussions = await db.discussions.find(query, {"content": 0, "tags": 0}).to_list(length=None)
+    
+    sort_criteria = None
+    if filter_by == "popular":
+        thirty_days_ago = datetime.utcnow() - timedelta(days=30)
+        query["created_at"] = {"$gte": thirty_days_ago}
+        sort_criteria = [("likes", -1)]
+    elif filter_by == "views":
+        sort_criteria = [("views", -1)]
+    else:
+        sort_criteria = [("created_at", -1)]
+    
+    discussions_cursor = db.discussions.find(query, {"content": 0, "tags": 0})
+    if sort_criteria:
+        discussions_cursor = discussions_cursor.sort(sort_criteria)
+    
+    discussions = await discussions_cursor.to_list(length=None)
     return discussions
 
 async def get_all_company_discussions_service(search: Optional[str] = None) -> List[Discussion]:
@@ -43,4 +60,5 @@ async def get_all_company_discussions_service(search: Optional[str] = None) -> L
             ]
         }
     discussions = await db.companies.find(query, {"content": 0, "tags": 0}).sort("views", -1).to_list(length=None)
+    
     return discussions

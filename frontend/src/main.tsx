@@ -8,7 +8,7 @@ import LandingPage from './pages/HomePage.tsx';
 import ErrorPage from './pages/commonPages/ErrorPage.tsx';
 import MyApplyPage from './pages/MyApplyPage.tsx';
 import SearchPage from './pages/SearchPage.tsx';
-import JobDiscussionPage from './pages/JobDiscussionPage';
+import CompanyDiscussionPage from './pages/CompanyDiscussionPage.tsx';
 import PostJobPage from './pages/PostJobPage';
 import CommunityPage from './pages/CommunityPage.tsx'
 import CommunityDiscussPage from './pages/CommunityDiscussPage.tsx'
@@ -17,12 +17,12 @@ import PostDiscussion from './components/community/PostDiscussion.tsx'
 const router = createBrowserRouter([
   {
     element: <RootLayout />,
-    errorElement: <ErrorPage />, // Add errorElement
+    errorElement: <ErrorPage />,
     children: [
       { path: "/", element: <LandingPage /> },
       { path: "/myapply", element: <MyApplyPage /> },
       { path: "/search", element: <SearchPage /> },
-      { path: "/jobs/:company_id", element: <JobDiscussionPage /> },
+      { path: "/company/:company_id", element: <CompanyDiscussionPage /> },
       { path: "/postjob", element: <PostJobPage /> },
       { path: "/community", element: <CommunityPage /> },
       { path: "/discuss/:discuss_id", element: <CommunityDiscussPage /> },

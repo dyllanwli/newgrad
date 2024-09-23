@@ -1,19 +1,22 @@
 # app/models/company.py
 from pydantic import BaseModel, Field
-
+from datetime import datetime
 from typing import Optional
 from bson import ObjectId
 from api.models.base import PyObjectId
 
 
 class CompanyBase(BaseModel):
-    _id: str
-    name: str
-    views: int
+    title: str
+    posted_by: str = "admin"
+    username: str = "admin"
     likes: Optional[int] = 0
     comments: Optional[int] = 0
+    views: int
     description: Optional[str] = None
     employees: Optional[int] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
 
 
 class CompanyCreate(CompanyBase):

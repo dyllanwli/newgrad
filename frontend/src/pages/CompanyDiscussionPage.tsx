@@ -1,4 +1,4 @@
-// JobDiscussionPage.tsx
+// CompanyDiscussionPage.tsx
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -7,7 +7,7 @@ import { Job } from '@/components/jobs/types';
 import JobList from '@/components/jobs/JobList';
 import axios from 'axios';
 
-const JobDiscussionPage: React.FC = () => {
+const CompanyDiscussionPage: React.FC = () => {
   const { company_id } = useParams<{ company_id: string }>();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -42,4 +42,4 @@ const JobDiscussionPage: React.FC = () => {
   );
 };
 
-export default JobDiscussionPage;
+export default CompanyDiscussionPage;

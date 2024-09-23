@@ -8,9 +8,10 @@ router = APIRouter()
 
 @router.get("/discussions", response_model=List[Discussion])
 async def get_all_discussions(
-    search: Optional[str] = Query(None, description="Search term for discussions")
+    search: Optional[str] = Query(None, description="Search term for discussions"),
+    filter_by: Optional[str] = Query(None, description="Filter for discussions: 'popular' or 'recent'")
 ):
-    discussions = await get_all_discussions_service(search)
+    discussions = await get_all_discussions_service(search, filter_by)
     return discussions
 
 
