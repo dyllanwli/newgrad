@@ -12,6 +12,7 @@ import JobDiscussionPage from './pages/JobDiscussionPage';
 import PostJobPage from './pages/PostJobPage';
 import CommunityPage from './pages/CommunityPage.tsx'
 import CommunityDiscussPage from './pages/CommunityDiscussPage.tsx'
+import PostDiscussion from './components/community/PostDiscussion.tsx'
 
 const router = createBrowserRouter([
   {
@@ -24,7 +25,8 @@ const router = createBrowserRouter([
       { path: "/jobs/:company_id", element: <JobDiscussionPage /> },
       { path: "/postjob", element: <PostJobPage /> },
       { path: "/community", element: <CommunityPage /> },
-      { path: "/discuss/:discuss_id", element: <CommunityDiscussPage /> }
+      { path: "/discuss/:discuss_id", element: <CommunityDiscussPage /> },
+      { path: "/post-discussion", element: <PostDiscussion /> }
     ]
   }
 ])

@@ -9,7 +9,7 @@ import { Job, Company } from "./jobs/types";
 import { NumericFormat } from 'react-number-format';
 import { useAuth } from '@clerk/clerk-react';
 import { JOBTAGS } from './constants/Tags';
-import MarkdownEditor from './markdown/MarkdownEditor';
+import MarkdownEditor from './ui/markdown/MarkdownEditor';
 import axios from 'axios';
 
 

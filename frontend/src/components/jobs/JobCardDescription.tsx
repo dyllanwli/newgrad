@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@headlessui/react';
-import MarkdownViewer from "../markdown/MarkdownViewer";
+import MarkdownViewer from "../ui/markdown/MarkdownViewer";
 import { ChevronDownIcon } from "lucide-react";
 
 interface JobCardDescriptionProps {

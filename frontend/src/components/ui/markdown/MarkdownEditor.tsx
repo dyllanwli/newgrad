@@ -3,13 +3,15 @@ import { TabGroup, TabList, TabPanel, TabPanels, Tab, Textarea } from '@headless
 import MarkdownViewer from './MarkdownViewer';
 
 interface MarkdownEditorProps {
+    id?: string;
     value: string;
     onChange?: (value: string) => void;
     className?: string;
     maxLength?: number;
+    height?: number;
 }
 
-const MarkdownEditor: React.FC<MarkdownEditorProps> = ({ value, onChange, className, maxLength }) => {
+const MarkdownEditor: React.FC<MarkdownEditorProps> = ({ value, onChange, className, maxLength, id, height }) => {
     return (
         <div className={`relative ${className}`}>
             <TabGroup>
@@ -33,11 +35,12 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({ value, onChange, classN
                     <TabPanel>
                         <Textarea
                             name="description"
+                            id={id}
                             value={value}
                             maxLength={maxLength}
                             onChange={(e) => onChange && onChange(e.target.value)}
                             className="w-full border rounded-lg p-2 pt-2"
-                            style={{ minHeight: '100px', resize: 'vertical' }}
+                            style={{ minHeight: height ? `${height}px` : '100px', resize: 'vertical' }}
                             rows={1}
                             onInput={(e) => {
                                 e.currentTarget.style.height = 'auto';
@@ -47,7 +50,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({ value, onChange, classN
                     </TabPanel>
                     <TabPanel>
                         <div className="border rounded pt-2 min-h-[100px]">
-                            <MarkdownViewer content={value} className="scale-75" />
+                            <MarkdownViewer content={value} className="scale-90" />
                         </div>
                     </TabPanel>
                 </TabPanels>
