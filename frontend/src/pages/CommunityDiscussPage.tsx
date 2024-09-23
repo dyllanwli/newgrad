@@ -33,7 +33,7 @@ const CommunityDiscussPage: React.FC = () => {
     }, [discuss_id]);
 
     const handleBackClick = () => {
-        navigate(-1);
+        navigate('/community');
     };
 
     return (
@@ -42,7 +42,7 @@ const CommunityDiscussPage: React.FC = () => {
             <div className="flex justify-between items-center mb-4">
                 <button 
                     onClick={handleBackClick} 
-                    className="p-2 text-gray-600 hover:text-gray-800 transition-colors duration-200, hover:scale-110"
+                    className="p-2 text-purple-600 hover:text-gray-800 transition-colors duration-200 hover:scale-110"
                 >
                     <ChevronLeft />
                 </button>

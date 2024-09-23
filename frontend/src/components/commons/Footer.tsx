@@ -1,5 +1,5 @@
 import React from 'react';
-import { LogoText } from './branding/LogoText';
+import { LogoText } from '../branding/LogoText';
 
 // // Define the navigation items
 // const navigation = {

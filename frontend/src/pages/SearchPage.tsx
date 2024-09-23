@@ -1,5 +1,5 @@
 import SearchJobs from '@/components/JobSearchPage';
-import Footer from '@/components/Footer';
+import Footer from '@/components/commons/Footer';
 
 export default function SearchPage() {
     return (

@@ -10,6 +10,8 @@ class CompanyBase(BaseModel):
     _id: str
     name: str
     views: int
+    likes: Optional[int] = 0
+    comments: Optional[int] = 0
     description: Optional[str] = None
     employees: Optional[int] = None
 

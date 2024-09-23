@@ -1,14 +1,14 @@
-// src/components/SearchBar.tsx
+// src/components/JobSearchBar.tsx
 import React, { useState, useRef } from 'react';
 import { Search } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
-interface SearchBarProps {
+interface JobSearchBarProps {
   placeholder?: string;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Search for jobs..." }) => {
+const JobSearchBar: React.FC<JobSearchBarProps> = ({ placeholder = "Search for jobs..." }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [query, setQuery] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
@@ -63,4 +63,4 @@ const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Search for jobs...
   );
 };
 
-export default SearchBar;
+export default JobSearchBar;

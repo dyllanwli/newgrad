@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Discussion } from './types';
 import { Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -8,9 +9,13 @@ interface DiscussionCardProps {
 }
 
 const DiscussionCard: React.FC<DiscussionCardProps> = ({ discussion }) => {
+    const navigate = useNavigate();
     const cardVariants = {
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0 },
+    };
+    const onCardClick = (discussion: Discussion) => {
+        navigate(`/discuss/${discussion._id}`);
     };
 
     return (
@@ -19,11 +24,12 @@ const DiscussionCard: React.FC<DiscussionCardProps> = ({ discussion }) => {
             initial="hidden"
             animate="visible"
             variants={cardVariants}
+            onClick={() => onCardClick(discussion)}
             transition={{ duration: 0.5 }}
         >
             <h2 className="text-xl font-semibold mb-2">{discussion.title}</h2>
             <div className="flex justify-between items-center text-gray-500">
-                <p className="text-gray-600">{discussion.posted_by}</p>
+                <p className="text-gray-600">{discussion.username.length > 15 ? `${discussion.username.substring(0, 15)}...` : discussion.username}</p>
                 <span className="flex items-center">
                     <Heart className="mr-1 size-5" /> {discussion.likes}
                 </span>

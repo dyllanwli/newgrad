@@ -1,4 +1,4 @@
-import Footer from "@/components/Footer";
+import Footer from "@/components/commons/Footer";
 // import { useTranslation } from 'react-i18next';
 import HeroSection from '@/components/landingPage/HeroSection';
 import JobSearchPage from '@/components/JobSearchPage';

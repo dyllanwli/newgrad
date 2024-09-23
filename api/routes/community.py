@@ -1,9 +1,17 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 from api.models.discussion import DiscussionCreate, Discussion
-from api.services.discussion_service import create_discussion_service, get_discussion_service
+from api.services.discussion_service import create_discussion_service, get_discussion_service, get_all_discussions_service
 from api.utils.auth import verify_credentials, HTTPCredentials
+from typing import List, Optional
 
 router = APIRouter()
+
+@router.get("/discussions", response_model=List[Discussion])
+async def get_all_discussions(
+    search: Optional[str] = Query(None, description="Search term for discussions")
+):
+    discussions = await get_all_discussions_service(search)
+    return discussions
 
 
 @router.post("/discussions", response_model=Discussion)

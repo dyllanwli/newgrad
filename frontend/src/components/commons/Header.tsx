@@ -1,14 +1,14 @@
 // /src/components/Header.tsx
 
 import React, { useState } from 'react';
-import { ClerkButton } from './ClerkButton';
+import { ClerkButton } from '../ClerkButton';
 import { Menu, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import Logo from './branding/Logo';
+import Logo from '../branding/Logo';
 import { useAuth } from '@clerk/clerk-react';
-import FullScreenDialog from "./ui/FullScreenDialog";
+import FullScreenDialog from "../ui/FullScreenDialog";
 
 const navItems = [
   { label: 'header.community', href: '/community' },

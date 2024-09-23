@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import JobList from './jobs/JobList';
-import SearchBar from './SearchBar';
+import JobSearchBar from './JobSearchBar';
 import axios from 'axios';
 import ProgressBar from './ui/ProgressBar'; 
 
@@ -42,7 +42,7 @@ const JobSearchPage: React.FC = () => {
         <div className="flex flex-col">
             <ProgressBar isLoading={isLoading} /> 
             <div className="flex justify-center py-4">
-                <SearchBar />
+                <JobSearchBar />
             </div>
             <JobList
                 jobs={jobs}
