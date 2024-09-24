@@ -15,7 +15,11 @@ const DiscussionCard: React.FC<DiscussionCardProps> = ({ discussion }) => {
         visible: { opacity: 1, y: 0 },
     };
     const onCardClick = (discussion: Discussion) => {
-        navigate(`/discuss/${discussion._id}`);
+        if (discussion.posted_by === "company") {
+            navigate(`/company/${discussion._id}`);
+        } else {
+            navigate(`/discuss/${discussion._id}`);
+        }
     };
 
     return (

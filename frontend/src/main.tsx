@@ -23,9 +23,9 @@ const router = createBrowserRouter([
       { path: "/myapply", element: <MyApplyPage /> },
       { path: "/search", element: <SearchPage /> },
       { path: "/company/:company_id", element: <CompanyDiscussionPage /> },
+      { path: "/discuss/:discuss_id", element: <CommunityDiscussPage /> },
       { path: "/postjob", element: <PostJobPage /> },
       { path: "/community", element: <CommunityPage /> },
-      { path: "/discuss/:discuss_id", element: <CommunityDiscussPage /> },
       { path: "/post-discussion", element: <PostDiscussion /> }
     ]
   }
