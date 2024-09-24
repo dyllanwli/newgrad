@@ -29,13 +29,13 @@ const CommunityPage: React.FC = () => {
     setIsLoading(true);
     try {
       if (filter === 'Company') {
-        const response = await axios.get('/api/discussions/company', {
+        const response = await axios.get('/api/companies/discussions', {
           params: { search }
         });
         setDiscussions(response.data);
       } else {
-        const response = await axios.get('/api/companies/discussions', {
-          params: { search }
+        const response = await axios.get('/api/discussions', {
+          params: { search, filter_by: filter }
         });
         setDiscussions(response.data);
       }
