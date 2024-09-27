@@ -16,11 +16,15 @@ async def create_discussion_service(
     discussion_dict["_id"] = result.inserted_id
     return Discussion(**discussion_dict)
 
+
 async def get_discussion_service(discussion_id: str):
-    discussion = await db.discussions.find_one({"_id": ObjectId(discussion_id)})
+    discussion = await db.discussions.find_one_and_update(
+        {"_id": ObjectId(discussion_id)}, {"$inc": {"views": 1}}, return_document=True
+    )
     if discussion is None:
         raise HTTPException(status_code=404, detail="Discussion not found")
     return Discussion(**discussion)
+
 
 async def get_all_discussions_service(
     search: Optional[str] = None, filter_by: Optional[str] = None
@@ -30,10 +34,10 @@ async def get_all_discussions_service(
         query = {
             "$or": [
                 {"title": {"$regex": search, "$options": "i"}},
-                {"content": {"$regex": search, "$options": "i"}}
+                {"content": {"$regex": search, "$options": "i"}},
             ]
         }
-    
+
     sort_criteria = None
     if filter_by == "popular":
         thirty_days_ago = datetime.utcnow() - timedelta(days=30)
@@ -43,15 +47,18 @@ async def get_all_discussions_service(
         sort_criteria = [("views", -1)]
     else:
         sort_criteria = [("created_at", -1)]
-    
+
     discussions_cursor = db.discussions.find(query, {"content": 0, "tags": 0})
     if sort_criteria:
         discussions_cursor = discussions_cursor.sort(sort_criteria)
-    
+
     discussions = await discussions_cursor.to_list(length=None)
     return discussions
 
-async def get_all_company_discussions_service(search: Optional[str] = None) -> List[Discussion]:
+
+async def get_all_company_discussions_service(
+    search: Optional[str] = None,
+) -> List[Discussion]:
     query = {}
     if search:
         query = {
@@ -59,6 +66,42 @@ async def get_all_company_discussions_service(search: Optional[str] = None) -> L
                 {"name": {"$regex": search, "$options": "i"}},
             ]
         }
-    discussions = await db.companies.find(query, {"content": 0, "tags": 0}).sort("views", -1).to_list(length=None)
-    
+    discussions = (
+        await db.companies.find(query, {"content": 0, "tags": 0})
+        .sort("views", -1)
+        .to_list(length=None)
+    )
+
     return discussions
+
+
+async def toggle_like_service(discussion_id: str, user_id: str):
+    discussion = await db.discussions.find_one({"_id": ObjectId(discussion_id)})
+    if discussion is None:
+        raise HTTPException(status_code=404, detail="Discussion not found")
+
+    user = await db.users.find_one({"user_id": user_id})
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    liked_discussions = user.get("liked_discussions", [])
+
+    if discussion_id in liked_discussions:
+        # User already liked, so we remove the like
+        await db.discussions.update_one(
+            {"_id": ObjectId(discussion_id)}, {"$inc": {"likes": -1}}
+        )
+        await db.users.update_one(
+            {"user_id": user_id}, {"$pull": {"liked_discussions": discussion_id}}
+        )
+        return {"liked": False}
+    else:
+        # User has not liked yet, so we add the like
+        await db.discussions.update_one(
+            {"_id": ObjectId(discussion_id)}, {"$inc": {"likes": 1}}
+        )
+        await db.users.update_one(
+            {"user_id": user_id},
+            {"$addToSet": {"liked_discussions": discussion_id}},
+        )
+        return {"liked": True}

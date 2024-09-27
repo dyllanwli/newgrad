@@ -1,15 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '@clerk/clerk-react';
+import axios from 'axios';
 
 const MyApplyPage = () => {
   const [selectedCard, setSelectedCard] = useState(null);
+  const [profile, setProfile] = useState(null); 
   const cards = ['Personal Info', 'Interests', 'Preferences', "Settings"];
+  const { getToken } = useAuth();
+
+  useEffect(() => {
+    // Fetch profile data when the component mounts
+    const fetchProfile = async () => {
+      try {
+        const token = await getToken();
+        const response = await axios.get('/api/profile', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        setProfile(response.data);
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
 
   const CardContent = ({ title }) => (
     <div className="p-4">
       <h3 className="text-lg font-semibold mb-2">{title}</h3>
       <p>Edit your {title.toLowerCase()} here.</p>
-      {/* Add your edit form or content here */}
     </div>
   );
 

@@ -7,6 +7,7 @@ import { Discussion } from '@/components/community/types';
 import MarkdownViewer from '@/components/ui/markdown/MarkdownViewer';
 import { ChevronLeft, Heart, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from "@clerk/clerk-react"
 
 const CommunityDiscussPage: React.FC = () => {
     const { discuss_id } = useParams<{ discuss_id: string }>();
@@ -14,7 +15,10 @@ const CommunityDiscussPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [likes, setLikes] = useState(0);
     const [views, setViews] = useState(0);
+    const [liked, setLiked] = useState(false);
     const navigate = useNavigate();
+    const { isSignedIn, getToken } = useAuth(); 
+
     useEffect(() => {
         const fetchDiscussion = async () => {
             setIsLoading(true);
@@ -36,6 +40,25 @@ const CommunityDiscussPage: React.FC = () => {
         navigate('/community');
     };
 
+    const handleLikeClick = async () => {
+        if (!isSignedIn) {
+            // Handle not signed in case
+            return;
+        }
+        const token = await getToken();
+        try {
+            const response = await axios.post(`/api/discussions/${discuss_id}/like`, {}, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setLiked(response.data.liked);
+            setLikes((prevLikes) => prevLikes + (response.data.liked ? 1 : -1));
+        } catch (error) {
+            console.error('Error toggling like:', error);
+        }
+    };
+
     return (
         <div className="container mx-auto px-4 py-8">
             <ProgressBar isLoading={isLoading} />
@@ -49,7 +72,12 @@ const CommunityDiscussPage: React.FC = () => {
                 <div className="flex items-center space-x-4">
                     <div className="flex items-center space-x-2 text-gray-600">
                         <span className="flex items-center">
-                            <Heart className="mr-1" /> {likes}
+                            <Heart 
+                                className={`mr-1 cursor-pointer ${liked ? 'text-red-500' : ''}`} 
+                                onClick={handleLikeClick} 
+                                fill={liked ? 'red' : 'none'} // Add this line to fill the heart when liked
+                            /> 
+                            {likes}
                         </span>
                         <span className="flex items-center">
                             <Eye className="mr-1" /> {views}

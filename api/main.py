@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.config import load_dotenv, lifespan
-from api.routes import jobs, comments, companies, community
+from api.routes import jobs, comments, companies, community, users
 
 load_dotenv()
 app = FastAPI(lifespan=lifespan)
@@ -32,7 +32,7 @@ app.include_router(jobs.router, prefix="/api")
 app.include_router(comments.router, prefix="/api")
 app.include_router(companies.router, prefix="/api")
 app.include_router(community.router, prefix="/api")
-
+app.include_router(users.router, prefix="/api")
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

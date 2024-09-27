@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Query
 from api.models.discussion import DiscussionCreate, Discussion
-from api.services.discussion_service import create_discussion_service, get_discussion_service, get_all_discussions_service
+from api.services.discussion_service import create_discussion_service, get_discussion_service, get_all_discussions_service, toggle_like_service
 from api.utils.auth import verify_credentials, HTTPCredentials
 from typing import List, Optional
 
@@ -32,3 +32,11 @@ async def create_discussion(
 async def get_discussion(discussion_id: str):
     discussion = await get_discussion_service(discussion_id)
     return discussion
+
+
+@router.post("/discussions/{discussion_id}/like")
+async def toggle_like(discussion_id: str, credentials: HTTPCredentials):
+    user_session = verify_credentials(credentials)
+    user_id = user_session["id"]
+    result = await toggle_like_service(discussion_id, user_id)
+    return result

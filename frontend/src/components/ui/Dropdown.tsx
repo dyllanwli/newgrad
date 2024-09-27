@@ -1,6 +1,7 @@
-import React, { useState } from 'react'; // Import useState
+import React, { useState } from 'react'; 
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
-import { motion } from 'framer-motion'; // Import framer-motion
+import { motion } from 'framer-motion'; 
+import { AlignLeft } from 'lucide-react'; // Ensure this import is present
 
 interface DropdownProps {
     options: { value: string; label: string }[];
@@ -17,23 +18,26 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect, placeholder = "S
     };
 
     return (
-        <Menu as="div" className="relative inline-block w-64">
-            <MenuButton className="w-full px-4 py-2 text-left bg-white border rounded shadow focus:outline-none">
+        <Menu as="div" className="relative inline-block w-48">
+            <MenuButton className="w-full px-2 py-1 text-left bg-white border rounded shadow focus:outline-none flex items-center text-sm">
                 {({ open }) => (
-                    <span>{open ? "Close" : selected || placeholder}</span> 
+                    <>
+                        <AlignLeft className="mr-2" />
+                        <span>{open ? "Close" : selected || placeholder}</span>
+                    </>
                 )}
             </MenuButton>
             <MenuItems as={motion.div} 
                 initial={{ opacity: 0, y: -10 }} 
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="absolute z-10 w-full mt-1 bg-white border rounded shadow"
+                className="absolute z-10 w-full mt-1 bg-white border rounded shadow text-sm"
             >
                 {options.map(option => (
                     <MenuItem key={option.value}>
                         <div
                             onClick={() => handleSelect(option.label)} 
-                            className={`px-4 py-2 cursor-pointer data-[focus]:bg-gray-100`}
+                            className="px-2 py-1 cursor-pointer data-[focus]:bg-gray-100"
                         >
                             {option.label}
                         </div>

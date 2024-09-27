@@ -21,19 +21,20 @@ class UserJobApplication(BaseModel):
     updated_at: datetime = Field(default_factory=datetime.utcnow)
     applied_at: datetime = Field(default_factory=datetime.utcnow)
     status: ApplicationStatus
-
-
+    
 class UserBase(BaseModel):
     _id: str
     username: str
-    applied_jobs: Optional[List[str]] = None
+    applied_jobs: Optional[List[UserJobApplication]] = None
+    liked_discussions: Optional[List[str]] = None
+    user_id: str
 
+class UserCreate(BaseModel):
+    username: str
+    email: str
+    user_id: str
 
-class UserCreate(UserBase):
-    pass
-
-
-class User(UserBase):
+class User(UserCreate):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
 
     class Config:
