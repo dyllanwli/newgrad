@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LogoTextHeader } from './LogoText';
+import { LogoTextHeader, LogoTextConfig } from './LogoText';
 
 const Logo = () => {
     const [textIndex, setTextIndex] = useState(0);
     const texts = [
-        'NewGrad.works',
-        'NewGrad.works'
+        `${LogoTextConfig.prefix}${LogoTextConfig.middle}.${LogoTextConfig.suffix}`,
+        `${LogoTextConfig.prefix}${LogoTextConfig.middle}.${LogoTextConfig.suffix}`
     ];
     const displayTimes = [5000, 3000];
 

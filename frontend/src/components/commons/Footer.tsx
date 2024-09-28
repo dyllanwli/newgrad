@@ -1,5 +1,5 @@
 import React from 'react';
-import { LogoText } from '../branding/LogoText';
+import { LogoText, LogoTextConfig } from '../branding/LogoText';
 
 // // Define the navigation items
 // const navigation = {
@@ -29,7 +29,7 @@ const Footer: React.FC = () => {
                     </button> */}
                 </div>
                 <div className="mt-8 pt-8 border-t border-gray-200 text-center">
-                    <p>&copy; {new Date().getFullYear()} NewGrad.works. All rights reserved.</p>
+                    <p>&copy; {new Date().getFullYear()} {LogoTextConfig.prefix}{LogoTextConfig.middle}.{LogoTextConfig.suffix} All rights reserved.</p>
                 </div>
             </div>
         </footer>
