@@ -14,7 +14,7 @@ import ProgressBar from '@/components/ui/ProgressBar';
 const MyApplyPage = () => {
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null); 
-  const [cards, setCards] = useState(['My Apply', 'My Profile', 'Liked', "Settings"]);
+  const [cards, setCards] = useState(['My Apply', 'My Profile', 'Liked']);
   const { getToken } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);

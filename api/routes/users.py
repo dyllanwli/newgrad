@@ -1,6 +1,7 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter
+from typing import List
 from api.models.user import User, UserCreate
-from api.services.user_service import get_or_create_user, get_user_with_job_applications
+from api.services.user_service import get_or_create_user, get_user_with_job_applications, delete_job_applications_by_ids
 from api.utils.auth import verify_credentials, HTTPCredentials
 
 router = APIRouter()
@@ -22,3 +23,10 @@ async def get_user_job_applications(credentials: HTTPCredentials):
     user_id = user_session["id"]
     user = await get_user_with_job_applications(user_id)
     return user
+
+@router.post("/profile/delete_job_applications")
+async def delete_job_applications(job_ids: List[str], credentials: HTTPCredentials):
+    user_session = verify_credentials(credentials)
+    user_id = user_session["id"]
+    await delete_job_applications_by_ids(user_id, job_ids)
+    return {"message": "Job applications deleted successfully"}

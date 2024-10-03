@@ -12,10 +12,10 @@ export interface Profile {
 }
 
 export interface UserJobApplication {
-    id: string;
-    job_title: string;
-    company_name: string;
+    job_id: string;
+    job: Job;
     status: string;
-    applied_at: string;
-    job?: Job;
+    applied_at?: string;
+    created_at?: string;
+    updated_at: string;
 }

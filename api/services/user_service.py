@@ -1,3 +1,4 @@
+from typing import List
 from api.models.user import User, UserCreate, UserJobApplication
 from api.dependencies import newgrad_db as db
 from api.models.job import Job
@@ -60,3 +61,13 @@ async def get_user_with_job_applications(user_id: str) -> User:
             job_application.job = await get_job_by_id(job_application.job_id)
         return user
     return None
+
+async def delete_job_applications_by_ids(user_id: str, job_ids: List[str]):
+    user = await get_user_by_id(user_id)
+    if user:
+        user.job_applications = [
+            job_application for job_application in user.job_applications
+            if job_application.job_id not in job_ids
+        ]
+        await db.users.update_one({"user_id": user_id}, {"$set": {"job_applications": [app.dict() for app in user.job_applications]}})
+        return {"message": "Job applications deleted successfully"}

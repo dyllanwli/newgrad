@@ -7,7 +7,6 @@ const SettingsContent: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
 
   const handleSaveSettings = () => {
-    // Implement save settings functionality here
     console.log('Saving settings:', { emailNotifications, darkMode });
   };
 
@@ -21,16 +20,6 @@ const SettingsContent: React.FC = () => {
             onChange={(e) => setEmailNotifications(e.target.checked)}
           />
           <span>Receive email notifications</span>
-        </label>
-      </div>
-      <div>
-        <label className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            checked={darkMode}
-            onChange={(e) => setDarkMode(e.target.checked)}
-          />
-          <span>Dark mode</span>
         </label>
       </div>
       <button

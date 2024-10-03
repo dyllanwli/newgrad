@@ -8,12 +8,11 @@ from enum import Enum
 
 
 class ApplicationStatus(str, Enum):
-    PENDING = "pending"
-    APPROVED = "approved"
-    REJECTED = "rejected"
-    WITHDRAWN = "withdrawn"
-    SAVED = "saved"
-
+    PENDING = "Pending"
+    APPROVED = "Approved"
+    REJECTED = "Rejected"
+    SAVED = "Saved"
+    INTERVIEW = "Interview"
 
 class UserJobApplication(BaseModel):
     job_id: str
