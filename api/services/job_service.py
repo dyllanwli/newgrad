@@ -21,12 +21,10 @@ async def create_job_queue(job: JobCreate):
     job_dict = job.model_dump()
     company_id = job_dict.get("company_id")
     if not company_id:
-        job_dict["company_id"] = ObjectId()
-    else:
-        job_dict["company_id"] = ObjectId(job_dict["company_id"])
+        job_dict["company_id"] = str(ObjectId())
+    # No need to convert company_id to ObjectId, keep it as string
     result = await db.jobs_queue.insert_one(job_dict)
-    job_dict["company_id"] = str(job_dict["company_id"])
-    job_dict["_id"] = result.inserted_id
+    job_dict["_id"] = str(result.inserted_id)
     return Job(**job_dict)
 
 
@@ -38,30 +36,29 @@ async def update_job(job: JobCreate):
         existing_company = await db.companies.find_one({"name": company_name})
 
         if existing_company:
-            company_id = existing_company["_id"]
+            company_id = str(existing_company["_id"])
         else:
             result = await db.companies.insert_one({"name": company_name})
-            company_id = result.inserted_id
+            company_id = str(result.inserted_id)
 
         job_dict["company_id"] = company_id
-    else:
-        job_dict["company_id"] = ObjectId(job_dict["company_id"])
 
     # Check if the job already exists
-    existing_job = await db.jobs.find_one({"_id": job_dict["_id"]})
+    existing_job = await db.jobs.find_one({"_id": ObjectId(job_dict["_id"])})
     if existing_job:
         # Update the existing job
-        await db.jobs.update_one({"_id": job_dict["_id"]}, {"$set": job_dict})
-        job_dict["company_id"] = str(job_dict["company_id"])
+        await db.jobs.update_one({"_id": ObjectId(job_dict["_id"])}, {"$set": job_dict})
         return Job(**job_dict)
     else:
         # If the job does not exist, insert it as a new job
         result = await db.jobs.insert_one(job_dict)
-        job_dict["company_id"] = str(job_dict["company_id"])
-        job_dict["_id"] = result.inserted_id
+        job_dict["_id"] = str(result.inserted_id)
         return Job(**job_dict)
 
-async def get_jobs(skip: int = 0, limit: int = 10, search: Optional[str] = None, where: str = None):
+
+async def get_jobs(
+    skip: int = 0, limit: int = 10, search: Optional[str] = None, where: str = None
+):
     collection = None
     if where == "queue":
         collection = db.jobs_queue
@@ -92,8 +89,10 @@ async def get_jobs(skip: int = 0, limit: int = 10, search: Optional[str] = None,
             {
                 "$lookup": {
                     "from": "companies",
-                    "localField": "company_id",
-                    "foreignField": "_id",
+                    "let": {"companyId": {"$toObjectId": "$company_id"}},
+                    "pipeline": [
+                        {"$match": {"$expr": {"$eq": ["$_id", "$$companyId"]}}}
+                    ],
                     "as": "company",
                 }
             },
@@ -101,7 +100,6 @@ async def get_jobs(skip: int = 0, limit: int = 10, search: Optional[str] = None,
             {
                 "$addFields": {
                     "_id": {"$toString": "$_id"},
-                    "company_id": {"$toString": "$company_id"},
                 }
             },
             {"$sort": {"_id": 1}},
@@ -124,7 +122,7 @@ async def get_jobs(skip: int = 0, limit: int = 10, search: Optional[str] = None,
     return jobs, total_jobs
 
 
-async def get_job(job_id: str):
+async def get_job_by_id(job_id: str):
     job = await db.jobs.find_one({"_id": ObjectId(job_id)})
     if job:
         return Job(**job)
@@ -133,19 +131,18 @@ async def get_job(job_id: str):
 
 async def get_jobs_by_company_service(company_id: str, skip: int = 0, limit: int = 10):
     pipeline = [
-        {"$match": {"company_id": ObjectId(company_id)}},
+        {"$match": {"company_id": company_id}},
         {
             "$lookup": {
                 "from": "companies",
-                "localField": "company_id",
-                "foreignField": "_id",
+                "let": {"companyId": {"$toObjectId": "$company_id"}},
+                "pipeline": [{"$match": {"$expr": {"$eq": ["$_id", "$$companyId"]}}}],
                 "as": "company",
             }
         },
         {
             "$addFields": {
                 "_id": {"$toString": "$_id"},
-                "company_id": {"$toString": "$company_id"},
             }
         },
         {"$unwind": "$company"},
@@ -154,7 +151,7 @@ async def get_jobs_by_company_service(company_id: str, skip: int = 0, limit: int
     ]
     jobs_cursor = db.jobs.aggregate(pipeline)
     jobs = await jobs_cursor.to_list(length=None)
-    total_jobs = await db.jobs.count_documents({"company_id": ObjectId(company_id)})
+    total_jobs = await db.jobs.count_documents({"company_id": company_id})
     return jobs, total_jobs
 
 

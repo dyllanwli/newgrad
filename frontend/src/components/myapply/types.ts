@@ -4,8 +4,9 @@ export interface Profile {
     email: string;
     user_id: string;
     bio?: string;
-    applied_jobs?: UserJobApplication[];
+    job_applications?: UserJobApplication[];
     liked_discussions?: string[];
+    admin?: boolean;
 }
 
 export interface Job {

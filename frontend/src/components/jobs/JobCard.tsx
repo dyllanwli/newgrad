@@ -8,6 +8,10 @@ import { formatDistanceToNow } from 'date-fns';
 import { fromZonedTime } from 'date-fns-tz';
 import { Button } from '@headlessui/react';
 import JobCardDescription from './JobCardDescription';
+import axios from 'axios';
+import { useUser } from '@clerk/clerk-react';
+import ProgressBar from '../ui/ProgressBar';
+
 interface JobCardProps {
     job: Job;
     handleJobClick: (company_id: string) => void;
@@ -15,9 +19,27 @@ interface JobCardProps {
 
 const JobCard: React.FC<JobCardProps> = ({ job, handleJobClick }) => {
     const [expandedLocations, setExpandedLocations] = useState(false);
+    const { user } = useUser();
+    const [isLoading, setIsLoading] = useState(false);
 
     const toggleLocations = () => {
         setExpandedLocations(!expandedLocations);
+    };
+
+    const handleApplyClick = async (job_id: string) => {
+        try {
+            setIsLoading(true);
+            const user_id = user?.id;
+            await axios.post('/api/jobs/apply', { job_id, user_id });
+
+            if (!job.expired && job.apply_link) {
+                window.location.href = job.apply_link;
+            }
+        } catch (error) {
+            console.error('Error applying to job:', error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -27,6 +49,7 @@ const JobCard: React.FC<JobCardProps> = ({ job, handleJobClick }) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
         >
+            <ProgressBar isLoading={isLoading} />
             <div className="flex flex-col md:flex-row md:items-start md:justify-between">
                 <div className="flex-grow">
                     <h3 className="text-lg font-bold mb-1 cursor-pointer" onClick={() => handleJobClick(job.company_id)}>{job.position}</h3>
@@ -73,16 +96,16 @@ const JobCard: React.FC<JobCardProps> = ({ job, handleJobClick }) => {
                     </div>
                 </div>
                 <div className="mt-4 md:mt-0 md:ml-4 flex flex-col space-y-2 md:w-auto">
-                    <a
-                        href={job.expired ? '#' : job.apply_link}
+                    <button
+                        onClick={() => handleApplyClick(job._id)}
                         className={`w-full sm:w-auto text-center py-2 px-4 rounded whitespace-nowrap ${job.expired
                             ? 'bg-gray-400 cursor-not-allowed text-white'
                             : 'bg-purple-600 font-bold hover:bg-purple-700 text-white transition-colors duration-300'
                             }`}
-                        onClick={job.expired ? (e) => e.preventDefault() : undefined}
+                        disabled={job.expired}
                     >
                         {job.expired ? 'Application Closed' : 'Apply Now'}
-                    </a>
+                    </button>
                     <p
                         onClick={() => handleJobClick(job.company_id)}
                         className="text-purple-600 text-center transition-colors duration-300 whitespace-nowrap bg-transparent border-none cursor-pointer"

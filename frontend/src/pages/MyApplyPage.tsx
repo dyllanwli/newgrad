@@ -7,18 +7,23 @@ import MyApplyContent from '../components/myapply/MyApplyContent';
 import MyProfileContent from '../components/myapply/MyProfileContent';
 import LikedContent from '../components/myapply/LikedContent';
 import SettingsContent from '../components/myapply/SettingsContent';
+import AdminContent from '../components/myapply/AdminContent';
 import { Profile } from '../components/myapply/types';
+import ProgressBar from '@/components/ui/ProgressBar';
 
 const MyApplyPage = () => {
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null); 
-  const cards = ['My Apply', 'My Profile', 'Liked', "Settings"];
+  const [cards, setCards] = useState(['My Apply', 'My Profile', 'Liked', "Settings"]);
   const { getToken } = useAuth();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Fetch profile data when the component mounts
     const fetchProfile = async () => {
       try {
+        setIsLoading(true);
         const token = await getToken();
         const response = await axios.get('/api/profile', {
           headers: {
@@ -26,8 +31,14 @@ const MyApplyPage = () => {
           }
         });
         setProfile(response.data);
+        setIsAdmin(response.data.admin);
+        if (response.data.admin === true && !cards.includes('Admin')) {
+          setCards(prevCards => [...prevCards, 'Admin']);
+        }
       } catch (error) {
         console.error('Error fetching profile:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -39,11 +50,13 @@ const MyApplyPage = () => {
       case 'My Profile':
         return <MyProfileContent profile={profile} />;
       case 'My Apply':
-        return <MyApplyContent applications={profile?.applied_jobs || []} />;
+        return <MyApplyContent applications={profile?.job_applications || []} />;
       case 'Liked':
         return <LikedContent />;
       case 'Settings':
         return <SettingsContent />;
+      case 'Admin':
+        return <AdminContent />;
       default:
         return null;
     }
@@ -51,6 +64,7 @@ const MyApplyPage = () => {
 
   return (
     <div className="w-full min-h-screen bg-gray-100">
+      <ProgressBar isLoading={isLoading} />
       {/* Mobile View */}
       <div className="md:hidden">
         <div className="space-y-4 p-4">
@@ -69,7 +83,7 @@ const MyApplyPage = () => {
       {/* Desktop View */}
       <div className="hidden md:flex justify-center">
         <div className="w-4/5 flex">
-          <div className="w-1/4 bg-white h-screen p-4 border-r">
+          <div className="w-1/4 bg-white h-screen p-4 border-r shadow-lg mt-4 rounded-lg">
             <nav>
               {cards.map((card) => (
                 <motion.div

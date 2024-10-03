@@ -11,12 +11,13 @@ class ApplicationStatus(str, Enum):
     PENDING = "pending"
     APPROVED = "approved"
     REJECTED = "rejected"
+    WITHDRAWN = "withdrawn"
+    SAVED = "saved"
 
 
 class UserJobApplication(BaseModel):
     job_id: str
     job: Optional[Job] = None
-    admin: Optional[str] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
     applied_at: datetime = Field(default_factory=datetime.utcnow)
@@ -25,7 +26,8 @@ class UserJobApplication(BaseModel):
 class UserBase(BaseModel):
     _id: str
     username: str
-    applied_jobs: Optional[List[UserJobApplication]] = []
+    admin: Optional[bool] = False
+    job_applications: Optional[List[UserJobApplication]] = []
     liked_discussions: Optional[List[str]] = []
     user_id: str
     bio: Optional[str] = None
