@@ -10,6 +10,7 @@ import CommunitySearchBar from '@/components/CommunitySearchBar';
 import { useAuth } from '@clerk/clerk-react';
 import DiscussionOptions from '@/components/community/DiscussionOptions';
 import FullScreenDialog from '@/components/ui/FullScreenDialog';
+import { useUser } from '@clerk/clerk-react';
 
 const CommunityPage: React.FC = () => {
   const [discussions, setDiscussions] = useState<Discussion[]>([]);
@@ -20,6 +21,7 @@ const CommunityPage: React.FC = () => {
   const navigate = useNavigate();
   const { isSignedIn } = useAuth();
   const [showDialog, setShowDialog] = useState(false);
+  const { user } = useUser();
 
   const handleCloseDialog = () => {
     setShowDialog(false);
@@ -28,6 +30,7 @@ const CommunityPage: React.FC = () => {
   const fetchDiscussions = async (search: string = '') => {
     setIsLoading(true);
     try {
+      const user_id = user?.id;
       if (filter === 'Company') {
         const response = await axios.get('/api/companies/discussions', {
           params: { search }
@@ -35,7 +38,7 @@ const CommunityPage: React.FC = () => {
         setDiscussions(response.data);
       } else {
         const response = await axios.get('/api/discussions', {
-          params: { search, filter_by: filter }
+          params: { search, filter_by: filter, user_id }
         });
         setDiscussions(response.data);
       }

@@ -16,6 +16,7 @@ class DiscussionBase(BaseModel):
     tags: Optional[List[str]] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
+    liked: Optional[bool] = False
 
 
 class DiscussionCreate(DiscussionBase):

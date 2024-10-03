@@ -2,11 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@clerk/clerk-react';
 import axios from 'axios';
+import ProfileCard from '../components/myapply/ProfileCard';
+import MyApplyContent from '../components/myapply/MyApplyContent';
+import MyProfileContent from '../components/myapply/MyProfileContent';
+import LikedContent from '../components/myapply/LikedContent';
+import SettingsContent from '../components/myapply/SettingsContent';
+import { Profile } from '../components/myapply/types';
 
 const MyApplyPage = () => {
-  const [selectedCard, setSelectedCard] = useState(null);
-  const [profile, setProfile] = useState(null); 
-  const cards = ['Personal Info', 'Interests', 'Preferences', "Settings"];
+  const [selectedCard, setSelectedCard] = useState<string | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null); 
+  const cards = ['My Apply', 'My Profile', 'Liked', "Settings"];
   const { getToken } = useAuth();
 
   useEffect(() => {
@@ -28,12 +34,20 @@ const MyApplyPage = () => {
     fetchProfile();
   }, []);
 
-  const CardContent = ({ title }) => (
-    <div className="p-4">
-      <h3 className="text-lg font-semibold mb-2">{title}</h3>
-      <p>Edit your {title.toLowerCase()} here.</p>
-    </div>
-  );
+  const getCardContent = (title: string) => {
+    switch (title) {
+      case 'My Profile':
+        return <MyProfileContent profile={profile} />;
+      case 'My Apply':
+        return <MyApplyContent applications={profile?.applied_jobs || []} />;
+      case 'Liked':
+        return <LikedContent />;
+      case 'Settings':
+        return <SettingsContent />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="w-full min-h-screen bg-gray-100">
@@ -41,26 +55,13 @@ const MyApplyPage = () => {
       <div className="md:hidden">
         <div className="space-y-4 p-4">
           {cards.map((card) => (
-            <motion.div
+            <ProfileCard
               key={card}
-              className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer"
-              whileHover={{ scale: 1.05 }}
-              onClick={() => setSelectedCard(card === selectedCard ? null : card)}
-            >
-              <h2 className="text-lg font-semibold p-4">{card}</h2>
-              <AnimatePresence>
-                {selectedCard === card && (
-                  <motion.div
-                    initial={{ height: 0 }}
-                    animate={{ height: 'auto' }}
-                    exit={{ height: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <CardContent title={card} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
+              card={card}
+              selectedCard={selectedCard}
+              setSelectedCard={setSelectedCard}
+              content={getCardContent(card)}
+            />
           ))}
         </div>
       </div>
@@ -73,8 +74,7 @@ const MyApplyPage = () => {
               {cards.map((card) => (
                 <motion.div
                   key={card}
-                  className={`p-2 mb-2 rounded cursor-pointer ${selectedCard === card ? 'bg-blue-100' : 'hover:bg-gray-100'
-                    }`}
+                  className={`p-2 mb-2 rounded cursor-pointer ${selectedCard === card ? 'bg-blue-100' : 'hover:bg-gray-100'}`}
                   whileHover={{ scale: 1.05 }}
                   onClick={() => setSelectedCard(card)}
                 >
@@ -94,7 +94,7 @@ const MyApplyPage = () => {
                   transition={{ duration: 0.3 }}
                   className="bg-white rounded-lg shadow-md p-6"
                 >
-                  <CardContent title={selectedCard} />
+                  {getCardContent(selectedCard)}
                 </motion.div>
               )}
             </AnimatePresence>
@@ -104,4 +104,5 @@ const MyApplyPage = () => {
     </div>
   );
 };
+
 export default MyApplyPage;

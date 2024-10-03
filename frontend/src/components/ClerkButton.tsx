@@ -1,7 +1,7 @@
 'use client'
 import React from 'react';
 import { SignedIn, SignedOut, SignInButton, useAuth } from '@clerk/clerk-react';
-import { LogIn, User } from 'lucide-react';
+import { LogIn } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -22,15 +22,15 @@ export const ClerkButton = () => {
         </SignInButton>
       </SignedOut>
       <SignedIn>
-      <button
-        onClick={() => {
-          signOut();
-          navigate('/');
-        }}
-        className="flex items-center justify-center gap-2 bg-white hover:bg-gray-100 text-black font-semibold text-sm py-1 px-2 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 whitespace-nowrap"
-      >
-        <span className="sm:inline">{t('app.signout')}</span>
-      </button>
+        <button
+          onClick={() => {
+            signOut();
+            navigate('/');
+          }}
+          className="flex items-center justify-center gap-2 bg-white hover:bg-gray-100 text-black font-semibold text-sm py-1 px-2 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 whitespace-nowrap"
+        >
+          <span className="sm:inline">{t('app.signout')}</span>
+        </button>
       </SignedIn>
     </div>
   );

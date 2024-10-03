@@ -9,4 +9,5 @@ export interface Discussion {
     likes: number; 
     comments: number; 
     views: number;
+    liked?: boolean;
 }

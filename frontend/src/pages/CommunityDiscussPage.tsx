@@ -7,7 +7,7 @@ import { Discussion } from '@/components/community/types';
 import MarkdownViewer from '@/components/ui/markdown/MarkdownViewer';
 import { ChevronLeft, Heart, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from "@clerk/clerk-react"
+import { useAuth, useUser } from "@clerk/clerk-react"
 
 const CommunityDiscussPage: React.FC = () => {
     const { discuss_id } = useParams<{ discuss_id: string }>();
@@ -18,15 +18,21 @@ const CommunityDiscussPage: React.FC = () => {
     const [liked, setLiked] = useState(false);
     const navigate = useNavigate();
     const { isSignedIn, getToken } = useAuth(); 
-
+    const { user } = useUser();
     useEffect(() => {
         const fetchDiscussion = async () => {
             setIsLoading(true);
             try {
-                const response = await axios.get(`/api/discussions/${discuss_id}`);
+                const user_id = user?.id;
+                const response = await axios.get(`/api/discussions/${discuss_id}`, {
+                    params: {
+                        user_id: user_id
+                    }
+                });
                 setDiscussion(response.data);
                 setLikes(response.data.likes);
                 setViews(response.data.views);
+                setLiked(response.data.liked);
             } catch (error) {
                 console.error('Error fetching discussion:', error);
             } finally {
@@ -37,7 +43,12 @@ const CommunityDiscussPage: React.FC = () => {
     }, [discuss_id]);
 
     const handleBackClick = () => {
-        navigate('/community');
+        const previousPage = document.referrer; 
+        if (previousPage.includes('/post-discussion')) {
+            navigate('/community');
+        } else {
+            navigate(-1); 
+        }
     };
 
     const handleLikeClick = async () => {

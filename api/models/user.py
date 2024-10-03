@@ -25,11 +25,12 @@ class UserJobApplication(BaseModel):
 class UserBase(BaseModel):
     _id: str
     username: str
-    applied_jobs: Optional[List[UserJobApplication]] = None
-    liked_discussions: Optional[List[str]] = None
+    applied_jobs: Optional[List[UserJobApplication]] = []
+    liked_discussions: Optional[List[str]] = []
     user_id: str
+    bio: Optional[str] = None
 
-class UserCreate(BaseModel):
+class UserCreate(UserBase):
     username: str
     email: str
     user_id: str

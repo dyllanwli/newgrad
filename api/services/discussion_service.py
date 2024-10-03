@@ -27,7 +27,7 @@ async def get_discussion_service(discussion_id: str):
 
 
 async def get_all_discussions_service(
-    search: Optional[str] = None, filter_by: Optional[str] = None
+    search: Optional[str] = None, filter_by: Optional[str] = None, user_id: Optional[str] = None
 ) -> List[Discussion]:
     query = {}
     if search:
@@ -53,6 +53,11 @@ async def get_all_discussions_service(
         discussions_cursor = discussions_cursor.sort(sort_criteria)
 
     discussions = await discussions_cursor.to_list(length=None)
+    if user_id:
+        user = await db.users.find_one({"user_id": user_id})
+        liked_discussions = set(user["liked_discussions"])
+        for discussion in discussions:
+            discussion["liked"] = str(discussion["_id"]) in liked_discussions
     return discussions
 
 
@@ -86,7 +91,7 @@ async def toggle_like_service(discussion_id: str, user_id: str):
 
     liked_discussions = user.get("liked_discussions", [])
 
-    if discussion_id in liked_discussions:
+    if liked_discussions and discussion_id in liked_discussions:
         # User already liked, so we remove the like
         await db.discussions.update_one(
             {"_id": ObjectId(discussion_id)}, {"$inc": {"likes": -1}}
@@ -105,3 +110,9 @@ async def toggle_like_service(discussion_id: str, user_id: str):
             {"$addToSet": {"liked_discussions": discussion_id}},
         )
         return {"liked": True}
+
+
+async def get_discussions_by_ids(discussion_ids: List[str]) -> List[Discussion]:
+    discussion_ids = [ObjectId(id) for id in discussion_ids]
+    discussions = await db.discussions.find({"_id": {"$in": discussion_ids}}).to_list(length=None)
+    return [Discussion(**discussion) for discussion in discussions]

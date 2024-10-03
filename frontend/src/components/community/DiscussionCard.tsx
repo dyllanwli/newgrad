@@ -35,7 +35,7 @@ const DiscussionCard: React.FC<DiscussionCardProps> = ({ discussion }) => {
             <div className="flex justify-between items-center text-gray-500">
                 {discussion.username && discussion.username !== "company" && <p className="text-gray-600">{discussion.username.length > 15 ? `${discussion.username.substring(0, 15)}...` : discussion.username}</p>}
                 <span className="flex items-center">
-                    <Heart className="mr-1 size-5" /> {discussion.likes}
+                    <Heart className={`mr-1 size-5 ${discussion.liked ? 'text-red-500' : ''}`} /> {discussion.likes}
                 </span>
             </div>
         </motion.div>
