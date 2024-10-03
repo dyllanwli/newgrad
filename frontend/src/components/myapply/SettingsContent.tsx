@@ -12,8 +12,7 @@ const SettingsContent: React.FC = () => {
   };
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-bold">Settings</h2>
+    <div className="container mx-auto px-4 py-2">
       <div>
         <label className="flex items-center space-x-2">
           <input

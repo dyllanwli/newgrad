@@ -9,8 +9,7 @@ interface MyApplyContentProps {
 const MyApplyContent: React.FC<MyApplyContentProps> = ({ applications }) => {
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-bold">My Applications</h2>
+    <div className="container mx-auto px-4 py-8">
       {applications.length === 0 ? (
         <p>No applications yet.</p>
       ) : (
