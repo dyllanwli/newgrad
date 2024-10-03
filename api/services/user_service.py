@@ -3,6 +3,7 @@ from api.dependencies import newgrad_db as db
 from api.models.job import Job
 from fastapi import HTTPException
 from api.models.user import ApplicationStatus
+from api.services.job_service import get_job_by_id
 from datetime import datetime
 
 
@@ -51,3 +52,11 @@ async def update_job_application_status(job: Job, user_id: str, status: Applicat
     )
 
     return user
+
+async def get_user_with_job_applications(user_id: str) -> User:
+    user = await get_user_by_id(user_id)
+    if user:
+        for job_application in user.job_applications:
+            job_application.job = await get_job_by_id(job_application.job_id)
+        return user
+    return None

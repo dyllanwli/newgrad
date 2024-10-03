@@ -20,7 +20,6 @@ const MyApplyPage = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch profile data when the component mounts
     const fetchProfile = async () => {
       try {
         setIsLoading(true);
@@ -50,7 +49,7 @@ const MyApplyPage = () => {
       case 'My Profile':
         return <MyProfileContent profile={profile} />;
       case 'My Apply':
-        return <MyApplyContent applications={profile?.job_applications || []} />;
+        return <MyApplyContent />;
       case 'Liked':
         return <LikedContent />;
       case 'Settings':
