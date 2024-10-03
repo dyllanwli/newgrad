@@ -42,12 +42,14 @@ const MyApplyContent: React.FC = () => {
         setExpandedPosition(expandedPosition === id ? null : id);
     };
 
-    const toggleSelecting = () => {
+    const toggleSelecting = (e: React.MouseEvent) => {
+        e.stopPropagation(); // Prevent event propagation
         setIsSelecting(!isSelecting);
         setSelectedApplications([]);
     };
 
-    const toggleApplicationSelection = (jobId: string) => {
+    const toggleApplicationSelection = (e: React.MouseEvent, jobId: string) => {
+        e.stopPropagation(); // Prevent event propagation
         setSelectedApplications(prev =>
             prev.includes(jobId) ? prev.filter(id => id !== jobId) : [...prev, jobId]
         );
@@ -108,7 +110,8 @@ const MyApplyContent: React.FC = () => {
                                             <input
                                                 type="checkbox"
                                                 checked={selectedApplications.includes(app.job_id)}
-                                                onChange={() => toggleApplicationSelection(app.job_id)}
+                                                onChange={(e) => toggleApplicationSelection(e as unknown as React.MouseEvent, app.job_id)}
+                                                onClick={(e) => e.stopPropagation()} // Add this line
                                             />
                                         </td>
                                     )}
