@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build --mode production --base=/",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
+    "preview": "vite --mode production preview",
     "deploy": "yarn build && vercel --prod"
   },
   "dependencies": {
