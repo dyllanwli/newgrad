@@ -1,7 +1,8 @@
 # api/routers/jobs.py
-from fastapi import APIRouter, HTTPException, Query, Body
+from fastapi import APIRouter, HTTPException, Query
 from typing import List, Optional
 from pydantic import BaseModel
+from api.models.user import UserJobApplication
 from api.models.job import Job, JobCreate
 from api.services.job_service import (
     create_job_queue,
@@ -12,7 +13,7 @@ from api.services.job_service import (
     increment_company_views,
     get_job_by_id,
 )
-from api.services.user_service import update_job_application_status
+from api.services.user_service import update_job_applications_by_id
 from api.utils.auth import verify_credentials, HTTPCredentials
 from api.models.user import ApplicationStatus
 import logging
@@ -112,16 +113,16 @@ async def get_jobs_by_company(
         logger.error("increment_company_views error")
     return {"jobs": jobs, "totalPages": (total_jobs + limit - 1) // limit}
 
-
-class JobApplication(BaseModel):
-    job_id: str
-    user_id: Optional[str] = None
-
 @router.post("/jobs/apply")
-async def apply_to_job(application: JobApplication = Body(...)):
-    job = await get_job_by_id(application.job_id)
+async def handle_job_apply(job_id: str, user_id: Optional[str] = None):
+    job = await get_job_by_id(job_id)
     if not job:
-        raise HTTPException(status_code=404, detail="Job not found")
-    if application.user_id:
-        await update_job_application_status(job, application.user_id, status=ApplicationStatus.SAVED)
+        logger.error("Job not found")
+    if user_id:
+        job_application = UserJobApplication(
+            status=ApplicationStatus.SAVED,
+            job_id=job_id,
+            job=job,
+        )
+        await update_job_applications_by_id(user_id, job_application)
     return job

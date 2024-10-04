@@ -2,12 +2,10 @@ import React, { useState } from 'react';
 import { useAuth } from '@clerk/clerk-react';
 
 const SettingsContent: React.FC = () => {
-  const { user } = useAuth();
+  const { getToken } = useAuth();
   const [emailNotifications, setEmailNotifications] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
 
-  const handleSaveSettings = () => {
-    console.log('Saving settings:', { emailNotifications, darkMode });
+  const handleSaveSettings = () => {;
   };
 
   return (

@@ -54,6 +54,21 @@ async def update_job_application_status(job: Job, user_id: str, status: Applicat
 
     return user
 
+async def update_job_applications_by_id(user_id: str, updated_job_application: UserJobApplication):
+    user = await get_user_by_id(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    job_application = next((app for app in user.job_applications if app.job_id == updated_job_application.job_id), None)
+    if not job_application:        
+        user.job_applications.append(updated_job_application)
+    else:
+        job_application = updated_job_application
+    
+    await db.users.update_one({"user_id": user_id}, {"$set": {"job_applications": [app.dict() for app in user.job_applications]}})
+    return user
+
+
 async def get_user_with_job_applications(user_id: str) -> User:
     user = await get_user_by_id(user_id)
     if user:

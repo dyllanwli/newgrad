@@ -30,7 +30,12 @@ const JobCard: React.FC<JobCardProps> = ({ job, handleJobClick }) => {
         try {
             setIsLoading(true);
             const user_id = user?.id;
-            await axios.post('/api/jobs/apply', { job_id, user_id });
+            await axios.post('/api/jobs/apply', null, {
+                params: {
+                    job_id: job_id,
+                    user_id: user_id
+                }
+            });
 
             if (!job.expired && job.apply_link) {
                 window.location.href = job.apply_link;
