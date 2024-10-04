@@ -3,14 +3,20 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.config import load_dotenv, lifespan
+from api.config import load_dotenv, lifespan, IS_PROD
 from api.routes import jobs, comments, companies, community, users
 
 load_dotenv()
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    lifespan=lifespan,
+    docs_url=None if IS_PROD else "/docs",
+    redoc_url=None if IS_PROD else "/redoc",
+    openapi_url=None if IS_PROD else "/openapi.json"
+)
 
 origins = [
     "http://localhost:5173",
+    "https://newgrad.works",
 ]
 
 @app.middleware("http")

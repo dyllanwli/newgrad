@@ -5,10 +5,12 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile
-    container_name: newgrad
+    container_name: newgrad.works
     volumes:
       - ./api:/backend/api
+      - ./clerk.prod.pem:/backend/clerk.prod.pem
+      - ./.env:/backend/.env
     ports:
-      - "8001:8000"
+      - "8002:8000"
     environment:
-      - IS_PROD=false
+      - IS_PROD=1
