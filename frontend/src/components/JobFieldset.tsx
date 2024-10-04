@@ -11,6 +11,7 @@ import { useAuth } from '@clerk/clerk-react';
 import { JOBTAGS } from './constants/Tags';
 import MarkdownEditor from './ui/markdown/MarkdownEditor';
 import axios from 'axios';
+import { API_BASE_URL } from '@/config';
 
 
 interface JobFieldsetProps {
@@ -46,7 +47,7 @@ const JobFieldset: React.FC<JobFieldsetProps> = ({ Job, title, buttonTitle, hand
                 try {
                     const token = await getToken();
                     const response = await axios.get(
-                        `/api/companies/search?query=${encodeURIComponent(query)}`,
+                        `${API_BASE_URL}/api/companies/search?query=${encodeURIComponent(query)}`,
                         {
                             headers: {
                                 Authorization: `Bearer ${token}`,

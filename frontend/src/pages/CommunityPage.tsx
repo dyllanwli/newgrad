@@ -10,6 +10,7 @@ import CommunitySearchBar from '@/components/CommunitySearchBar';
 import { useAuth } from '@clerk/clerk-react';
 import DiscussionOptions from '@/components/community/DiscussionOptions';
 import FullScreenDialog from '@/components/ui/FullScreenDialog';
+import { API_BASE_URL } from '@/config';
 import { useUser } from '@clerk/clerk-react';
 
 const CommunityPage: React.FC = () => {
@@ -31,12 +32,12 @@ const CommunityPage: React.FC = () => {
     try {
       const user_id = user?.id;
       if (filter === 'Company') {
-        const response = await axios.get('/api/companies/discussions', {
+        const response = await axios.get(`${API_BASE_URL}/api/companies/discussions`, {
           params: { search }
         });
         setDiscussions(response.data);
       } else {
-        const response = await axios.get('/api/discussions', {
+        const response = await axios.get(`${API_BASE_URL}/api/discussions`, {
           params: { search, filter_by: filter, user_id }
         });
         setDiscussions(response.data);

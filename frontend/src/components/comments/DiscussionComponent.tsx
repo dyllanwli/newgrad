@@ -8,7 +8,7 @@ import { MAX_DEPTH, MAX_VISIBLE_DEPTH } from './constants';
 import { Button, Textarea } from '@headlessui/react'
 import ProgressBar from '../ui/ProgressBar';
 import axios from 'axios';
-
+import { API_BASE_URL } from '@/config';
 interface DiscussionComponentProps {
   discussId: string;
 }
@@ -32,7 +32,7 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ discussId }) 
       setIsLoading(true);
       const token = isSignedIn ? await getToken() : null;
       try {
-        const response = await axios.get(`/api/discuss/${discussId}/comments`, {
+        const response = await axios.get(`${API_BASE_URL}/api/discuss/${discussId}/comments`, {
           headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         });
         setComments(response.data);
@@ -72,7 +72,7 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ discussId }) 
     }
     const token = await getToken();
     try {
-      const response = await axios.post(`/api/discuss/${discussId}/comments`, 
+      const response = await axios.post(`${API_BASE_URL}/api/discuss/${discussId}/comments`, 
         { content: newComment }, 
         { headers: { 
           'Content-Type': 'application/json', 
@@ -93,7 +93,7 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ discussId }) 
     }
     const token = await getToken();
     try {
-      const response = await axios.post(`/api/discuss/${discussId}/comments`, 
+      const response = await axios.post(`${API_BASE_URL}/api/discuss/${discussId}/comments`, 
         { content: replyContent, parent_id: parentComment._id }, 
         { headers: { 
           'Content-Type': 'application/json', 
@@ -112,7 +112,7 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ discussId }) 
     }
     const token = await getToken();
     try {
-      await axios.post(`/api/comments/${commentId}/vote`, null, {
+      await axios.post(`${API_BASE_URL}/api/comments/${commentId}/vote`, null, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -166,7 +166,7 @@ const DiscussionComponent: React.FC<DiscussionComponentProps> = ({ discussId }) 
     }
     const token = await getToken();
     try {
-      const response = await axios.put(`/api/comments/${updatedComment._id}`, 
+      const response = await axios.put(`${API_BASE_URL}/api/comments/${updatedComment._id}`, 
         { content: updatedComment.content }, 
         {
           headers: {

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import MarkdownEditor from '@/components/ui/markdown/MarkdownEditor';
 import { useAuth, useUser } from '@clerk/clerk-react';
 import axios from 'axios';
+import { API_BASE_URL } from '@/config';
 
 // Define the shape of a tag
 interface Tag {
@@ -51,7 +52,7 @@ const PostDiscussion: React.FC = () => {
                 throw new Error('User is not signed in');
             }
             const token = await getToken();
-            const response = await axios.post('/api/discussions', {
+            const response = await axios.post(`${API_BASE_URL}/api/discussions`, {
                 title,
                 content,
                 tags: tags.map(tag => tag.name),

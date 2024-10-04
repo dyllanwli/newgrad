@@ -6,6 +6,8 @@ import JobList from './jobs/JobList';
 import JobSearchBar from './JobSearchBar';
 import axios from 'axios';
 import ProgressBar from './ui/ProgressBar'; 
+import { API_BASE_URL } from '@/config';
+
 
 const JobSearchPage: React.FC = () => {
     const [jobs, setJobs] = useState([]);
@@ -20,7 +22,7 @@ const JobSearchPage: React.FC = () => {
         const fetchJobs = async () => {
             setIsLoading(true); 
             try {
-                const response = await axios.get(`/api/jobs`, {
+                const response = await axios.get(`${API_BASE_URL}/api/jobs`, {
                     params: {
                         page: currentPage,
                         limit: 8,

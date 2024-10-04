@@ -6,6 +6,7 @@ import DiscussionComponent from '@/components/comments/DiscussionComponent';
 import { Job } from '@/components/jobs/types';
 import JobList from '@/components/jobs/JobList';
 import axios from 'axios';
+import { API_BASE_URL } from '@/config';
 
 const CompanyDiscussionPage: React.FC = () => {
   const { company_id } = useParams<{ company_id: string }>();
@@ -16,7 +17,7 @@ const CompanyDiscussionPage: React.FC = () => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axios.get(`/api/companies/${company_id}/jobs`);
+        const response = await axios.get(`${API_BASE_URL}/api/companies/${company_id}/jobs`);
         setJobs(response.data.jobs);
         setTotalPages(response.data.totalPages);
       } catch (error) {

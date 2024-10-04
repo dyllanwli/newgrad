@@ -4,6 +4,7 @@ import { useAuth } from '@clerk/clerk-react';
 import { Discussion } from '../community/types';
 import DiscussionCard from '../community/DiscussionCard';
 import ProgressBar from '../ui/ProgressBar';
+import { API_BASE_URL } from '@/config';
 
 const LikedContent: React.FC = () => {
   const [likedDiscussions, setLikedDiscussions] = useState<Discussion[]>([]);
@@ -14,7 +15,7 @@ const LikedContent: React.FC = () => {
       try {
         setIsLoading(true);
         const token = await getToken();
-        const response = await axios.get('/api/liked-discussions', {
+        const response = await axios.get(`${API_BASE_URL}/api/liked-discussions`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }

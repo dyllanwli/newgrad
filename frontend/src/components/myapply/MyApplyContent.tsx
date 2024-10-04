@@ -5,7 +5,7 @@ import { useAuth } from '@clerk/clerk-react';
 import ProgressBar from '../ui/ProgressBar';
 import Dialog from '../ui/Dialog'; // Assuming you have a Dialog component
 import { format } from 'date-fns'; // Add this import
-
+import { API_BASE_URL } from '@/config';
 const MyApplyContent: React.FC = () => {
     const [applications, setApplications] = useState<UserJobApplication[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -23,7 +23,7 @@ const MyApplyContent: React.FC = () => {
             try {
                 setIsLoading(true);
                 const token = await getToken();
-                const response = await axios.get('/api/profile/job_applications', {
+                const response = await axios.get(`${API_BASE_URL}/api/profile/job_applications`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -63,7 +63,7 @@ const MyApplyContent: React.FC = () => {
     const deleteSelectedApplications = async () => {
         try {
             const token = await getToken();
-            await axios.post('/api/profile/delete_job_applications', selectedApplications, {
+            await axios.post(`${API_BASE_URL}/api/profile/delete_job_applications`, selectedApplications, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -102,7 +102,7 @@ const MyApplyContent: React.FC = () => {
             application.status = newStatus;
             application.updated_at = newUpdatedAt;
             
-            await axios.post('/api/profile/update_job_applications', application, {
+            await axios.post(`${API_BASE_URL}/api/profile/update_job_applications`, application, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

@@ -7,6 +7,7 @@ import { useAuth, useUser } from '@clerk/clerk-react';
 import JobFieldset from '@/components/JobFieldset';
 import FullScreenDialog from "@/components/ui/FullScreenDialog";
 import ProgressBar from '@/components/ui/ProgressBar';
+import { API_BASE_URL } from '@/config';
 
 const PostJobPage: React.FC = () => {
     const { getToken, isSignedIn } = useAuth();
@@ -51,7 +52,7 @@ const PostJobPage: React.FC = () => {
         console.log(formData);
         setIsLoading(true);
         try {
-            await axios.post('/api/post_job_request', formData, {
+            await axios.post(`${API_BASE_URL}/api/post_job_request`, formData, {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,

@@ -10,7 +10,7 @@ import SettingsContent from '../components/myapply/SettingsContent';
 import AdminContent from '../components/myapply/AdminContent';
 import { Profile } from '../components/myapply/types';
 import ProgressBar from '@/components/ui/ProgressBar';
-
+import { API_BASE_URL } from '@/config';
 const MyApplyPage = () => {
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null); 
@@ -24,7 +24,7 @@ const MyApplyPage = () => {
       try {
         setIsLoading(true);
         const token = await getToken();
-        const response = await axios.get('/api/profile', {
+        const response = await axios.get(`${API_BASE_URL}/api/profile`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }

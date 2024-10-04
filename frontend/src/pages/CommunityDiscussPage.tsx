@@ -8,7 +8,7 @@ import MarkdownViewer from '@/components/ui/markdown/MarkdownViewer';
 import { ChevronLeft, Heart, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth, useUser } from "@clerk/clerk-react"
-
+import { API_BASE_URL } from '@/config';
 const CommunityDiscussPage: React.FC = () => {
     const { discuss_id } = useParams<{ discuss_id: string }>();
     const [discussion, setDiscussion] = useState<Discussion | null>(null);
@@ -24,7 +24,7 @@ const CommunityDiscussPage: React.FC = () => {
             setIsLoading(true);
             try {
                 const user_id = user?.id;
-                const response = await axios.get(`/api/discussions/${discuss_id}`, {
+                const response = await axios.get(`${API_BASE_URL}/api/discussions/${discuss_id}`, {
                     params: {
                         user_id: user_id
                     }
@@ -58,7 +58,7 @@ const CommunityDiscussPage: React.FC = () => {
         }
         const token = await getToken();
         try {
-            const response = await axios.post(`/api/discussions/${discuss_id}/like`, {}, {
+            const response = await axios.post(`${API_BASE_URL}/api/discussions/${discuss_id}/like`, {}, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

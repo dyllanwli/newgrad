@@ -11,6 +11,7 @@ import JobCardDescription from './JobCardDescription';
 import axios from 'axios';
 import { useUser } from '@clerk/clerk-react';
 import ProgressBar from '../ui/ProgressBar';
+import { API_BASE_URL } from '@/config';
 
 interface JobCardProps {
     job: Job;
@@ -30,7 +31,7 @@ const JobCard: React.FC<JobCardProps> = ({ job, handleJobClick }) => {
         try {
             setIsLoading(true);
             const user_id = user?.id;
-            await axios.post('/api/jobs/apply', null, {
+            await axios.post(`${API_BASE_URL}/api/jobs/apply`, null, {
                 params: {
                     job_id: job_id,
                     user_id: user_id
