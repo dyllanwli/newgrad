@@ -3,6 +3,8 @@ import axios from 'axios';
 import { UserJobApplication } from './types';
 import { useAuth } from '@clerk/clerk-react';
 import ProgressBar from '../ui/ProgressBar';
+import Dialog from '../ui/Dialog'; // Assuming you have a Dialog component
+import { format } from 'date-fns'; // Add this import
 
 const MyApplyContent: React.FC = () => {
     const [applications, setApplications] = useState<UserJobApplication[]>([]);
@@ -13,6 +15,8 @@ const MyApplyContent: React.FC = () => {
     const [isSelecting, setIsSelecting] = useState(false);
     const [selectedApplications, setSelectedApplications] = useState<string[]>([]);
     const [editingApplication, setEditingApplication] = useState<string | null>(null);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedApplication, setSelectedApplication] = useState<UserJobApplication | null>(null);
 
     useEffect(() => {
         const fetchJobApplications = async () => {
@@ -72,9 +76,24 @@ const MyApplyContent: React.FC = () => {
         }
     };
 
-    const handleStatusClick = (e: React.MouseEvent, jobId: string) => {
-        e.stopPropagation(); // Stop event propagation
-        setEditingApplication(jobId);
+    const handleStatusClick = (e: React.MouseEvent, application: UserJobApplication) => {
+        e.stopPropagation();
+        setSelectedApplication(application);
+        setIsDialogOpen(true);
+    };
+
+    const handleStatusUpdate = async (newStatus: string) => {
+        if (selectedApplication) {
+            await updateJobApplication(selectedApplication, newStatus, selectedApplication.updated_at);
+            setIsDialogOpen(false);
+            setSelectedApplication(null);
+        }
+    };
+
+    const handleDateChange = async (e: React.ChangeEvent<HTMLInputElement>, application: UserJobApplication) => {
+        e.stopPropagation();
+        const newDate = e.target.value;
+        await updateJobApplication(application, application.status, newDate);
     };
 
     const updateJobApplication = useCallback(async (application: UserJobApplication, newStatus: string, newUpdatedAt: string) => {
@@ -153,51 +172,21 @@ const MyApplyContent: React.FC = () => {
                                             : ((app.job?.position || app.job?.position || '') || '').slice(0, 15) + ((app.job?.position || '')?.length > 15 ? '...' : '')}
                                     </td>
                                     <td className="py-3 px-6 text-left whitespace-nowrap">
-                                        {editingApplication === app.job_id ? (
-                                            <select
-                                                value={app.status}
-                                                onChange={(e) => {
-                                                    e.stopPropagation(); // Stop event propagation
-                                                    updateJobApplication(app, e.target.value, app.updated_at);
-                                                }}
-                                                onClick={(e) => e.stopPropagation()} // Stop event propagation
-                                                className="px-2 py-1 rounded text-xs font-semibold"
-                                            >
-                                                <option value="Pending">Pending</option>
-                                                <option value="Accepted">Accepted</option>
-                                                <option value="Rejected">Rejected</option>
-                                                <option value="Interview">Interview</option>
-                                                <option value="Saved">Saved</option>
-                                            </select>
-                                        ) : (
-                                            <span 
-                                                className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(app.status)} cursor-pointer`}
-                                                onClick={(e) => handleStatusClick(e, app.job_id)}
-                                            >
-                                                {app.status}
-                                            </span>
-                                        )}
+                                        <span 
+                                            className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(app.status)} cursor-pointer`}
+                                            onClick={(e) => handleStatusClick(e, app)}
+                                        >
+                                            {app.status}
+                                        </span>
                                     </td>
                                     <td className="py-3 px-6 text-left whitespace-nowrap">
-                                        {editingApplication === app.job_id ? (
-                                            <input
-                                                type="date"
-                                                value={new Date(app.updated_at).toISOString().split('T')[0]}
-                                                onChange={(e) => {
-                                                    e.stopPropagation(); // Stop event propagation
-                                                    updateJobApplication(app, app.status, e.target.value);
-                                                }}
-                                                onClick={(e) => e.stopPropagation()} // Stop event propagation
-                                                className="px-2 py-1 rounded text-xs"
-                                            />
-                                        ) : (
-                                            <span 
-                                                className="cursor-pointer"
-                                                onClick={(e) => handleStatusClick(e, app.job_id)}
-                                            >
-                                                {new Date(app.updated_at).toLocaleDateString()}
-                                            </span>
-                                        )}
+                                        <input
+                                            type="date"
+                                            value={format(new Date(app.updated_at), 'yyyy-MM-dd')}
+                                            onChange={(e) => handleDateChange(e, app)}
+                                            onClick={(e) => e.stopPropagation()}
+                                            className="px-2 py-1 rounded text-xs border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        />
                                     </td>
                                 </tr>
                             ))}
@@ -216,6 +205,20 @@ const MyApplyContent: React.FC = () => {
                     </button>
                 </div>
             )}
+            <Dialog isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
+                <h2 className="text-lg font-semibold mb-4">Update Application Status</h2>
+                <div className="space-y-2">
+                    {['Pending', 'Accepted', 'Rejected', 'Interview', 'Saved'].map((status) => (
+                        <button
+                            key={status}
+                            onClick={() => handleStatusUpdate(status)}
+                            className={`w-full px-4 py-2 text-left rounded ${getStatusColor(status)} hover:opacity-80`}
+                        >
+                            {status}
+                        </button>
+                    ))}
+                </div>
+            </Dialog>
         </div>
     );
 };
