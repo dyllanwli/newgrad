@@ -32,5 +32,16 @@ export default ({ mode }: { mode: string }) => {
         '@': path.resolve(__dirname, 'src'),
       },
     },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vendor: ['react', 'react-dom', 'react-router-dom'],
+            // Add other large dependencies or modules here
+          },
+        },
+      },
+      chunkSizeWarningLimit: 1000, // Increase the warning limit if needed (in kB)
+    },
   })
 };
