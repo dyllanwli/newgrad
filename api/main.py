@@ -17,7 +17,6 @@ app = FastAPI(
 origins = [
     "http://localhost:5173",
     "http://localhost:4173",
-    "https://newgrad.works",
 ]
 
 @app.middleware("http")
@@ -29,7 +28,7 @@ async def add_noindex_header(request, call_next):
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"] if IS_PROD else origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
