@@ -22,20 +22,27 @@ const JobList: React.FC<JobListProps> = ({ jobs, currentPage, setCurrentPage, to
         <div className="container mx-auto px-4 py-8">
             <h2 className="text-3xl font-bold mb-6 text-gray-800">Available Jobs</h2>
             <div className="space-y-4">
-                {jobs.map((job) => (
-                    <JobCard
-                        job={job}
-                        key={job._id}
-                        handleJobClick={handleJobClick}
-                    />))}
+                {jobs && jobs.length > 0 ? (
+                    jobs.map((job) => (
+                        <JobCard
+                            job={job}
+                            key={job._id}
+                            handleJobClick={handleJobClick}
+                        />
+                    ))
+                ) : (
+                    <p>No jobs available at the moment.</p>
+                )}
             </div>
-            <div className="mt-8">
-                <JobListPagination
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
-                    totalPages={totalPages}
-                />
-            </div>
+            {jobs && jobs.length > 0 && (
+                <div className="mt-8">
+                    <JobListPagination
+                        currentPage={currentPage}
+                        setCurrentPage={setCurrentPage}
+                        totalPages={totalPages}
+                    />
+                </div>
+            )}
         </div>
     );
 };
