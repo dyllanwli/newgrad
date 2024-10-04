@@ -81,8 +81,8 @@ const MyApplyPage = () => {
 
       {/* Desktop View */}
       <div className="hidden md:flex justify-center">
-        <div className="w-4/5 flex">
-          <div className="w-1/4 bg-white h-screen p-4 border-r shadow-lg mt-4 rounded-lg">
+        <div className="w-11/12 flex"> {/* Increased width from w-4/5 to w-11/12 */}
+          <div className="w-1/5 bg-white h-screen p-4 border-r shadow-lg mt-4 rounded-lg"> {/* Decreased width from w-1/4 to w-1/5 */}
             <nav>
               {cards.map((card) => (
                 <motion.div
@@ -96,7 +96,7 @@ const MyApplyPage = () => {
               ))}
             </nav>
           </div>
-          <div className="w-3/4 p-8">
+          <div className="w-4/5 p-8"> {/* Increased width from w-3/4 to w-4/5 */}
             <AnimatePresence mode="wait">
               {selectedCard && (
                 <motion.div

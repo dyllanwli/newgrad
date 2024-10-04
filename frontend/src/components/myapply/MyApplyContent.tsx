@@ -72,7 +72,8 @@ const MyApplyContent: React.FC = () => {
         }
     };
 
-    const handleStatusClick = (jobId: string) => {
+    const handleStatusClick = (e: React.MouseEvent, jobId: string) => {
+        e.stopPropagation(); // Stop event propagation
         setEditingApplication(jobId);
     };
 
@@ -99,7 +100,7 @@ const MyApplyContent: React.FC = () => {
     }, [getToken]);
 
     return (
-        <div className={`${isFullScreen ? 'fixed inset-0 z-50 bg-white overflow-auto' : 'container mx-auto px-4 py-8'}`}>
+        <div className={`${isFullScreen ? 'fixed inset-0 z-50 bg-white overflow-auto' : 'w-full mx-auto px-4 py-8'}`}>
             <div className="flex justify-between items-center mb-6">
                 <button
                     onClick={toggleSelecting}
@@ -119,9 +120,9 @@ const MyApplyContent: React.FC = () => {
                 <p className="text-gray-600">No applications yet.</p>
             ) : (
                 <div className="overflow-x-auto">
-                    <table className="min-w-full bg-white">
+                    <table className="w-full bg-white">
                         <thead>
-                            <tr className="bg-gray-100 text-gray-500 uppercase text-xs leading-normal">
+                            <tr className="bg-gray-100 text-gray-500 uppercase text-sm leading-normal">
                                 {isSelecting && <th className="px-4 text-left">Select</th>}
                                 <th className="px-4 text-left">Company</th>
                                 <th className="px-4 text-left">Position</th>
@@ -129,7 +130,7 @@ const MyApplyContent: React.FC = () => {
                                 <th className="px-4 text-left">Updated At</th>
                             </tr>
                         </thead>
-                        <tbody className="text-gray-600 text-sm font-light">
+                        <tbody className="text-gray-600 text-sm">
                             {applications.map((app) => (
                                 <tr key={app.job_id} className="border-b border-gray-200 hover:bg-gray-100">
                                     {isSelecting && (
@@ -155,7 +156,11 @@ const MyApplyContent: React.FC = () => {
                                         {editingApplication === app.job_id ? (
                                             <select
                                                 value={app.status}
-                                                onChange={(e) => updateJobApplication(app, e.target.value, app.updated_at)}
+                                                onChange={(e) => {
+                                                    e.stopPropagation(); // Stop event propagation
+                                                    updateJobApplication(app, e.target.value, app.updated_at);
+                                                }}
+                                                onClick={(e) => e.stopPropagation()} // Stop event propagation
                                                 className="px-2 py-1 rounded text-xs font-semibold"
                                             >
                                                 <option value="Pending">Pending</option>
@@ -167,7 +172,7 @@ const MyApplyContent: React.FC = () => {
                                         ) : (
                                             <span 
                                                 className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(app.status)} cursor-pointer`}
-                                                onClick={() => handleStatusClick(app.job_id)}
+                                                onClick={(e) => handleStatusClick(e, app.job_id)}
                                             >
                                                 {app.status}
                                             </span>
@@ -178,13 +183,17 @@ const MyApplyContent: React.FC = () => {
                                             <input
                                                 type="date"
                                                 value={new Date(app.updated_at).toISOString().split('T')[0]}
-                                                onChange={(e) => updateJobApplication(app, app.status, e.target.value)}
+                                                onChange={(e) => {
+                                                    e.stopPropagation(); // Stop event propagation
+                                                    updateJobApplication(app, app.status, e.target.value);
+                                                }}
+                                                onClick={(e) => e.stopPropagation()} // Stop event propagation
                                                 className="px-2 py-1 rounded text-xs"
                                             />
                                         ) : (
                                             <span 
                                                 className="cursor-pointer"
-                                                onClick={() => handleStatusClick(app.job_id)}
+                                                onClick={(e) => handleStatusClick(e, app.job_id)}
                                             >
                                                 {new Date(app.updated_at).toLocaleDateString()}
                                             </span>
