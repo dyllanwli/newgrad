@@ -59,13 +59,19 @@ async def update_job_applications_by_id(user_id: str, updated_job_application: U
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    job_application = next((app for app in user.job_applications if app.job_id == updated_job_application.job_id), None)
-    if not job_application:        
-        user.job_applications.append(updated_job_application)
-    else:
-        job_application = updated_job_application
+    # Find the index of the existing job application
+    index = next((i for i, app in enumerate(user.job_applications) if app.job_id == updated_job_application.job_id), None)
     
-    await db.users.update_one({"user_id": user_id}, {"$set": {"job_applications": [app.dict() for app in user.job_applications]}})
+    if index is not None:
+        user.job_applications[index] = updated_job_application
+    else:
+        user.job_applications.append(updated_job_application)
+
+    
+    await db.users.update_one(
+        {"user_id": user_id},
+        {"$set": {"job_applications": [app.dict() for app in user.job_applications]}}
+    )
     return user
 
 

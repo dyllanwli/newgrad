@@ -9,7 +9,7 @@ from enum import Enum
 
 class ApplicationStatus(str, Enum):
     PENDING = "Pending"
-    APPROVED = "Approved"
+    ACCEPTED = "Accepted"
     REJECTED = "Rejected"
     SAVED = "Saved"
     INTERVIEW = "Interview"

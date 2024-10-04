@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { UserJobApplication } from './types';
 import { useAuth } from '@clerk/clerk-react';
@@ -12,6 +12,7 @@ const MyApplyContent: React.FC = () => {
     const [expandedPosition, setExpandedPosition] = useState<string | null>(null);
     const [isSelecting, setIsSelecting] = useState(false);
     const [selectedApplications, setSelectedApplications] = useState<string[]>([]);
+    const [editingApplication, setEditingApplication] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchJobApplications = async () => {
@@ -71,6 +72,32 @@ const MyApplyContent: React.FC = () => {
         }
     };
 
+    const handleStatusClick = (jobId: string) => {
+        setEditingApplication(jobId);
+    };
+
+    const updateJobApplication = useCallback(async (application: UserJobApplication, newStatus: string, newUpdatedAt: string) => {
+        try {
+            const token = await getToken();
+            application.status = newStatus;
+            application.updated_at = newUpdatedAt;
+            
+            await axios.post('/api/profile/update_job_applications', application, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            
+            setApplications(prev => prev.map(app => 
+                app.job_id === application.job_id ? { ...app, ...application } : app
+            ));
+        } catch (error) {
+            console.error('Error updating job application:', error);
+        } finally {
+            setEditingApplication(null);
+        }
+    }, [getToken]);
+
     return (
         <div className={`${isFullScreen ? 'fixed inset-0 z-50 bg-white overflow-auto' : 'container mx-auto px-4 py-8'}`}>
             <div className="flex justify-between items-center mb-6">
@@ -125,11 +152,44 @@ const MyApplyContent: React.FC = () => {
                                             : ((app.job?.position || app.job?.position || '') || '').slice(0, 15) + ((app.job?.position || '')?.length > 15 ? '...' : '')}
                                     </td>
                                     <td className="py-3 px-6 text-left whitespace-nowrap">
-                                        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(app.status)}`}>
-                                            {app.status}
-                                        </span>
+                                        {editingApplication === app.job_id ? (
+                                            <select
+                                                value={app.status}
+                                                onChange={(e) => updateJobApplication(app, e.target.value, app.updated_at)}
+                                                className="px-2 py-1 rounded text-xs font-semibold"
+                                            >
+                                                <option value="Pending">Pending</option>
+                                                <option value="Accepted">Accepted</option>
+                                                <option value="Rejected">Rejected</option>
+                                                <option value="Interview">Interview</option>
+                                                <option value="Saved">Saved</option>
+                                            </select>
+                                        ) : (
+                                            <span 
+                                                className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(app.status)} cursor-pointer`}
+                                                onClick={() => handleStatusClick(app.job_id)}
+                                            >
+                                                {app.status}
+                                            </span>
+                                        )}
                                     </td>
-                                    <td className="py-3 px-6 text-left whitespace-nowrap">{new Date(app.updated_at).toLocaleDateString()}</td>
+                                    <td className="py-3 px-6 text-left whitespace-nowrap">
+                                        {editingApplication === app.job_id ? (
+                                            <input
+                                                type="date"
+                                                value={new Date(app.updated_at).toISOString().split('T')[0]}
+                                                onChange={(e) => updateJobApplication(app, app.status, e.target.value)}
+                                                className="px-2 py-1 rounded text-xs"
+                                            />
+                                        ) : (
+                                            <span 
+                                                className="cursor-pointer"
+                                                onClick={() => handleStatusClick(app.job_id)}
+                                            >
+                                                {new Date(app.updated_at).toLocaleDateString()}
+                                            </span>
+                                        )}
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
@@ -152,16 +212,16 @@ const MyApplyContent: React.FC = () => {
 };
 
 const getStatusColor = (status: string): string => {
-    switch (status.toLowerCase()) {
-        case 'pending':
+    switch (status) {
+        case 'Pending':
             return 'bg-yellow-100 text-yellow-800';
-        case 'accepted':
+        case 'Accepted':
             return 'bg-green-100 text-green-800';
-        case 'rejected':
+        case 'Rejected':
             return 'bg-red-100 text-red-800';
-        case 'interview':
+        case 'Interview':
             return 'bg-blue-100 text-blue-800';
-        case 'saved':
+        case 'Aaved':
             return 'bg-purple-100 text-purple-800';
         default:
             return 'bg-gray-100 text-gray-800';
