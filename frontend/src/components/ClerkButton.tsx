@@ -1,5 +1,4 @@
 'use client'
-import React from 'react';
 import { SignedIn, SignedOut, SignInButton, useAuth } from '@clerk/clerk-react';
 import { LogIn } from 'lucide-react';
 import { useTranslation } from 'react-i18next';

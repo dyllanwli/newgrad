@@ -14,7 +14,6 @@ import { useUser } from '@clerk/clerk-react';
 
 const CommunityPage: React.FC = () => {
   const [discussions, setDiscussions] = useState<Discussion[]>([]);
-  const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('all');

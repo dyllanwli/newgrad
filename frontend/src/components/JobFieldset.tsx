@@ -29,7 +29,6 @@ const JobFieldset: React.FC<JobFieldsetProps> = ({ Job, title, buttonTitle, hand
     const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
     const [createNewCompany, setCreateNewCompany] = useState(false);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
-    const [showPreview, setShowPreview] = useState(false);
 
 
     const fieldVariants = {

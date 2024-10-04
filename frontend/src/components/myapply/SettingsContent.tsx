@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { useAuth } from '@clerk/clerk-react';
 
 const SettingsContent: React.FC = () => {
-  const { getToken } = useAuth();
   const [emailNotifications, setEmailNotifications] = useState(true);
 
   const handleSaveSettings = () => {;

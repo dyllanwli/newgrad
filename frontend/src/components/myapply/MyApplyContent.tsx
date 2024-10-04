@@ -14,7 +14,7 @@ const MyApplyContent: React.FC = () => {
     const [expandedPosition, setExpandedPosition] = useState<string | null>(null);
     const [isSelecting, setIsSelecting] = useState(false);
     const [selectedApplications, setSelectedApplications] = useState<string[]>([]);
-    const [editingApplication, setEditingApplication] = useState<string | null>(null);
+    const [_, setEditingApplication] = useState<string | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedApplication, setSelectedApplication] = useState<UserJobApplication | null>(null);
 

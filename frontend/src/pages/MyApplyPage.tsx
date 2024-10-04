@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@clerk/clerk-react';
 import axios from 'axios';
@@ -16,7 +16,7 @@ const MyApplyPage = () => {
   const [profile, setProfile] = useState<Profile | null>(null); 
   const [cards, setCards] = useState(['My Apply', 'My Profile', 'Liked']);
   const { getToken } = useAuth();
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [_, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

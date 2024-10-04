@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from 'react-router-dom'
 import Header from '@/components/commons/Header';
 import { ClerkProvider } from '@clerk/clerk-react'
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
